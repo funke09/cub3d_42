@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror
 LIBFT = libft/libft.a
 # MLX = libmlx.dylib
 MLXFLAGS =  -lmlx -framework OpenGL -framework AppKit -lm
-SRCS = main.c
+SRCS = cub.c main.c
 OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)
