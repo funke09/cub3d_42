@@ -8,55 +8,134 @@ int cub3d_error(char *msg)
 
 void cub3d_parse_resolution(t_cub3d *cub3d, char *line)
 {
-    int i;
+   int i;
+   int flag;
 
-    (void)cub3d;
-    i = 1;
-    while (line[i] == ' ')
+   i = 1;
+   flag = 0;
+   while(line[i] == ' ')
+       i++;
+    while(is_digit(line[i]) && flag == 0)
+    {
+        cub3d->width = ft_atoi(line + i);
+        flag = 1;
         i++;
-    cub3d->width = ft_atoi(line + i);
-    while (line[i] >= '0' && line[i] <= '9')
+    }
+    while(line[i] == ' ')
         i++;
-    while (line[i] == ' ')
+    while(is_digit(line[i]) && flag == 1)
+    {
+        cub3d->height = ft_atoi(line + i);
+        flag = 2;
         i++;
-    cub3d->height = ft_atoi(line + i);
+    }
+    if(flag != 2)
+        cub3d_error("Error: invalid resolution");
 }
 
-void cub3d_parse_texture(t_cub3d *cub3d, char *line, char **texture)
+
+int is_xpm(char *line)
 {
     int i;
 
-    (void)cub3d;
-    i = 1;
-    while (line[i] == ' ')
+    i = ft_strlen(line) - 1;
+    if(line[i] == 'm' && line[i - 1] == 'p' && line[i - 2] == 'x' && line[i - 3] == '.')
+        return (1);
+    return (0);
+}
+
+void cub3d_check_duplicate_path(t_cub3d *cub3d, int num)
+{
+    if(num == 1 && cub3d->no)
+        cub3d_error("Error: duplicate path");
+    else if(num == 2 && cub3d->so)
+        cub3d_error("Error: duplicate path");
+    else if(num == 3 && cub3d->we)
+        cub3d_error("Error: duplicate path");
+    else if(num == 4 && cub3d->ea)
+        cub3d_error("Error: duplicate path");
+    else if(num == 5 && cub3d->sprite)
+        cub3d_error("Error: duplicate path");
+}
+
+void check_duplicate_texture(t_cub3d *cub3d)
+{
+    if(!cub3d->no)
+        cub3d_error("Error: missing texture");
+    else if(!cub3d->so)
+        cub3d_error("Error: missing texture");
+    else if(!cub3d->we)
+        cub3d_error("Error: missing texture");
+    else if(!cub3d->ea)
+        cub3d_error("Error: missing texture");
+    else if(!cub3d->sprite)
+        cub3d_error("Error: missing texture");
+}
+
+void cub3d_parse_texture(t_cub3d *cub3d, char *line, int num)
+{
+    int i;
+    int j;
+    char *path;
+
+    i = 2;
+    j = 0;
+    if(!line[i])
+        cub3d_error("Error: invalid texture path");
+    while(line[i] == ' ')
         i++;
-    *texture = ft_strdup(line + i);
+    path = (char *)malloc(sizeof(char) * (ft_strlen(line) - i + 1));
+    if(!path)
+        cub3d_error("Error: malloc failed");
+    while(line[i])
+    {
+        path[j] = line[i];
+        i++;
+        j++;
+    }
+    path[j] = '\0';
+    if(!is_xpm(path))
+        cub3d_error("Error: invalid texture path");
+    cub3d_check_duplicate_path(cub3d, num);
+    if(num == 1)
+        cub3d->no = path;
+    else if(num == 2)
+        cub3d->so = path;
+    else if(num == 3)
+        cub3d->we = path;
+    else if(num == 4)
+        cub3d->ea = path;
+    else if(num == 5)
+        cub3d->sprite = path;
+    check_duplicate_texture(cub3d); 
 }
 
 void cub3d_parse_color(t_cub3d *cub3d, char *line, int *color)
 {
     int i;
-    int r;
-    int g;
-    int b;
+    int j;
+    int flag;
+    int rgb[3];
 
-    (void)cub3d;
     i = 1;
-    while (line[i] == ' ')
+    j = 0;
+    flag = 0;
+    while(line[i] == ' ')
         i++;
-    r = ft_atoi(line + i);
-    while (line[i] >= '0' && line[i] <= '9')
+    while(is_digit(line[i]) && flag < 3)
+    {
+        rgb[flag] = ft_atoi(line + i);
+        flag++;
         i++;
-    while (line[i] == ' ')
-        i++;
-    g = ft_atoi(line + i);
-    while (line[i] >= '0' && line[i] <= '9')
-        i++;
-    while (line[i] == ' ')
-        i++;
-    b = ft_atoi(line + i);
-   /* It's a bitwise operation. */
-    *color = (r << 16) | (g << 8) | b;
+        while(is_digit(line[i]))
+            i++;
+        if(line[i] == ',')
+            i++;
+    }
+    if(flag != 3)
+        cub3d_error("Error: invalid color");
+  /* Converting the rgb values into a single integer. */
+    *color = (rgb[0] << 16) | (rgb[1] << 8) | rgb[2];
 }
 
 int is_valid_char(char c)
@@ -66,19 +145,26 @@ int is_valid_char(char c)
     return (0);
 }
 
+int is_map(char *str)
+{
+    if(*str == '\0')
+        return (0);
+    while (*str)
+    {
+        if(!is_space(*str) && !ft_strchr(IS_CHAR, *str))
+            return (0);
+        str++;
+    }
+    return (1);
+}
+
 void cub3d_parse_map(t_cub3d *cub3d, char *line)
 {
-    int i;
-
-    (void)cub3d;
-    i= 0;
-    if(line[0] != '1')
-        cub3d_error("Invalid map: first line must be a wall");
-    while(line[i])
+    while (is_map())
     {
-        if(!is_valid_char(line[i]))
-            cub3d_error("Invalid map: invalid char");
+        /* code */
     }
+    
 }
 
 // void cub3d_parse(t_cub3d *cub3d, char *path)
