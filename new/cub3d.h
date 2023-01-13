@@ -38,7 +38,7 @@ typdef struct s_map
     int len_map;
     int len_line;
     int num_str;
-    char    **tmp
+    char    **tmp;
 }       t_map;
 
 #endif
