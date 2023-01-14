@@ -48,7 +48,7 @@ int read_file(char *file, t_cub3d *cub3d)
         else if(is_valid_char(line[0]))
             cub3d_parse_map(cub3d, line);
         else
-            printerror("Error: invalid file");
+            printerror("Error: invalid information in the file\n");
         free(line);
     }
     close(cub3d->fd);

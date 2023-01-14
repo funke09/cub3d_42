@@ -6,7 +6,7 @@
 /*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 03:40:42 by zcherrad          #+#    #+#             */
-/*   Updated: 2022/05/20 00:37:22 by zcherrad         ###   ########.fr       */
+/*   Updated: 2023/01/14 00:15:49 by zcherrad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,6 @@ int		ft_lstsize(t_list *lst);
 void	ft_lstadd_back(t_list **lst, t_list *new);
 void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstdelone(t_list *lst, void (*del)(void*));
-char	*get_next_line(int fd);
+int		get_next_line(int fd, char **line);
 void	ft_strdel(char **as);
 #endif

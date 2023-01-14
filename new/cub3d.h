@@ -8,17 +8,17 @@
 #include <sys/types.h>
 #include <math.h>
 #include <string.h>
-#include <errno.h>
 #include <limits.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
 #include <mlx.h>
+#include "libft/libft.h"
 # define MAX_X 2560
 # define MAX_Y 1440
 
 
 
-typdef struct s_map
+typedef struct s_map
 {
     char **map;
     char *no;
