@@ -1,6 +1,7 @@
 NAME = cub3d
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address
+CFLAGS =-fsanitize=address 
+# -Wall -Wextra -Werror
 LIBFT = libft/libft.a
 MLXFLAGS =  -lmlx -framework OpenGL -framework AppKit -lm
 SRCS = main.c
