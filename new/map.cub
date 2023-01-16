@@ -5,8 +5,8 @@ WE ./textures/redbrick.xpm
 EA ./textures/wood.xpm
 
 S ./textures/creeper.xpm
-F 77,92,53
-C 163,208,230
+F 77,92,23
+C 54,208,2
 
 		1111111111111111111111111
 		1000000000110000000000001

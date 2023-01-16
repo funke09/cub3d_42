@@ -84,32 +84,52 @@ void *ft_strreplace(char *str, int number)
     int i;
     int j;
     char *tmp;
+    int len;
 
     i = 0;
     j = 0;
-
-    tmp = malloc(sizeof(char) * (ft_strlen(str) + 4));
+    len = ft_strlen(str) + (number * 3);
+    tmp = malloc(sizeof(char) * (len + 1));
     if(!tmp)
         printerror("Error: malloc failed");
-    
-    while(str[i])
+    tmp[0] = '\0';
+    while(i < ft_strlen(str))
     {
-        if(i == number)
+        if(str[i] == '\t')
         {
             tmp[j] = ' ';
             tmp[j + 1] = ' ';
             tmp[j + 2] = ' ';
             tmp[j + 3] = ' ';
             j += 4;
-            i++;
+            // i++;
         }
-        tmp[j] = str[i];
+        else
+        {
+            tmp[j] = str[i];
+            j++;
+        }
         i++;
-        j++;
     }
     tmp[j] = 0;
     free(str);
     return (tmp);
+}
+
+static int tab_counter(char *str, char c)
+{
+    int i;
+    int count;
+
+    i = 0;
+    count = 0;
+    while (str[i])
+    {
+        if (str[i] == c)
+            count++;
+        i++;
+    }
+    return (count);
 }
 
 int fill_space(t_map *map)
@@ -122,8 +142,8 @@ int fill_space(t_map *map)
     {
         if(ft_strchr(map->tmp[i], '\t'))
         {
-            number = (ft_strchr(map->tmp[i], '\t') - map->tmp[i]);
-            map->tmp[i] = ft_strreplace(map->tmp[i], number);
+            number = tab_counter(map->tmp[i], '\t');
+            map->tmp[i] = (char*)ft_strreplace(map->tmp[i], number);
             if(!map->tmp[i])
                 printerror("Error: replace failed");
         }
@@ -205,17 +225,17 @@ int go_south(char *str, t_map *map)
         return (0);
     while(str[i] == ' ')
         i++;
-    printf("str = %s\n", str);
+    // printf("str = %s\n", str);
     map->so = ft_strdup(str + i);
     if(!map->so)
         return (0);
     // printf("opeeen = %s\n", map->so);
     if(open(map->so, O_RDONLY) == -1)
     {
-        printf("map->so = %s | open failed\n", map->so);
+        // printf("map->so = %s | open failed\n", map->so);
         return (0);
     }
-    printf("so = %s\n", map->so);
+    // printf("so = %s\n", map->so);
     return (1);
 }
 
@@ -277,21 +297,21 @@ int is_floorcolor(char *str, t_map *map)
     i = 1;
     if(map->r_floor || map->g_floor || map->b_floor)
         return (0);
-    while(str[i] == ' ' || str[i] == ',')
+    while(is_blank(str[i]) || str[i] == ',')
         i++;
     if(!ft_isdigit(str[i]))
         return (0);
     map->r_floor = ft_atoi(str + i);
     while(ft_isdigit(str[i]))
         i++;
-    while(str[i] == ' ' || str[i] == ',')
+    while(is_blank(str[i])|| str[i] == ',')
         i++;
     if(!ft_isdigit(str[i]))
         return (0);
     map->g_floor = ft_atoi(str + i);
     while(ft_isdigit(str[i]))
         i++;
-    while(str[i] == ' ' || str[i] == ',')
+    while(is_blank(str[i]) || str[i] == ',')
         i++;
     if(!ft_isdigit(str[i]))
         return (0);
@@ -332,21 +352,21 @@ int is_ceilingcolor(char *str, t_map *map)
     i = 1;
     if(map->r_ceiling || map->g_ceiling || map->b_ceiling)
         return (0);
-    while(str[i] == ' ' || str[i] == ',')
+    while(is_blank(str[i]) || str[i] == ',')
         i++;
     if(!ft_isdigit(str[i]))
         return (0);
     map->r_ceiling = ft_atoi(str + i);
     while(ft_isdigit(str[i]))
         i++;
-    while(str[i] == ' ' || str[i] == ',')
+    while(is_blank(str[i]) || str[i] == ',')
         i++;
     if(!ft_isdigit(str[i]))
         return (0);
     map->g_ceiling = ft_atoi(str + i);
     while(ft_isdigit(str[i]))
         i++;
-    while(str[i] == ' ' || str[i] == ',')
+    while(is_blank(str[i]) || str[i] == ',')
         i++;
     if(!ft_isdigit(str[i]))
         return (0);
@@ -380,7 +400,7 @@ int check_parametrs(char **str, t_map *map, int *count, int *i)
         else if(str[*i][0] == 'S' && str[*i][1] == 'O' && str[*i][2] == ' ')
         {
             printf("south\n");
-            printf("string[i] = %s\n", str[*i]);
+            // printf("string[i] = %s\n", str[*i]);
             if(!go_south(str[*i], map))
                 return (0);
             (*count)++;
@@ -442,7 +462,7 @@ int is_map(char *str)
     int i;
 
     i = 0;
-    if(!*str)
+    if(!str || !*str)
         return (0);
     while(str[i])
     {
@@ -502,21 +522,23 @@ int map_is_protected(char **str)
     i = 0;
     while(str[0][i])
     {
+        if (i + 1 > ft_strlen(str[0]))
+            return (0);
         if(str[0][i] == '0' || str[0][i] == '2' || str[0][i] == 'N' || str[0][i] == 'S' || str[0][i] == 'W' || str[0][i] == 'E')
         {
             // printf("str[0] = %s\n", str[0]);
-            printf("str[-1][i + 1] = %c\n", str[-1][i + 1]);
+            // printf("str[-1][i + 1] = %c\n", str[-1][i + 1]);
             if(!str[-1][i - 1] || !str[-1][i] || !str[-1][i + 1] || !str[1][i - 1] || !str[1][i] || !str[1][i + 1] || !str[0][i - 1] || !str[0][i + 1])
             {
                 // printf("str[-1] = %s\n", str[-1]);
-                printf("str[-1][i + 1] = %c\n", str[-1][i + 1]);
-                printf("i == %d\n", i);
+                // printf("str[-1][i + 1] = %c\n", str[-1][i + 1]);
+                // printf("i == %d\n", i);
                 // printf("str[-1][i] = %c\n", str[-1][i]);
                 // printf("str[1][i - 1] = %c\n", str[1][i - 1]);
                 // printf("str[1][i] = %c\n", str[1][i]);
                 // printf("str[1][i + 1] = %c\n", str[1][i + 1]);
                 // printf("str[-1][i - 1] = %c\n", str[-1][i - 1]);
-                printf(">>>>>>>>>>str[0][i] = %c <<<<<<<\n", str[0][i]);
+                // printf(">>>>>>>>>>str[0][i] = %c <<<<<<<\n", str[0][i]);
                 // printf("str[0][i + 1] = %c\n", str[0][i + 1]);
                 return (0);
             }
@@ -565,12 +587,12 @@ int check_map(char **str, t_map *map)
     i = 0;
     while(is_map(str[i]))
     {
+        printf("END!");
         map->num_str = i;
         if(i == 0 && !check_first(str[i]))
             return(0);
         else if(!is_map(str[i + 1]))
         {
-
             if(i < 2)
                 return(0);
             if(!check_player(map))
@@ -631,6 +653,13 @@ int sumilation(char *file_name)
     if (!map->tmp)
         printerror("Error: maap tmp failed\n");
     read_map(fd, map);
+    printf("+++++++++++++");
+    int i= 0 ;
+    while (map->tmp[i])
+    {
+        printf("%s  len=%d\n", map->tmp[i], ft_strlen(map->tmp[i]));
+        i++;
+    }
     if(!parssing_map(map->tmp, map))
         printerror("Error: parsing failed");
     return (0);

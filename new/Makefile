@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS =-fsanitize=address 
 # -Wall -Wextra -Werror
 LIBFT = libft/libft.a
-MLXFLAGS =  -lmlx -framework OpenGL -framework AppKit -lm
+MLXFLAGS =   -framework OpenGL -framework AppKit -lm
 SRCS = main.c
 OBJS = $(SRCS:.c=.o)
 
