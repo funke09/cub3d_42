@@ -358,12 +358,6 @@ int is_ceilingcolor(char *str, t_map *map)
 
 int check_parametrs(char **str, t_map *map, int *count, int *i)
 {
-    int j= 0;
-    while (str[j])
-    {
-        printf("str[%d] = %s\n", j, str[j]);
-        j++;
-    }
     while(str[*i] && (*count) < 8)
     {
         // printf("string[i] = %s\n", str[*i]);
@@ -464,7 +458,7 @@ int check_first(char *str)
     int i;
 
     i = 0;
-    while(str[i])
+   while(str[i])
     {
         if(!is_blank(str[i]) && str[i] != '1')
         {
@@ -510,10 +504,26 @@ int map_is_protected(char **str)
     {
         if(str[0][i] == '0' || str[0][i] == '2' || str[0][i] == 'N' || str[0][i] == 'S' || str[0][i] == 'W' || str[0][i] == 'E')
         {
+            // printf("str[0] = %s\n", str[0]);
+            printf("str[-1][i + 1] = %c\n", str[-1][i + 1]);
             if(!str[-1][i - 1] || !str[-1][i] || !str[-1][i + 1] || !str[1][i - 1] || !str[1][i] || !str[1][i + 1] || !str[0][i - 1] || !str[0][i + 1])
+            {
+                // printf("str[-1] = %s\n", str[-1]);
+                printf("str[-1][i + 1] = %c\n", str[-1][i + 1]);
+                printf("i == %d\n", i);
+                // printf("str[-1][i] = %c\n", str[-1][i]);
+                // printf("str[1][i - 1] = %c\n", str[1][i - 1]);
+                // printf("str[1][i] = %c\n", str[1][i]);
+                // printf("str[1][i + 1] = %c\n", str[1][i + 1]);
+                // printf("str[-1][i - 1] = %c\n", str[-1][i - 1]);
+                printf(">>>>>>>>>>str[0][i] = %c <<<<<<<\n", str[0][i]);
+                // printf("str[0][i + 1] = %c\n", str[0][i + 1]);
                 return (0);
+            }
+            // printf("we are here\n");
             if(is_blank(str[-1][i - 1]) || is_blank(str[-1][i]) || is_blank(str[-1][i + 1]) || is_blank(str[1][i - 1]) || is_blank(str[1][i]) || is_blank(str[1][i + 1]) || is_blank(str[0][i - 1]) || is_blank(str[0][i + 1]))
                 return (0);
+            // printf("we passed\n");
         }
         i++;
     }
@@ -553,10 +563,8 @@ int check_map(char **str, t_map *map)
     int i;
 
     i = 0;
-    printf("str[0] = %s\n", str[0]);
     while(is_map(str[i]))
     {
-        // printf("str = %s\n", str[i]);
         map->num_str = i;
         if(i == 0 && !check_first(str[i]))
             return(0);
