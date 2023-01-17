@@ -17,6 +17,13 @@
 # define MAX_Y 1440
 
 
+typedef struct s_game
+{
+    void *window;
+    void *mlx;
+    int width;
+    int height;
+}    t_game;
 
 typedef struct s_map
 {
@@ -39,7 +46,9 @@ typedef struct s_map
     int len_line;
     int num_str;
     char    **tmp;
+    t_game game;
 }       t_map;
+
 
 void printerror(char *message);
 int is_blank(char c);
@@ -62,5 +71,6 @@ int check_first(char *str);
 int check_player(t_map *map);
 int if_no_or_multipule_player(t_map *map, char *str);
 int map_is_protected(char **str);
+int init_game(t_map *map);
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 11:49:18 by zcherrad          #+#    #+#             */
-/*   Updated: 2022/05/20 00:23:56 by zcherrad         ###   ########.fr       */
+/*   Updated: 2023/01/17 23:38:33 by zcherrad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlen(const char *s)
+int	ft_strlen(const char *s)
 {
 	size_t	i;
 
