@@ -99,6 +99,7 @@ int sumilation(char *file_name)
     read_map(fd, map);
     if(!parssing_map(map->tmp, map))
         printerror("Error: parsing failed (Invalid map)");
+    init_game(map);
     return (0);
     
 }
