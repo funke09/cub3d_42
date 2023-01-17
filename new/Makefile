@@ -4,7 +4,7 @@ CFLAGS =-fsanitize=address
 # -Wall -Wextra -Werror
 LIBFT = libft/libft.a
 MLXFLAGS =   -framework OpenGL -framework AppKit -lm
-SRCS = main.c
+SRCS = main.c tolls_map.c tools_map.c read_map.c init_t_map.c check_map.c 
 OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)

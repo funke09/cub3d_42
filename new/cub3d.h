@@ -41,4 +41,26 @@ typedef struct s_map
     char    **tmp;
 }       t_map;
 
+void printerror(char *message);
+int is_blank(char c);
+void *free_loop(char **str);
+int is_the_file(char *file);
+void init_map(t_map *map);
+void read_map(int fd, t_map *map);
+int go_resolution(char *str, t_map *map);
+int go_north(char *str, t_map *map);
+int go_south(char *str, t_map *map);
+int go_west(char *str, t_map *map);
+int go_east(char *str, t_map *map);
+int is_sprite(char *str, t_map *map);
+int is_floorcolor(char *str, t_map *map);
+int is_char(char **str, int *i);
+int is_ceilingcolor(char *str, t_map *map);
+int is_map(char *str);
+int check_parametrs(char **str, t_map *map, int *count, int *i);
+int check_first(char *str);
+int check_player(t_map *map);
+int if_no_or_multipule_player(t_map *map, char *str);
+int map_is_protected(char **str);
+
 #endif
