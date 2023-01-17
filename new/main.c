@@ -36,10 +36,9 @@ int is_the_file(char *file)
     {
         if(file[i] == '.')
         {
-            if(file[i + 1] == 'c' && file[i + 2] == 'u' && file[i + 3] == 'b')
+            if(file[i + 1] == 'c' && file[i + 2] == 'u' && file[i + 3] == 'b' && !file[i + 4])
                 return (0);
-            else
-                return (1);
+            return (1);
         }
         i++;
     }
@@ -210,7 +209,6 @@ int go_north(char *str, t_map *map)
     map->no = ft_strdup(str + i);
     if(!map->no)
         return (0);
-    printf("no = %s\n", map->no);
     if(open(map->no, O_RDONLY) == -1)
         return (0);
     return (1);
@@ -225,17 +223,11 @@ int go_south(char *str, t_map *map)
         return (0);
     while(str[i] == ' ')
         i++;
-    // printf("str = %s\n", str);
     map->so = ft_strdup(str + i);
     if(!map->so)
         return (0);
-    // printf("opeeen = %s\n", map->so);
     if(open(map->so, O_RDONLY) == -1)
-    {
-        // printf("map->so = %s | open failed\n", map->so);
         return (0);
-    }
-    // printf("so = %s\n", map->so);
     return (1);
 }
 
@@ -380,10 +372,8 @@ int check_parametrs(char **str, t_map *map, int *count, int *i)
 {
     while(str[*i] && (*count) < 8)
     {
-        // printf("string[i] = %s\n", str[*i]);
         if(str[*i][0] == 'R' && str[*i][1] == ' ')
         {
-            printf("resolution\n");
             if(!go_resolution(str[*i], map))
                 return (0);
             (*count)++;
@@ -391,7 +381,6 @@ int check_parametrs(char **str, t_map *map, int *count, int *i)
         }
         else if(str[*i][0] == 'N' && str[*i][1] == 'O' && str[*i][2] == ' ')
         {
-            printf("north\n");
             if(!go_north(str[*i], map))
                 return (0);
             (*count)++;
@@ -399,8 +388,6 @@ int check_parametrs(char **str, t_map *map, int *count, int *i)
         }
         else if(str[*i][0] == 'S' && str[*i][1] == 'O' && str[*i][2] == ' ')
         {
-            printf("south\n");
-            // printf("string[i] = %s\n", str[*i]);
             if(!go_south(str[*i], map))
                 return (0);
             (*count)++;
@@ -408,7 +395,6 @@ int check_parametrs(char **str, t_map *map, int *count, int *i)
         }
         else if(str[*i][0] == 'W' && str[*i][1] == 'E' && str[*i][2] == ' ')
         {
-            printf("west\n");
             if(!go_west(str[*i], map))
                 return (0);
             (*count)++;
@@ -416,7 +402,6 @@ int check_parametrs(char **str, t_map *map, int *count, int *i)
         }
         else if(str[*i][0] == 'E' && str[*i][1] == 'A' && str[*i][2] == ' ')
         {
-            printf("east\n");
             if(!go_east(str[*i], map))
                 return (0);
             (*count)++;
@@ -424,7 +409,6 @@ int check_parametrs(char **str, t_map *map, int *count, int *i)
         }
         else if(str[*i][0] == 'S' && str[*i][1] == ' ')
         {
-            printf("sprite\n");
             if(!is_sprite(str[*i], map))
                 return (0);
             (*count)++;
@@ -432,7 +416,6 @@ int check_parametrs(char **str, t_map *map, int *count, int *i)
         }
         else if(str[*i][0] == 'F' && str[*i][1] == ' ')
         {
-            printf("floor\n");
             if(!is_floorcolor(str[*i], map))
                 return (0);
             (*count)++;
@@ -440,17 +423,13 @@ int check_parametrs(char **str, t_map *map, int *count, int *i)
         }
         else if(str[*i][0] == 'C' && str[*i][1] == ' ')
         {
-            printf("ceiling\n");
             if(!is_ceilingcolor(str[*i], map))
                 return (0);
             (*count)++;
             (*i)++;
         }
         else if(!is_char(str, i))
-        {
-            printf("map\n");
             return (0);
-        }
         else if(str[*i][0] == '\0')
             (*i)++;
     }
@@ -526,26 +505,10 @@ int map_is_protected(char **str)
             return (0);
         if(str[0][i] == '0' || str[0][i] == '2' || str[0][i] == 'N' || str[0][i] == 'S' || str[0][i] == 'W' || str[0][i] == 'E')
         {
-            // printf("str[0] = %s\n", str[0]);
-            // printf("str[-1][i + 1] = %c\n", str[-1][i + 1]);
             if(!str[-1][i - 1] || !str[-1][i] || !str[-1][i + 1] || !str[1][i - 1] || !str[1][i] || !str[1][i + 1] || !str[0][i - 1] || !str[0][i + 1])
-            {
-                // printf("str[-1] = %s\n", str[-1]);
-                // printf("str[-1][i + 1] = %c\n", str[-1][i + 1]);
-                // printf("i == %d\n", i);
-                // printf("str[-1][i] = %c\n", str[-1][i]);
-                // printf("str[1][i - 1] = %c\n", str[1][i - 1]);
-                // printf("str[1][i] = %c\n", str[1][i]);
-                // printf("str[1][i + 1] = %c\n", str[1][i + 1]);
-                // printf("str[-1][i - 1] = %c\n", str[-1][i - 1]);
-                // printf(">>>>>>>>>>str[0][i] = %c <<<<<<<\n", str[0][i]);
-                // printf("str[0][i + 1] = %c\n", str[0][i + 1]);
                 return (0);
-            }
-            // printf("we are here\n");
             if(is_blank(str[-1][i - 1]) || is_blank(str[-1][i]) || is_blank(str[-1][i + 1]) || is_blank(str[1][i - 1]) || is_blank(str[1][i]) || is_blank(str[1][i + 1]) || is_blank(str[0][i - 1]) || is_blank(str[0][i + 1]))
                 return (0);
-            // printf("we passed\n");
         }
         i++;
     }
@@ -587,7 +550,6 @@ int check_map(char **str, t_map *map)
     i = 0;
     while(is_map(str[i]))
     {
-        printf("END!");
         map->num_str = i;
         if(i == 0 && !check_first(str[i]))
             return(0);
@@ -600,19 +562,15 @@ int check_map(char **str, t_map *map)
         }
         else
         {
-            printf("*********map3\n");
             if(!map_is_protected(&str[i]))
                 return(0);
-            printf("*********map4\n");
             if(!if_no_or_multipule_player(map, str[i]))
                 return(0);
         }
         i++;
     }
-    printf("*********map5\n");
     if(!allocate_map(str, map))
         return (0);
-    printf("*********END\n");
     return (1);
 }
 
@@ -651,17 +609,10 @@ int sumilation(char *file_name)
     if(fd <= 0)
         printerror("Error: such file does not exist\n");
     if (!map->tmp)
-        printerror("Error: maap tmp failed\n");
+        printerror("Error: map tmp failed\n");
     read_map(fd, map);
-    printf("+++++++++++++");
-    int i= 0 ;
-    while (map->tmp[i])
-    {
-        printf("%s  len=%d\n", map->tmp[i], ft_strlen(map->tmp[i]));
-        i++;
-    }
     if(!parssing_map(map->tmp, map))
-        printerror("Error: parsing failed");
+        printerror("Error: parsing failed (Invalid map)");
     return (0);
     
 }
