@@ -8,6 +8,11 @@ void ft_window(t_map *map)
     map->game.window = mlx_new_window(map->game.mlx, map->game.width, map->game.height, "Cub3D");
 }
 
+// void ft_map(t_map *map)
+// {
+//     map->
+// }
+
 void init_start(t_map *map)
 {
     ft_window(map);

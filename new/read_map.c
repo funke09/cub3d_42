@@ -3,7 +3,7 @@
 // to realloc tabs we add 4 cause we need to add 4 spaces
 void *ft_strreplace(char *str, int number)
 {
-    int i;
+    size_t i;
     int j;
     char *tmp;
     int len;

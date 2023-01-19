@@ -114,7 +114,7 @@ int if_no_or_multipule_player(t_map *map, char *str)
 
 int map_is_protected(char **str)
 {
-    int i;
+    size_t i;
 
     i = 0;
     while(str[0][i])
@@ -123,9 +123,9 @@ int map_is_protected(char **str)
             return (0);
         if(str[0][i] == '0' || str[0][i] == '2' || str[0][i] == 'N' || str[0][i] == 'S' || str[0][i] == 'W' || str[0][i] == 'E')
         {
-            if(!str[-1][i - 1] || !str[-1][i] || !str[-1][i + 1] || !str[1][i - 1] || !str[1][i] || !str[1][i + 1] || !str[0][i - 1] || !str[0][i + 1])
+            if(!str[-1][i] || !str[1][i] || !str[0][i - 1] || !str[0][i + 1])
                 return (0);
-            if(is_blank(str[-1][i - 1]) || is_blank(str[-1][i]) || is_blank(str[-1][i + 1]) || is_blank(str[1][i - 1]) || is_blank(str[1][i]) || is_blank(str[1][i + 1]) || is_blank(str[0][i - 1]) || is_blank(str[0][i + 1]))
+            if(is_blank(str[-1][i]) || is_blank(str[1][i]) || is_blank(str[0][i - 1]) || is_blank(str[0][i + 1]))
                 return (0);
         }
         i++;

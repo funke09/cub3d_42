@@ -25,6 +25,19 @@ typedef struct s_game
     int height;
 }    t_game;
 
+typedef struct s_info
+{
+    char **full_map;
+    int len_map;
+    int width_map;
+    int height_map;
+    int rows;
+    int cols;
+    int r_map;
+    int b_map;
+
+}   t_info;
+
 typedef struct s_map
 {
     char **map;
@@ -47,6 +60,7 @@ typedef struct s_map
     int num_str;
     char    **tmp;
     t_game game;
+    t_info info;
 }       t_map;
 
 
