@@ -25,6 +25,8 @@ typedef struct s_game
     int height;
 }    t_game;
 
+// int expande_size = 10;
+
 typedef struct s_info
 {
     char **full_map;
@@ -86,5 +88,8 @@ int check_player(t_map *map);
 int if_no_or_multipule_player(t_map *map, char *str);
 int map_is_protected(char **str);
 int init_game(t_map *map);
+void expande_row(char **new_row, char c, int expandsize, int l);
+void expande_map(char **map,int width, int height, int expandsize);
+void showarray(char **map);
 
 #endif

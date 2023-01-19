@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS =-Wall -Wextra -Werror -fsanitize=address 
 HEADER = cub3d.h
 LIBFT = libft/libft.a
-MLXFLAGS =  -lmlx -framework OpenGL -framework AppKit
+MLXFLAGS = -Lmlx -lmlx -framework OpenGL -framework AppKit
 SRCS = main.c tolls_map.c tools_map.c read_map.c init_t_map.c check_map.c init_game.c
 OBJS = $(SRCS:.c=.o)
 
