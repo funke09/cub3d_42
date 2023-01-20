@@ -99,8 +99,10 @@ t_map *sumilation(char *file_name)
     read_map(fd, map);
     if(!parssing_map(map->tmp, map))
         printerror("Error: parsing failed (Invalid map)");
+    /* Initializing the game. */
     init_game(map);
     // showarray(map->map);
+
     // printf("len_str %d\n", map->num_str);
     // expande_map(map->map, map->res_x, map->num_str, 10);
     return (map);

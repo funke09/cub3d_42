@@ -6,7 +6,7 @@
 #    By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/16 02:18:15 by zcherrad          #+#    #+#              #
-#    Updated: 2022/05/20 00:35:06 by zcherrad         ###   ########.fr        #
+#    Updated: 2023/01/20 23:25:58 by zcherrad         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,7 +65,7 @@ ft_lstclear.c\
 
 OBJS = $(SRCS:.c=.o)
 B_OBJS = $(B_SRCS:.c=.o)
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -g -Wall -Werror -Wextra
 CC = gcc
 RM = rm -f
 AR = ar rc

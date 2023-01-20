@@ -11,11 +11,22 @@ void ft_window(t_map *map)
 int ft_count_rows(char **map)
 {
     int i;
+    int s;
+    int j;
 
-    i = 0;
-    while (map[i])
-        i++;
-    return (i);
+    i = -1;
+    s = 0;
+    j = -1;
+    while (map[++i])
+    {
+        j= -1;
+        while (map[i][++j]);
+        
+        if(j > s)
+            s = j;
+    }
+    // printf("s = %d\n", s);
+    return (s);
 }
 
 int ft_count_cols(char **map)
@@ -46,6 +57,8 @@ int tilsize(t_map *map)
 
     x = (map->game.width / map->info.cols / 3);
     y = (map->game.height / map->info.rows / 3);
+    printf("x = %d\n", x);
+    printf("y = %d\n", y);
     if (x < y)
         return (x);
     else
@@ -97,18 +110,24 @@ void ft_player(t_map *map)
     map->player_t.walk_direction = 0;
     map->player_t.turn_direction = 0;
     map->player_t.move_speed = 0.35;
-    map->player_t.rot_speed = 3 * (M_PI / 180);
+    map->player_t.rot_speed = 7 * (M_PI / 180);
 
 }
 
 void ft_map(t_map *map)
 {
-    map->info.full_map = map->map;
+    map->info.rows = ft_count_rows(map->map);
+    map->info.cols = ft_count_cols(map->map);
     map->info.tile_size = tilsize(map);
     map->info.width_map = map->info.tile_size * map->info.cols;
     map->info.height_map = map->info.tile_size * map->info.rows;
-    map->info.rows = ft_count_rows(map->info.full_map);
-    map->info.cols = ft_count_cols(map->info.full_map);
+   map->info.full_map = expande_map(map->map, map->info.cols, map->info.rows, map->info.tile_size);
+    printf("rows = %d\n", map->info.rows);
+    printf("cols = %d\n", map->info.cols);
+    printf("width = %d\n", map->info.width_map);
+    printf("height = %d\n", map->info.height_map);
+    printf("tile_size = %d\n", map->info.tile_size);
+    // showarray(map->info.full_map);
     
 }
 
@@ -187,26 +206,30 @@ int init_game(t_map *map)
     return (1);
 }
 
-void expande_row(char **new_row, char c, int expandsize, int l)
+void expande_row(char **new_row, char c, int expandsize, int l, int yy)
 {
     int i;
     int j;
+    int x;
+    int y;
 
+    y = yy;
     j = l;
+    x = -1;
     i = -1;
     while (++i < expandsize)
     {
-        while (++j < expandsize)
+        while (++x < expandsize)
         {
-            new_row[i][j] = c;
+            new_row[yy++][j++] = c;
         }
-        j = l;
+        x = -1;
     }
 }
 
 
 //expand every element from the given matrix with given size
-void expande_map(char **map,int width, int height, int expandsize)
+char **expande_map(char **map,int width, int height, int expandsize)
 {
     int i;
     int j;
@@ -216,25 +239,27 @@ void expande_map(char **map,int width, int height, int expandsize)
 
     new_map = malloc(sizeof(char *) * (height * expandsize));
     if(!new_map)
-        return ;
+        return (NULL);
     i = -1;
     j = -1;
-    k = -1;
-    l = -1;
+    k = 0;
+    l = 0;
      while (++i < height)
      {
         new_map[i] = malloc(sizeof(char) * (width * expandsize));
         if(!new_map[i])
-            return ;
+            return (NULL);// exit
           while (++j < width)
           {
-               expande_row(&new_map[k], map[i][j], expandsize, l);
+               expande_row(&new_map[k], map[i][j], expandsize, l, k);
                 l = l + expandsize;
-          }
+                k = k + expandsize;
+            }
           j = -1;
-          k = k + expandsize;
+          
      }
-        showarray(new_map);
+     return (new_map);
+        //showarray(new_map);
 
 }
 
