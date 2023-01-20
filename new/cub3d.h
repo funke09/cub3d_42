@@ -49,6 +49,18 @@ typedef struct s_info
 
 }   t_info;
 
+typedef struct	s_player
+{
+	int		p_x;
+	int		p_y;
+	int		radius;
+	char		walk_direction;
+	int			turn_direction;
+	float		rot_angle;
+	float		move_speed;
+	float		rot_speed;
+}				t_player;
+
 typedef struct s_map
 {
     char **map;
@@ -72,6 +84,7 @@ typedef struct s_map
     char    **tmp;
     t_game game;
     t_info info;
+    t_player player_t;
 }       t_map;
 
 

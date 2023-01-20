@@ -79,7 +79,7 @@ int parssing_map(char **str, t_map *map)
         printerror("Error: invalid map\n");
     while(str[i] && is_map(str[i + 1]))
         i++;
-    free_loop(map->tmp);
+    // free_loop(map->tmp);
     return (1);
 }
 

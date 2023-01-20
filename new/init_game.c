@@ -52,6 +52,55 @@ int tilsize(t_map *map)
         return (y);
 }
 
+float rotation(char c)
+{
+ 
+    if (c == 'S')
+        return (M_PI_2);
+    else if (c == 'N')
+        return (3 * M_PI_2);
+    else if (c == 'W')
+        return (M_PI);
+    else if (c == 'E')
+        return (0);
+    return (0);
+}
+
+void get_x_y(t_info *info, t_player *player, char **tmp)
+{
+    int i;
+    int j;
+
+    i = 0;
+    j = 0;
+    while (tmp[i])
+    {
+        j = 0;
+        while (tmp[i][j])
+        {
+            if (tmp[i][j] == 'N' || tmp[i][j] == 'S' || tmp[i][j] == 'W' || tmp[i][j] == 'E')
+            {
+                player->p_x = ((float)j + 0.5)* info->tile_size;
+                player->p_y = ((float)i + 0.5)* info->tile_size;
+                player->rot_angle = rotation(tmp[i][j]);
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
+void ft_player(t_map *map)
+{
+    get_x_y(&map->info, &map->player_t, map->tmp);
+    map->player_t.radius = map->info.tile_size / 6;
+    map->player_t.walk_direction = 0;
+    map->player_t.turn_direction = 0;
+    map->player_t.move_speed = 0.35;
+    map->player_t.rot_speed = 3 * (M_PI / 180);
+
+}
+
 void ft_map(t_map *map)
 {
     map->info.full_map = map->map;
@@ -69,37 +118,10 @@ void init_start(t_map *map)
 {
     ft_window(map);
     ft_map(map);
-    // ft_player(map);
+    ft_player(map);
     // ft_sprite(map);
     // ft_texture(map);
 }
-
-int key_press(int keycode, t_map *map)
-{
-    if (keycode == ESC)
-        close_window(map);
-    else if (keycode == W_KEY)
-        printf("W\n");
-    else if (keycode == A_KEY)
-        printf("A\n");
-    else if (keycode == S_KEY)
-        printf("S\n");
-    else if (keycode == D_KEY)
-        printf("D\n");
-    else if (keycode == LEFT)
-        printf("LEFT\n");
-    else if (keycode == RIGHT)
-        printf("RIGHT\n");
-    return (0);
-}
-
-int key_release(int keycode, t_map *map)
-{
-    if (keycode == 53)
-        close_window(map);
-    return (0);
-}
-
 int close_window(t_map *map)
 {
     free_loop(map->map);
@@ -107,8 +129,48 @@ int close_window(t_map *map)
     exit(0);
 }
 
+int key_press(int keycode, t_map *map)
+{
+    if (keycode == ESC)
+        close_window(map);
+    else if (keycode == W_KEY)
+        map->player_t.walk_direction = 'w';
+    else if (keycode == A_KEY)
+        map->player_t.walk_direction = 'a';
+    else if (keycode == S_KEY)
+        map->player_t.walk_direction = 's';
+    else if (keycode == D_KEY)
+        map->player_t.walk_direction = 'd';
+    else if (keycode == LEFT)
+        map->player_t.turn_direction = -1;
+    else if (keycode == RIGHT)
+        map->player_t.turn_direction = 1;
+    return (0);
+}
+
+int key_release(int keycode, t_map *map)
+{
+    if (keycode == 53)
+        close_window(map);
+    else if (keycode == W_KEY)
+        map->player_t.walk_direction = 0;
+    else if (keycode == A_KEY)
+        map->player_t.walk_direction = 0;
+    else if (keycode == S_KEY)
+        map->player_t.walk_direction = 0;
+    else if (keycode == D_KEY)
+        map->player_t.walk_direction = 0;
+    else if (keycode == LEFT)
+        map->player_t.turn_direction = 0;
+    else if (keycode == RIGHT)
+        map->player_t.turn_direction = 0;
+    return (0);
+}
+
+
 int close_key(t_map *map)
 {
+    (void)map;
     exit(0);
     return (0);
 }
@@ -118,9 +180,9 @@ int init_game(t_map *map)
 {
     init_start(map);
     mlx_do_key_autorepeatoff(map->game.mlx);
-    mlx_hook(map->game.window, 2, 1L<<0, &key_press, map);
-    mlx_hook(map->game.window, 3, 1L<<1, &key_release, map);
-    mlx_hook(map->game.window, 17, 1L<<17, &close_key, map);
+    mlx_hook(map->game.window, 2, 1L << 0, &key_press, map);
+    mlx_hook(map->game.window, 3, 1L << 1, &key_release, map);
+    mlx_hook(map->game.window, 17, 1L << 17, &close_key, map);
     mlx_loop(map->game.mlx);
     return (1);
 }
