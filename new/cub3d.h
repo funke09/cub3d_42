@@ -15,6 +15,15 @@
 #include "libft/libft.h"
 # define MAX_X 2560
 # define MAX_Y 1440
+# define UP 126
+# define DOWN 125
+# define LEFT 123
+# define RIGHT 124
+# define ESC 53
+# define W_KEY 13
+# define A_KEY 0
+# define S_KEY 1
+# define D_KEY 2
 
 
 typedef struct s_game
@@ -30,7 +39,7 @@ typedef struct s_game
 typedef struct s_info
 {
     char **full_map;
-    int len_map;
+    int tile_size;
     int width_map;
     int height_map;
     int rows;

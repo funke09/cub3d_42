@@ -84,7 +84,7 @@ int parssing_map(char **str, t_map *map)
 }
 
 
-int sumilation(char *file_name)
+t_map *sumilation(char *file_name)
 {
     int fd;
     t_map *map;
@@ -99,11 +99,11 @@ int sumilation(char *file_name)
     read_map(fd, map);
     if(!parssing_map(map->tmp, map))
         printerror("Error: parsing failed (Invalid map)");
-    // init_game(map);
-    showarray(map->map);
-    printf("len_str %d\n", map->num_str);
-    // expande_map(map->map, map->res_x, map->res_y, 10);
-    return (0);
+    init_game(map);
+    // showarray(map->map);
+    // printf("len_str %d\n", map->num_str);
+    // expande_map(map->map, map->res_x, map->num_str, 10);
+    return (map);
     
 }
 
@@ -111,12 +111,15 @@ int sumilation(char *file_name)
 
 int main(int ac, char **av)
 {
+    t_map *map;
+
     if(ac == 2)
     {
         if(is_the_file(av[1]))
             printerror("Error: invalid file");
-        sumilation(av[1]);
+        map = sumilation(av[1]);
     }
     else
        printerror("Error: usage ./cub3d map.cub");
+    
 }
