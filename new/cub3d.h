@@ -13,6 +13,8 @@
 #include <sys/mman.h>
 #include <mlx.h>
 #include "libft/libft.h"
+#include <stdbool.h>
+#define TILE_SIZE 32
 # define MAX_X 2560
 # define MAX_Y 1440
 # define UP 126
@@ -34,6 +36,17 @@ typedef struct s_game
     int height;
 }    t_game;
 
+
+typedef struct s_image
+{
+    void *img;
+    int *addr;
+    int bits_per_pixel;
+    int line_length;
+    int endian;
+    int width;
+    int height;
+}   t_image;
 // int expande_size = 10;
 
 typedef struct s_info
@@ -85,6 +98,7 @@ typedef struct s_map
     t_game game;
     t_info info;
     t_player player_t;
+    t_image image;
 }       t_map;
 
 
