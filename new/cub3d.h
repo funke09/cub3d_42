@@ -14,7 +14,7 @@
 #include <mlx.h>
 #include "libft/libft.h"
 #include <stdbool.h>
-#define TILE_SIZE 50
+#define TILE_SIZE 42
 # define MAX_X 2560
 # define MAX_Y 1440
 # define UP 126

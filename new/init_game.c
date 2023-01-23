@@ -310,7 +310,6 @@ int is_wall(t_map *map, float x, float y)
     int i;
     int j;
 
-
     if((int)x < 0 || (int)x > map->game.width || (int)y < 0 || (int)y > map->game.height)
         return (1);
     i = (int)y / TILE_SIZE;
@@ -318,7 +317,7 @@ int is_wall(t_map *map, float x, float y)
     if(i >= (int)ft_strlen(map->map[j]))
         return (1);
     if (map->map[(int)i][(int)j] == '1')
-        return (1);
+            return (1);
     return (0);
 }
 
@@ -587,17 +586,18 @@ int DDA(t_map *map, t_rays *ray)
 
 int draw_rays(t_map *map)
 {
-    t_rays ray;
+    t_rays *ray;
     int i;
 
     i = 0;
-    ray.ray_angle = to_rad(map->player_t.rot_angle - (map->rays.fov / 2));
+    ray = &map->rays;
+    ray->ray_angle = to_rad(map->player_t.rot_angle - (map->rays.fov / 2));
     while (i < map->rays.ray_num)
     {
-        update_rayes(ray.ray_angle, &ray);
-        DDA(map, &ray);
-        draw_line(&ray, map, i, ray.ray_angle);
-        ray.ray_angle += to_rad(ray.ray_angle + (map->rays.fov / map->rays.ray_num));
+        update_rayes(ray->ray_angle, ray);
+        DDA(map, ray);
+        // draw_line(&ray, map, i, ray.ray_angle);
+        // ray.ray_angle += to_rad(ray.ray_angle + (map->rays.fov / map->rays.ray_num));
         i++;
     }
     return (0);
