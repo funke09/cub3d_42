@@ -14,7 +14,7 @@
 #include <mlx.h>
 #include "libft/libft.h"
 #include <stdbool.h>
-#define TILE_SIZE 32
+#define TILE_SIZE 50
 # define MAX_X 2560
 # define MAX_Y 1440
 # define UP 126
@@ -48,6 +48,39 @@ typedef struct s_image
     int height;
 }   t_image;
 // int expande_size = 10;
+
+typedef struct s_rays
+{
+    float ray_angle;
+    float fov;
+    float fov_m;
+    float fov_x;
+    int ray_num;
+    
+    float distance;
+    float strip_width;
+    int is_ray_facing_down;
+    int is_ray_facing_left;
+    float d_p_p;
+
+    float hor_x;
+    float hor_y;
+    float ver_x;
+    float ver_y;
+    float wall_hit_x;
+    float wall_hit_y;
+
+    int hor_wall;
+    int ver_wall;
+    int v_hit;
+
+
+
+    float h_step_x;
+    float h_step_y;
+    float v_step_x;
+    float v_step_y;
+}   t_rays;
 
 typedef struct s_info
 {
@@ -99,6 +132,7 @@ typedef struct s_map
     t_info info;
     t_player player_t;
     t_image image;
+    t_rays rays;
 }       t_map;
 
 

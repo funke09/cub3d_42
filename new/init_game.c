@@ -79,6 +79,7 @@ int alpha(char c)
         return(180);
     else if(c == 'E')
         return(0);
+    return (0);
 }
 void get_x_y(t_info *info, t_player *player, char **tmp)
 {
@@ -158,34 +159,51 @@ int ft_texture(t_map *map)
     return (0);
 }
 
-int abs(int n) { return ((n > 0) ? n : (n * (-1))); }
+void rays_init(t_map *map)
+{
+    map->rays.fov = 60 * (M_PI / 180);
+    map->rays.strip_width = 1;
+    map->rays.ray_num = map->game.width / map->rays.strip_width;
+    map->rays.fov_m = 2 * M_PI - (map->rays.fov / 2);
+    map->rays.fov_x = (map->rays.fov / 2);
+    map->rays.d_p_p = (map->game.width / 2) / tan(map->rays.fov / 2);
+}
+
+int abs(int n) 
+{
+    if(n < 0)
+        return (-n);
+    return (n);
+}
  
 // DDA Function for line generation
-void DDA(int X0, int Y0, int X1, int Y1)
-{
-    // calculate dx & dy
-    int dx = X1 - X0;
-    int dy = Y1 - Y0;
+// void DDA(int X0, int Y0, int X1, int Y1)
+// {
+//     // calculate dx & dy
+//     int dx = X1 - X0;
+//     int dy = Y1 - Y0;
  
-    // calculate steps required for generating pixels
-    int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+//     // calculate steps required for generating pixels
+//     int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
  
-    // calculate increment in x & y for each steps
-    float Xinc = dx / (float)steps;
-    float Yinc = dy / (float)steps;
+//     // calculate increment in x & y for each steps
+//     float Xinc = dx / (float)steps;
+//     float Yinc = dy / (float)steps;
  
-    // Put pixel for each step
-    float X = X0;
-    float Y = Y0;
-    for (int i = 0; i <= steps; i++) {
-        mlx_pixel_put(round(X), round(Y),
-                 RED); // put pixel at (X,Y)
-        X += Xinc; // increment in x at each step
-        Y += Yinc; // increment in y at each step
-        delay(100); // for visualization of line-
-                    // generation step by step
-    }
-}
+//     // Put pixel for each step
+//     float X = X0;
+//     float Y = Y0;
+//     for (int i = 0; i <= steps; i++) {
+//         mlx_pixel_put(round(X), round(Y),
+//                  RED); // put pixel at (X,Y)
+//         X += Xinc; // increment in x at each step
+//         Y += Yinc; // increment in y at each step
+//         delay(100); // for visualization of line-
+//                     // generation step by step
+//     }
+// }
+
+
 
 bool player(t_map *map, float i, float j)
 {
@@ -276,13 +294,323 @@ void ft_draw(t_map *map)
     }
 
 */
+/* to prevent the angle in radians to turn negative or above 2PI */
+float to_rad(float num)
+{
+    if(num >= (2 * M_PI))
+        return (num - (2 * M_PI));
+    else if(num < 0)
+        return (num + (2 * M_PI));
+    else
+        return (num);
+}
+
+int is_wall(t_map *map, float x, float y)
+{
+    int i;
+    int j;
+
+
+    if((int)x < 0 || (int)x > map->game.width || (int)y < 0 || (int)y > map->game.height)
+        return (1);
+    i = (int)y / TILE_SIZE;
+    j = (int)x / TILE_SIZE;
+    if(i >= (int)ft_strlen(map->map[j]))
+        return (1);
+    if (map->map[(int)i][(int)j] == '1')
+        return (1);
+    return (0);
+}
+
+void get_new_pos(t_map *map)
+{
+    float step;
+    float new_x;
+    float new_y;
+    float angle;
+
+    if(map->player_t.walk_direction == 0)
+        return;
+    angle = map->player_t.rot_angle;
+    if(map->player_t.walk_direction == 'w')
+        angle = to_rad(angle);
+    else if(map->player_t.walk_direction == 's')
+        angle = to_rad(angle + M_PI);
+    else if(map->player_t.walk_direction == 'a')
+        angle = to_rad(angle - M_PI_2);
+    else if(map->player_t.walk_direction == 'd')
+        angle = to_rad(angle + M_PI_2);
+    step = map->player_t.move_speed * TILE_SIZE;
+    new_x = map->player_t.p_x + (cos(angle) * step);
+    new_y = map->player_t.p_y + (sin(angle) * step);
+    if(!is_wall(map, new_x, new_y))
+    {
+        map->player_t.p_x = new_x;
+        map->player_t.p_y = new_y;
+    }
+    
+}
+
+void movement_init(t_map *map)
+{
+    if(map->player_t.turn_direction == 0)
+        return;
+    map->player_t.rot_angle = to_rad(map->player_t.rot_angle +
+     (map->player_t.turn_direction * map->player_t.move_speed));
+    get_new_pos(map);
+}
+
+
+int update_rayes(float angle, t_rays *ray)
+{
+    ray->wall_hit_x = 0;
+    ray->wall_hit_y = 0;
+    ray->v_hit = 0;
+    ray->hor_wall = 0;
+    ray->ver_wall = 0;
+    ray->hor_x = 0;
+    ray->hor_y = 0;
+    ray->ver_x = 0;
+    ray->ver_y = 0;
+    if(angle > 0 && angle < M_PI)
+        ray->is_ray_facing_down = 1;
+    else
+        ray->is_ray_facing_down = 0;
+    if(angle > M_PI_2 || angle < (3 * M_PI_2))
+        ray->is_ray_facing_left = 1;
+    else
+        ray->is_ray_facing_left = 0;
+    return (0);
+
+}
+
+int H_interstep(t_rays *ray, t_map *map, float *x, float *y)
+{
+   float y_intercept;
+    float x_intercept;
+
+    y_intercept = floor(map->player_t.p_y / TILE_SIZE) * TILE_SIZE;
+    if(ray->is_ray_facing_down)
+        y_intercept += TILE_SIZE;
+    x_intercept = map->player_t.p_x + (y_intercept - map->player_t.p_y) / tan(ray->ray_angle);
+    ray->h_step_y = TILE_SIZE;
+    if(!ray->is_ray_facing_down)
+        ray->h_step_y *= -1;
+    ray->h_step_x = TILE_SIZE / tan(ray->ray_angle);
+    if(ray->is_ray_facing_left && ray->h_step_x > 0)
+        ray->h_step_x *= -1;
+    if(!ray->is_ray_facing_left && ray->h_step_x < 0)
+        ray->h_step_x *= -1;
+    *x = x_intercept;
+    *y = y_intercept;
+    return (0);
+}
+
+int hor_up(t_rays *ray, t_map *map, float *x, float *y)
+{
+    if(!ray->is_ray_facing_down)
+    {
+        while(*y >= 0 && *y <= map->game.height && *x >= 0 && *x <= map->game.width)
+        {
+            if(is_wall(map, *x, *y - 1))
+            {
+                ray->hor_wall = 1;
+                ray->hor_x = *x;
+                ray->hor_y = *y;
+                break;
+            }
+            else
+            {
+                *x += ray->h_step_x;
+                *y += ray->h_step_y;
+            }
+        }
+    }
+    return (0);
+}
+
+int hor_down(t_rays *ray, t_map *map, float *x, float *y)
+{
+    if(ray->is_ray_facing_down)
+    {
+        while(*y >= 0 && *y <= map->game.height && *x >= 0 && *x <= map->game.width)
+        {
+            if(is_wall(map, *x, *y + 1))
+            {
+                ray->hor_wall = 1;
+                ray->hor_x = *x;
+                ray->hor_y = *y;
+                return (0);
+            }
+            else
+            {
+                *x += ray->h_step_x;
+                *y += ray->h_step_y;
+            }
+        }
+    }
+    return (0);
+}
+
+int V_interstep(t_rays *ray, t_map *map, float *x, float *y)
+{
+    float y_intercept;
+    float x_intercept;
+
+    x_intercept = floor(map->player_t.p_x / TILE_SIZE) * TILE_SIZE;
+    if(!ray->is_ray_facing_left)
+        x_intercept += TILE_SIZE;
+    y_intercept = map->player_t.p_y + (x_intercept - map->player_t.p_x) * tan(ray->ray_angle);
+    ray->v_step_x = TILE_SIZE;
+    if(!ray->is_ray_facing_left)
+        ray->v_step_x *= -1;
+    ray->v_step_y = TILE_SIZE * tan(ray->ray_angle);
+    if(ray->is_ray_facing_down && ray->v_step_y > 0)
+        ray->v_step_y *= -1;
+    if(!ray->is_ray_facing_down && ray->v_step_y < 0)
+        ray->v_step_y *= -1;
+    *x = x_intercept;
+    *y = y_intercept;
+    return (0);
+}
+
+int ver_right(t_rays *ray, t_map *map, float *x, float *y)
+{
+    if(!ray->is_ray_facing_left)
+    {
+        while(*y >= 0 && *y <= map->game.height && *x >= 0 && *x <= map->game.width)
+        {
+            if(is_wall(map, *x + 1, *y))
+            {
+                ray->ver_wall = 1;
+                ray->ver_x = *x;
+                ray->ver_y = *y;
+                return(0);
+            }
+            else
+            {
+                *x += ray->v_step_x;
+                *y += ray->v_step_y;
+            }
+        }
+    }
+    return (0);
+}
+
+int ver_left(t_rays *ray, t_map *map, float *x, float *y)
+{
+    if(ray->is_ray_facing_left)
+    {
+        while(*y >= 0 && *y <= map->game.height && *x >= 0 && *x <= map->game.width)
+        {
+            if(is_wall(map, *x - 1, *y))
+            {
+                ray->ver_wall = 1;
+                ray->ver_x = *x;
+                ray->ver_y = *y;
+                break;
+            }
+            else
+            {
+                *x += ray->v_step_x;
+                *y += ray->v_step_y;
+            }
+        }
+    }
+    return (0);
+}
+
+int horz_check(t_map *map, t_rays *ray)
+{
+    float x;
+    float y;
+
+    H_interstep(ray, map, &x, &y);
+    hor_up(ray, map, &x, &y);
+    hor_down(ray, map, &x, &y);
+    return (0);
+}
+
+
+int vert_check(t_map *map, t_rays *ray)
+{
+    float x;
+    float y;
+
+    V_interstep(ray, map, &x, &y);
+    ver_left(ray, map, &x, &y);
+    ver_right(ray, map, &x, &y);
+    return (0);
+}
+
+float distance(float x1, float y1, float x2, float y2)
+{
+    return (sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2)));
+}
+
+void horz_vertic_check(t_map *map, t_rays *ray, float *h_d, float *v_d)
+{
+    if(ray->hor_wall)
+        *h_d = distance(map->player_t.p_x, map->player_t.p_y, ray->hor_x, ray->hor_y);
+    else
+        *h_d = INT_MAX;
+    if(ray->ver_wall)
+        *v_d = distance(map->player_t.p_x, map->player_t.p_y, ray->ver_x, ray->ver_y);
+    else
+        *v_d = INT_MAX;
+    if(*h_d < *v_d)
+    {
+        ray->wall_hit_x = ray->hor_x;
+        ray->wall_hit_y = ray->hor_y;
+        ray->distance = *h_d;
+        ray->v_hit = 0;
+    }
+    else
+    {
+        ray->wall_hit_x = ray->ver_x;
+        ray->wall_hit_y = ray->ver_y;
+        ray->distance = *v_d;
+        ray->v_hit = 1;
+    }
+}
+
+int DDA(t_map *map, t_rays *ray)
+{
+    float hor_D;
+    float ver_D;
+
+    horz_check(map, ray);
+    vert_check(map, ray);
+    horz_vertic_check(map, ray, &hor_D, &ver_D);
+    return (0);
+}
+
+int draw_rays(t_map *map)
+{
+    t_rays ray;
+    int i;
+
+    i = 0;
+    ray.ray_angle = to_rad(map->player_t.rot_angle - (map->rays.fov / 2));
+    while (i < map->rays.ray_num)
+    {
+        update_rayes(ray.ray_angle, &ray);
+        DDA(map, &ray);
+        draw_line(&ray, map, i, ray.ray_angle);
+        ray.ray_angle += to_rad(ray.ray_angle + (map->rays.fov / map->rays.ray_num));
+        i++;
+    }
+    return (0);
+}
 
 void init_start(t_map *map)
 {
     ft_window(map);
     ft_map(map);
     ft_player(map);
-    ft_draw(map);
+    rays_init(map);
+    // ft_draw(map);
+    // mlx_hook(map->game.window, 2, 1L<<0, deal_key, map);
     /*
     ft_check (map)    send rays
 
@@ -351,6 +679,9 @@ int init_game(t_map *map)
     mlx_hook(map->game.window, 2, 1L << 0, &key_press, map);
     mlx_hook(map->game.window, 3, 1L << 1, &key_release, map);
     mlx_hook(map->game.window, 17, 1L << 17, &close_key, map);
+    movement_init(map);
+    draw_rays(map);
+    ft_draw(map);
     mlx_loop(map->game.mlx);
     return (1);
 }
