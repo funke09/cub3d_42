@@ -584,6 +584,110 @@ int DDA(t_map *map, t_rays *ray)
     return (0);
 }
 
+void		draw_line(t_rays *ray, t_map *a, int col_id, double ray_angle)
+{
+	//yjarhbou
+	ft_prepare_3d_line(ray, ray_angle, a, col_id);
+	line3d(ray, a, ray->text_wallhit);
+}
+
+void		line3d(t_rays *ray, t_map *a)
+{
+	double		remain_pixels;
+	double		pixelx;
+	double		pixely;
+	int			texx;
+	int			texy;
+
+	pixelx = a->line_3d.start_x;
+	pixely = a->line_3d.start_y;
+	texy = 0;
+	texx = bitmap_offset(ray, a);
+	remain_pixels = a->line_3d.pixels;
+	while (remain_pixels > 0)
+	{
+		a->img_3d.addr[((int)pixely * (int)a->win.win_w + (int)pixelx)] =
+		a->notext.imgt.addr[(int)texy *
+		(int)a->notext.imgt.width + (int)texx];
+		pixelx += a->line_3d.deltax;
+		pixely += a->line_3d.deltay;
+		texy = ((pixely - a->line_3d.start_y) *
+		a->notext.imgt.width) / a->line_3d.pixels;
+		--remain_pixels;
+	}
+}
+
+int		bitmap_offset(t_rays *ray, t_map *a)
+{
+	//here!! yjarhbou
+	double	ray_x;
+	double	ray_y;
+	double	remainder;
+	int		offset;
+
+	ray_x = ray->wall_hit_x / a->map.tile_size;
+	ray_y = ray->wall_hit_y / a->map.tile_size;
+	if (ray->v_hit)
+	{
+		remainder = ray_y - floor(ray_y);
+		offset = (ray->text_wallhit.imgt.width - 1) * remainder;
+	}
+	else
+	{
+		remainder = ray_x - floor(ray_x);
+		offset = (ray->text_wallhit.imgt.width - 1) * remainder;
+	}
+	return (offset);
+}
+
+void		ft_prepare_3d_line(t_ray *rays, double ray_angle, t_adata *a, int col_id)
+{
+	//yjarhbou
+	double		line_height;
+	double		nofish_dist;
+
+	nofish_dist = (ray->distance / a->map.tile_size) *
+	cos(ray_angle - a->joe.rotangle);
+	line_height = a->ray.distprojplane / nofish_dist;
+	a->line_3d.start_x = col_id;
+	a->line_3d.start_y = (a->win.win_h / 2) - (line_height / 2);
+	if (a->line_3d.start_y < 0)
+		a->line_3d.start_y = 0;
+	a->line_3d.end_x = col_id;
+	a->line_3d.end_y = (a->win.win_h / 2) + (line_height / 2);
+	if (a->line_3d.end_y >= a->win.win_h)
+		a->line_3d.end_y = a->win.win_h - 1.0;
+	a->line_3d.deltax = a->line_3d.end_x - a->line_3d.start_x;
+	a->line_3d.deltay = a->line_3d.end_y - a->line_3d.start_y;
+	a->line_3d.pixels = sqrt(pow(a->line_3d.deltax, 2) +
+	pow(a->line_3d.deltay, 2));
+	a->line_3d.deltax /= a->line_3d.pixels;
+	a->line_3d.deltay /= a->line_3d.pixels;
+	find_text_wallhit(ray_angle, ray, a);
+}
+
+void		find_text_wallhit(double ray_angle, t_rays *ray, t_map *a)
+{
+	if (ray->v_hit)
+	{
+		//yjarhbou to radien
+		if (to_rad(ray_angle) > M_PI_2 &&
+		to_rad(ray_angle) < (3 * M_PI_2))
+			ray->text_wallhit = a->wetext;
+		else
+			ray->text_wallhit = a->eatext;
+	}
+	else
+	{
+		if (to_rad(ray_angle) > M_PI &&
+		to_rad(ray_angle) < 2 * M_PI)
+			ray->text_wallhit = a->notext;
+		else
+			ray->text_wallhit = a->sotext;
+	}
+	
+}
+
 int draw_rays(t_map *map)
 {
     t_rays *ray;
@@ -596,8 +700,8 @@ int draw_rays(t_map *map)
     {
         update_rayes(ray->ray_angle, ray);
         DDA(map, ray);
-        // draw_line(&ray, map, i, ray.ray_angle);
-        // ray.ray_angle += to_rad(ray.ray_angle + (map->rays.fov / map->rays.ray_num));
+         draw_line(&ray, map, i, ray.ray_angle); // yjarhbou
+        // ray.ray_angle += to_rad(ray.ray_angle + (map->rays.fov / map->rays.ray_num));//yjarhou
         i++;
     }
     return (0);

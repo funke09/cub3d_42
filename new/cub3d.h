@@ -74,7 +74,7 @@ typedef struct s_rays
     int ver_wall;
     int v_hit;
 
-
+    t_text	text_wallhit;
 
     float h_step_x;
     float h_step_y;
@@ -106,6 +106,24 @@ typedef struct	s_player
 	float		move_speed;
 	float		rot_speed;
 }				t_player;
+
+
+typedef struct	s_text
+{
+	char		*text_name;
+	t_image		imgt;
+}				t_text;
+
+typedef struct	s_image
+{
+	void	*ptr;
+	int		*addr;
+	int		pixel_bits;
+	int		line_bytes;
+	int		endian;
+	int		width;
+	int		height;
+}				t_image;
 
 typedef struct s_map
 {
