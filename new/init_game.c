@@ -603,20 +603,101 @@ int draw_rays(t_map *map)
     return (0);
 }
 
+int ft_draw_map(t_map *map, int w, int h)
+{
+    int x;
+    int y;
+
+    x = w / TILE_SIZE;
+    y = h / TILE_SIZE;
+    if(x >= (int)ft_strlen(map->map[y]))
+        return (0);
+    else if(map->map[y][x] == '1')
+        map->image3d.addr[h * map->game.width + w] = 0xa0ea68;
+    else if(map->map[y][x] == '2' || map->map[y][x] == '0' || map->map[y][x] == 'N' 
+    || map->map[y][x] == 'S' || map->map[y][x] == 'E' || map->map[y][x] == 'W')
+        map->image3d.addr[h * map->game.width + w] = 0xd1c3a3;
+    else
+        return (0);
+    return (1);
+
+}
+
+int circle(t_map *map, int w, int h)
+{
+    if(sqrt(pow(map->player_t.p_x - w, 2) + pow(map->player_t.p_y - h, 2)) <= map->player_t.radius)
+        map->image3d.addr[h * map->game.width + w] = 0xc923bb;
+    return (0);
+}
+
+int ft_initline(t_map *map)
+{
+    map->line.x_s = map->player_t.p_x;
+    map->line.y_s = map->player_t.p_y;
+    map->line.x_e = map->player_t.p_x + (cos(map->player_t.rot_angle) * TILE_SIZE);
+    map->line.y_e = map->player_t.p_y + (sin(map->player_t.rot_angle) * TILE_SIZE);
+    map->line.dx = map->line.x_e - map->line.x_s;
+    map->line.dy = map->line.y_e - map->line.y_s;
+    map->line.pixl = sqrt(pow(map->line.dx, 2) + pow(map->line.dy, 2));
+    map->line.dx = map->line.dx / map->line.pixl;
+    map->line.dy = map->line.dy / map->line.pixl;
+    map->line.color = 0x754371;
+    return (0);
+}
+
+int the_line(t_line line, t_map *map)
+{
+    float x;
+    float y;
+    int i;
+
+    x = line.x_s;
+    y = line.y_s;
+    i = 0;
+    while (i < line.pixl)
+    {
+        map->image3d.addr[(int)y * map->game.width + (int)x] = line.color;
+        x += line.dx;
+        y += line.dy;
+        i++;
+    }
+    return (0);
+}
+
+void draw_the_map(int(*f)(t_map *, int , int), t_map *map)
+{
+    int w;
+    int h;
+
+    h = 0;
+    while (h < map->game.height)
+    {
+        w = 0;
+        while (w < map->game.width)
+        {
+            f(map, w, h);
+            w++;
+        }
+        h++;
+    }
+}
+
+int draw_map(t_map *map)
+{
+    draw_the_map(&ft_draw_map, map);
+    draw_circle(&circle, map);
+    ft_initline(map);
+    the_line(map->line, map);
+
+}
+
 void init_start(t_map *map)
 {
     ft_window(map);
     ft_map(map);
     ft_player(map);
     rays_init(map);
-    // ft_draw(map);
-    // mlx_hook(map->game.window, 2, 1L<<0, deal_key, map);
-    /*
-    ft_check (map)    send rays
 
-    */
-    // ft_sprite(map);
-    // ft_texture(map);
 }
 int close_window(t_map *map)
 {
@@ -672,6 +753,16 @@ int close_key(t_map *map)
 }
 
 
+int ft_check(t_map *map)
+{
+    movement_init(map);
+    draw_rays(map);
+    ft_draw(map);
+    draw_map(map);
+    mlx_put_image_to_window(map->game.mlx, map->game.window, map->image3d.img, 0, 0);
+    return (0);
+}
+
 int init_game(t_map *map)
 {
     init_start(map);
@@ -679,69 +770,11 @@ int init_game(t_map *map)
     mlx_hook(map->game.window, 2, 1L << 0, &key_press, map);
     mlx_hook(map->game.window, 3, 1L << 1, &key_release, map);
     mlx_hook(map->game.window, 17, 1L << 17, &close_key, map);
-    movement_init(map);
-    draw_rays(map);
-    ft_draw(map);
+    mlx_loop_hook(map->game.mlx, &ft_check, map);
     mlx_loop(map->game.mlx);
     return (1);
 }
 
-void expande_row(char **new_row, char c, int expandsize, int l, int yy)
-{
-    int i;
-    int j;
-    int x;
-    int y;
-
-    y = yy;
-    j = l;
-    x = -1;
-    i = -1;
-    while (++i < expandsize)
-    {
-        while (++x < expandsize)
-        {
-            new_row[yy++][j++] = c;
-        }
-        x = -1;
-    }
-}
-
-
-//expand every element from the given matrix with given size
-char **expande_map(char **map,int width, int height, int expandsize)
-{
-    int i;
-    int j;
-    int k;
-    int l;
-    char **new_map;
-
-    new_map = malloc(sizeof(char *) * (height * expandsize));
-    if(!new_map)
-        return (NULL);
-    i = -1;
-    j = -1;
-    k = 0;
-    l = 0;
-     while (++i < height)
-     {
-        new_map[i] = malloc(sizeof(char) * (width * expandsize));
-        if(!new_map[i])
-            return (NULL);// exit
-          while (++j < width)
-          {
-               expande_row(&new_map[k], map[i][j], expandsize, l, k);
-                l = l + expandsize;
-                k = k + expandsize;
-            }
-          j = -1;
-          
-     }
-     return (new_map);
-        //showarray(new_map);
-
-}
 
 void showarray(char **map)
 {

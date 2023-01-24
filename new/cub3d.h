@@ -95,6 +95,19 @@ typedef struct s_info
 
 }   t_info;
 
+
+typedef struct s_line
+{
+    float x_s;
+    float y_s;
+    int color;
+    float x_e;
+    float y_e;
+    float pixl;
+    float dx;
+    float dy;
+}   t_line;
+
 typedef struct	s_player
 {
 	float		p_x;
@@ -132,7 +145,9 @@ typedef struct s_map
     t_info info;
     t_player player_t;
     t_image image;
+    t_image image3d;
     t_rays rays;
+    t_line line;
 }       t_map;
 
 
