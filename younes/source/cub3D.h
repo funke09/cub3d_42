@@ -17,7 +17,7 @@
 # define KEY_AROW_R	124
 # define KEY_AROW_L	123
 # define KEY_	2
-
+//yjarhbou
 typedef struct s_map
 {
 	char **map;
