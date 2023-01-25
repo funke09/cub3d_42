@@ -34,6 +34,7 @@ void ft_fill_data(t_map *data, char *file)
         if (line[0] != '\n' && len < 6)
         {
             len++;
+            line[ft_strlen(line) - 1] = 0;
             ft_fill_info(data, line);
         }
         free(line);
