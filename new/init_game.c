@@ -39,18 +39,6 @@ int ft_count_cols(char **map)
     return (len);
 }
 
-int tilsize(t_map *map)
-{
-   int x;
-   int y;
-
-    x = (map->game.width / map->info.cols / 3);
-    y = (map->game.height / map->info.rows / 3);
-    if (x < y)
-        return (x);
-    else
-        return (y);
-}
 // for player position 
 /*
 
@@ -97,10 +85,10 @@ void get_x_y(t_info *info, t_player *player, char **tmp)
         {
             if (tmp[i][j] == 'N' || tmp[i][j] == 'S' || tmp[i][j] == 'W' || tmp[i][j] == 'E')
             {
-                player->p_x = ((float)j + 0.5)* TILE_SIZE;
-                player->p_y = ((float)i + 0.5)* TILE_SIZE;
-                printf("player->p_x = %f\n", player->p_x);
-                printf("player->p_y = %f\n", player->p_y);
+                player->p_x = ((float)j + 0.5)* info->tile_size;
+                player->p_y = ((float)i + 0.5)* info->tile_size;
+                // printf("player->p_x = %f\n", player->p_x);
+                // printf("player->p_y = %f\n", player->p_y);
                 // printf("tmp[i][j] = %c\n", tmp[i][j]);
                 player->rot_angle = rotation(tmp[i][j]);
                 player->radius = alpha(tmp[i][j]);
@@ -123,41 +111,37 @@ void ft_player(t_map *map)
 
 }
 
+float tilsize(t_map *map)
+{
+    int x;
+    int y;
+
+    x = (int)((map->res_x / map->info.cols) / 3);
+    y = (int)((map->res_y / map->info.rows) / 3);
+    if(x < y)
+        return((float)x);
+    else
+        return((float)y);
+}
+
 void ft_map(t_map *map)
 {
     map->info.full_map = map->map;
     map->info.rows = ft_count_rows(map->info.full_map);
     map->info.cols = ft_count_cols(map->info.full_map);
-    // map->info.tile_size = 20;
+    map->info.tile_size = tilsize(map);
     map->info.width_map = map->info.tile_size * map->info.cols;
     map->info.height_map = map->info.tile_size * map->info.rows;
-//    map->info.full_map = expande_map(map->map, map->info.cols, map->info.rows, map->info.tile_size);
+//    map->info.full_map = expande_map(map->map, map->info.cols, map->info.rows, map->info.map->info.tile_size);
     // printf("rows = %d\n", map->info.rows);
     // printf("cols = %d\n", map->info.cols);
     // printf("width = %d\n", map->info.width_map);
     // printf("height = %d\n", map->info.height_map);
-    // printf("tile_size = %d\n", map->info.tile_size);
+    // printf("map->info.tile_size = %d\n", map->info.map->info.tile_size);
     // showarray(map->info.full_map);
     
 }
 
-int init_texture(t_map *map, t_image *image, char *path)
-{
-    image->img = mlx_xpm_file_to_image(map->game.mlx, path, &image->width, &image->height);
-    // printf("image->img = %p\n", image->img);
-    image->addr =(int *) mlx_get_data_addr(image->img, &image->bits_per_pixel, &image->line_length, &image->endian);
-    // printf("image->addr = %p\n", image->addr);
-    return (0);
-}
-
-int ft_texture(t_map *map)
-{
-    init_texture(map, &map->image, map->no);
-    init_texture(map, &map->image, map->so);
-    init_texture(map, &map->image, map->we);
-    init_texture(map, &map->image, map->ea);
-    return (0);
-}
 
 void rays_init(t_map *map)
 {
@@ -212,10 +196,10 @@ bool player(t_map *map, float i, float j)
     float x1;
     float y1;
 
-    x1 = map->player_t.p_x / TILE_SIZE;
-    y1 = map->player_t.p_y / TILE_SIZE;
-    x = i / TILE_SIZE;
-    y = j / TILE_SIZE;
+    x1 = map->player_t.p_x / map->info.tile_size;
+    y1 = map->player_t.p_y / map->info.tile_size;
+    x = i / map->info.tile_size;
+    y = j / map->info.tile_size;
     return((x-x1) * (x-x1) + (y-y1) * (y-y1) <= 0.16 * 0.16);
 }
 
@@ -225,10 +209,10 @@ void print_square(t_map *map, int x, int y, int color)
     int j = y;
 
 
-    while (i < x + TILE_SIZE - 1)
+    while (i < x + map->info.tile_size - 1)
     {
         j = y;
-        while (j < y + TILE_SIZE - 1)
+        while (j < y + map->info.tile_size - 1)
         {
             if(player(map, i, j))
             {
@@ -249,13 +233,13 @@ void draw_square(t_map *map, char c, int x, int y)
 
     i = 0;
     if (c == '1')
-        print_square(map, x * TILE_SIZE, y * TILE_SIZE, 0x00FF00);
+        print_square(map, x * map->info.tile_size, y * map->info.tile_size, 0x00FF00);
     else if (c == '0' || c == 'N' || c == 'S' || c == 'W' || c == 'E')
-        print_square(map, x * TILE_SIZE, y * TILE_SIZE, 0x0000FF);
+        print_square(map, x * map->info.tile_size, y * map->info.tile_size, 0x0000FF);
     else if (c == ' ')
-       print_square(map, x * TILE_SIZE, y * TILE_SIZE, 0x0FFFF0); 
+       print_square(map, x * map->info.tile_size, y * map->info.tile_size, 0x0FFFF0); 
     // else if (player(map, x, y))
-    //     print_square(map, x * TILE_SIZE, y * TILE_SIZE, 0x00FF00);
+    //     print_square(map, x * map->info.tile_size, y * map->info.tile_size, 0x00FF00);
 }
 
 void ft_draw(t_map *map)
@@ -264,8 +248,8 @@ void ft_draw(t_map *map)
     int j;
 
     i = 0;
-    printf("p_x = %f\n", map->player_t.p_x);
-    printf("p_y = %f\n", map->player_t.p_y);
+    // printf("p_x = %f\n", map->player_t.p_x);
+    // printf("p_y = %f\n", map->player_t.p_y);
     while(map->map[i])
     {
         j = 0;
@@ -298,11 +282,10 @@ void ft_draw(t_map *map)
 float to_rad(float num)
 {
     if(num >= (2 * M_PI))
-        return (num - (2 * M_PI));
-    else if(num < 0)
-        return (num + (2 * M_PI));
-    else
-        return (num);
+        num -= (2 * M_PI);
+    if(num < 0)
+        num += (2 * M_PI);
+    return (num);
 }
 
 int is_wall(t_map *map, float x, float y)
@@ -310,13 +293,13 @@ int is_wall(t_map *map, float x, float y)
     int i;
     int j;
 
-    if((int)x < 0 || (int)x > map->game.width || (int)y < 0 || (int)y > map->game.height)
+    if((int)x < 0 || (int)x > map->info.width_map || (int)y < 0 || (int)y > map->info.height_map)
         return (1);
-    i = (int)y / TILE_SIZE;
-    j = (int)x / TILE_SIZE;
-    if(i >= (int)ft_strlen(map->map[j]))
+    i = (int)y / map->info.tile_size;
+    j = (int)x / map->info.tile_size;
+    if(i >= (int)ft_strlen(map->info.full_map[j]))
         return (1);
-    if (map->map[(int)i][(int)j] == '1')
+    if (map->info.full_map[(int)i][(int)j] == '1')
             return (1);
     return (0);
 }
@@ -339,7 +322,7 @@ void get_new_pos(t_map *map)
         angle = to_rad(angle - M_PI_2);
     else if(map->player_t.walk_direction == 'd')
         angle = to_rad(angle + M_PI_2);
-    step = map->player_t.move_speed * TILE_SIZE;
+    step = map->player_t.move_speed * map->info.tile_size;
     new_x = map->player_t.p_x + (cos(angle) * step);
     new_y = map->player_t.p_y + (sin(angle) * step);
     if(!is_wall(map, new_x, new_y))
@@ -388,14 +371,14 @@ int H_interstep(t_rays *ray, t_map *map, float *x, float *y)
    float y_intercept;
     float x_intercept;
 
-    y_intercept = floor(map->player_t.p_y / TILE_SIZE) * TILE_SIZE;
+    y_intercept = floor(map->player_t.p_y / map->info.tile_size) * map->info.tile_size;
     if(ray->is_ray_facing_down)
-        y_intercept += TILE_SIZE;
+        y_intercept += map->info.tile_size;
     x_intercept = map->player_t.p_x + (y_intercept - map->player_t.p_y) / tan(ray->ray_angle);
-    ray->h_step_y = TILE_SIZE;
+    ray->h_step_y = map->info.tile_size;
     if(!ray->is_ray_facing_down)
         ray->h_step_y *= -1;
-    ray->h_step_x = TILE_SIZE / tan(ray->ray_angle);
+    ray->h_step_x = map->info.tile_size / tan(ray->ray_angle);
     if(ray->is_ray_facing_left && ray->h_step_x > 0)
         ray->h_step_x *= -1;
     if(!ray->is_ray_facing_left && ray->h_step_x < 0)
@@ -409,7 +392,7 @@ int hor_up(t_rays *ray, t_map *map, float *x, float *y)
 {
     if(!ray->is_ray_facing_down)
     {
-        while(*y >= 0 && *y <= map->game.height && *x >= 0 && *x <= map->game.width)
+        while(*y >= 0 && *y <= map->info.height_map && *x >= 0 && *x <= map->info.width_map)
         {
             if(is_wall(map, *x, *y - 1))
             {
@@ -432,7 +415,7 @@ int hor_down(t_rays *ray, t_map *map, float *x, float *y)
 {
     if(ray->is_ray_facing_down)
     {
-        while(*y >= 0 && *y <= map->game.height && *x >= 0 && *x <= map->game.width)
+        while((*y) >= 0 && (*y) <= map->info.height_map && (*x) >= 0 && (*x) <= map->info.width_map)
         {
             if(is_wall(map, *x, *y + 1))
             {
@@ -456,14 +439,14 @@ int V_interstep(t_rays *ray, t_map *map, float *x, float *y)
     float y_intercept;
     float x_intercept;
 
-    x_intercept = floor(map->player_t.p_x / TILE_SIZE) * TILE_SIZE;
+    x_intercept = floor(map->player_t.p_x / map->info.tile_size) * map->info.tile_size;
     if(!ray->is_ray_facing_left)
-        x_intercept += TILE_SIZE;
+        x_intercept += map->info.tile_size;
     y_intercept = map->player_t.p_y + (x_intercept - map->player_t.p_x) * tan(ray->ray_angle);
-    ray->v_step_x = TILE_SIZE;
+    ray->v_step_x = map->info.tile_size;
     if(!ray->is_ray_facing_left)
         ray->v_step_x *= -1;
-    ray->v_step_y = TILE_SIZE * tan(ray->ray_angle);
+    ray->v_step_y = map->info.tile_size * tan(ray->ray_angle);
     if(ray->is_ray_facing_down && ray->v_step_y > 0)
         ray->v_step_y *= -1;
     if(!ray->is_ray_facing_down && ray->v_step_y < 0)
@@ -477,7 +460,7 @@ int ver_right(t_rays *ray, t_map *map, float *x, float *y)
 {
     if(!ray->is_ray_facing_left)
     {
-        while(*y >= 0 && *y <= map->game.height && *x >= 0 && *x <= map->game.width)
+        while((*y) >= 0 && (*y) <= map->info.height_map - 1 && (*x) >= 0 && (*x) <= map->info.width_map - 1)
         {
             if(is_wall(map, *x + 1, *y))
             {
@@ -500,7 +483,7 @@ int ver_left(t_rays *ray, t_map *map, float *x, float *y)
 {
     if(ray->is_ray_facing_left)
     {
-        while(*y >= 0 && *y <= map->game.height && *x >= 0 && *x <= map->game.width)
+        while(*y >= 0 && *y <= map->info.height_map && *x >= 0 && *x <= map->info.width_map)
         {
             if(is_wall(map, *x - 1, *y))
             {
@@ -584,49 +567,38 @@ int DDA(t_map *map, t_rays *ray)
     return (0);
 }
 
-void		draw_line(t_rays *ray, t_map *a, int col_id, double ray_angle)
+void		find_text_wallhit(float ray_angle, t_rays *ray, t_map *map)
 {
-	//yjarhbou
-	ft_prepare_3d_line(ray, ray_angle, a, col_id);
-	line3d(ray, a, ray->text_wallhit);
-}
-
-void		line3d(t_rays *ray, t_map *a)
-{
-	double		remain_pixels;
-	double		pixelx;
-	double		pixely;
-	int			texx;
-	int			texy;
-
-	pixelx = a->line_3d.start_x;
-	pixely = a->line_3d.start_y;
-	texy = 0;
-	texx = bitmap_offset(ray, a);
-	remain_pixels = a->line_3d.pixels;
-	while (remain_pixels > 0)
+	if (ray->v_hit)
 	{
-		a->img_3d.addr[((int)pixely * (int)a->win.win_w + (int)pixelx)] =
-		a->notext.imgt.addr[(int)texy *
-		(int)a->notext.imgt.width + (int)texx];
-		pixelx += a->line_3d.deltax;
-		pixely += a->line_3d.deltay;
-		texy = ((pixely - a->line_3d.start_y) *
-		a->notext.imgt.width) / a->line_3d.pixels;
-		--remain_pixels;
+		//yjarhbou to radien
+		if (to_rad(ray_angle) > M_PI_2 &&
+		to_rad(ray_angle) < (3 * M_PI_2))
+			ray->text_wallhit = map->west;
+		else
+			ray->text_wallhit = map->eath;
 	}
+	else
+	{
+		if (to_rad(ray_angle) > M_PI &&
+		to_rad(ray_angle) < 2 * M_PI)
+			ray->text_wallhit = map->north;
+		else
+			ray->text_wallhit = map->south;
+	}
+	
 }
 
-int		bitmap_offset(t_rays *ray, t_map *a)
+int		bitmap_offset(t_rays *ray, t_map *map)
 {
 	//here!! yjarhbou
-	double	ray_x;
-	double	ray_y;
-	double	remainder;
+	float	ray_x;
+	float	ray_y;
+	float	remainder;
 	int		offset;
 
-	ray_x = ray->wall_hit_x / a->map.tile_size;
-	ray_y = ray->wall_hit_y / a->map.tile_size;
+	ray_x = ray->wall_hit_x / map->info.tile_size;
+	ray_y = ray->wall_hit_y / map->info.tile_size;
 	if (ray->v_hit)
 	{
 		remainder = ray_y - floor(ray_y);
@@ -640,68 +612,85 @@ int		bitmap_offset(t_rays *ray, t_map *a)
 	return (offset);
 }
 
-void		ft_prepare_3d_line(t_ray *rays, double ray_angle, t_adata *a, int col_id)
+void		_3d_line(t_rays *ray, float ray_angle, t_map *map, int i)
 {
 	//yjarhbou
-	double		line_height;
-	double		nofish_dist;
+	float		height;
+	float		dist;
 
-	nofish_dist = (ray->distance / a->map.tile_size) *
-	cos(ray_angle - a->joe.rotangle);
-	line_height = a->ray.distprojplane / nofish_dist;
-	a->line_3d.start_x = col_id;
-	a->line_3d.start_y = (a->win.win_h / 2) - (line_height / 2);
-	if (a->line_3d.start_y < 0)
-		a->line_3d.start_y = 0;
-	a->line_3d.end_x = col_id;
-	a->line_3d.end_y = (a->win.win_h / 2) + (line_height / 2);
-	if (a->line_3d.end_y >= a->win.win_h)
-		a->line_3d.end_y = a->win.win_h - 1.0;
-	a->line_3d.deltax = a->line_3d.end_x - a->line_3d.start_x;
-	a->line_3d.deltay = a->line_3d.end_y - a->line_3d.start_y;
-	a->line_3d.pixels = sqrt(pow(a->line_3d.deltax, 2) +
-	pow(a->line_3d.deltay, 2));
-	a->line_3d.deltax /= a->line_3d.pixels;
-	a->line_3d.deltay /= a->line_3d.pixels;
-	find_text_wallhit(ray_angle, ray, a);
+	dist = (ray->distance / map->info.tile_size) * cos(ray_angle - map->player_t.rot_angle);
+	height = map->rays.d_p_p / dist;
+	map->line_3d.x_s = i;
+	map->line_3d.y_s = (map->game.width / 2) - (height / 2);
+	if (map->line_3d.y_s < 0)
+		map->line_3d.y_s = 0;
+	map->line_3d.x_e = i;
+	map->line_3d.y_e = (map->game.width / 2) + (height / 2);
+	if (map->line_3d.y_e >= map->game.width)
+		map->line_3d.y_e = map->game.width - 1.0;
+	map->line_3d.dx = map->line_3d.x_e - map->line_3d.x_s;
+	map->line_3d.dy = map->line_3d.y_e - map->line_3d.y_s;
+	map->line_3d.pixl = sqrt(pow(map->line_3d.dx, 2) + pow(map->line_3d.dy, 2));
+	map->line_3d.dx /= map->line_3d.pixl;
+	map->line_3d.dy /= map->line_3d.pixl;
+	find_text_wallhit(ray_angle, ray, map);
 }
 
-void		find_text_wallhit(double ray_angle, t_rays *ray, t_map *a)
+
+
+void		line3d(t_rays *ray, t_map *map, t_text text)
 {
-	if (ray->v_hit)
+	float pixl;
+    float p_x;
+    float p_y;
+    float t_x;
+    float t_y;
+
+    p_x = map->line_3d.x_s;
+	p_y = map->line_3d.y_s;
+    // printf("p_x = %f\n", p_x);
+    // printf("p_y = %f\n", p_y);
+	t_y = 0;
+	t_x = bitmap_offset(ray, map);
+	pixl = map->line_3d.pixl;
+	while (pixl > 0)
 	{
-		//yjarhbou to radien
-		if (to_rad(ray_angle) > M_PI_2 &&
-		to_rad(ray_angle) < (3 * M_PI_2))
-			ray->text_wallhit = a->wetext;
-		else
-			ray->text_wallhit = a->eatext;
+		if (t_y == text.imgt.width)
+			t_y = text.imgt.width - 1;
+        // printf("t_y == %f\n", t_y);
+        // printf("text.imgt.width   = %d\n", text.imgt.width );
+        // printf("RRR == %d\n", (int)t_y * (int)text.imgt.width + (int)t_x);
+		map->image3d.addr[((int)p_y * (int)map->game.width + (int)p_x)] = text.imgt.addr[(int)t_y * (int)text.imgt.width + (int)t_x];
+		p_x += map->line_3d.dx;
+		p_y += map->line_3d.dy;
+		t_y = ((p_y - map->line_3d.y_s) *
+		text.imgt.width) / map->line_3d.pixl;
+		--pixl;
 	}
-	else
-	{
-		if (to_rad(ray_angle) > M_PI &&
-		to_rad(ray_angle) < 2 * M_PI)
-			ray->text_wallhit = a->notext;
-		else
-			ray->text_wallhit = a->sotext;
-	}
-	
+
 }
+
+void		draw_line(t_rays *ray, t_map *map, int i, float angle)
+{
+	//yjarhbou
+	_3d_line(ray, angle, map, i);
+	// line3d(ray, map, ray->text_wallhit);
+}
+
 
 int draw_rays(t_map *map)
 {
-    t_rays *ray;
+    t_rays ray;
     int i;
 
     i = 0;
-    ray = &map->rays;
-    ray->ray_angle = to_rad(map->player_t.rot_angle - (map->rays.fov / 2));
+    ray.ray_angle = to_rad(map->player_t.rot_angle - (map->rays.fov / 2));
     while (i < map->rays.ray_num)
     {
-        update_rayes(ray->ray_angle, ray);
-        DDA(map, ray);
-         draw_line(&ray, map, i, ray.ray_angle); // yjarhbou
-        // ray.ray_angle += to_rad(ray.ray_angle + (map->rays.fov / map->rays.ray_num));//yjarhou
+        update_rayes(ray.ray_angle, &ray);
+        DDA(map, &ray);
+        draw_line(&ray, map, i, ray.ray_angle); // yjarhbou
+        ray.ray_angle += to_rad(ray.ray_angle + (map->rays.fov / map->rays.ray_num));//yjarhou
         i++;
     }
     return (0);
@@ -712,15 +701,16 @@ int ft_draw_map(t_map *map, int w, int h)
     int x;
     int y;
 
-    x = w / TILE_SIZE;
-    y = h / TILE_SIZE;
+    x = (int)w / map->info.tile_size;
+    y = (int)h / map->info.tile_size;
+    //printf("x = %d, len = %d\n", x, (int)ft_strlen(map->map[y]));
     if(x >= (int)ft_strlen(map->map[y]))
         return (0);
     else if(map->map[y][x] == '1')
-        map->image3d.addr[h * map->game.width + w] = 0xa0ea68;
+        map->image3d.addr[(int)(h * (int)map->game.width + w)] = 0xa0ea68;
     else if(map->map[y][x] == '2' || map->map[y][x] == '0' || map->map[y][x] == 'N' 
     || map->map[y][x] == 'S' || map->map[y][x] == 'E' || map->map[y][x] == 'W')
-        map->image3d.addr[h * map->game.width + w] = 0xd1c3a3;
+        map->image3d.addr[(int)(h * (int)map->game.width + w)] = 0xd1c3a3;
     else
         return (0);
     return (1);
@@ -730,7 +720,7 @@ int ft_draw_map(t_map *map, int w, int h)
 int circle(t_map *map, int w, int h)
 {
     if(sqrt(pow(map->player_t.p_x - w, 2) + pow(map->player_t.p_y - h, 2)) <= map->player_t.radius)
-        map->image3d.addr[h * map->game.width + w] = 0xc923bb;
+        map->image3d.addr[h * (int)map->game.width + w] = 0xc923bb;
     return (0);
 }
 
@@ -738,8 +728,8 @@ int ft_initline(t_map *map)
 {
     map->line.x_s = map->player_t.p_x;
     map->line.y_s = map->player_t.p_y;
-    map->line.x_e = map->player_t.p_x + (cos(map->player_t.rot_angle) * TILE_SIZE);
-    map->line.y_e = map->player_t.p_y + (sin(map->player_t.rot_angle) * TILE_SIZE);
+    map->line.x_e = map->player_t.p_x + (cos(map->player_t.rot_angle) * map->info.tile_size);
+    map->line.y_e = map->player_t.p_y + (sin(map->player_t.rot_angle) * map->info.tile_size);
     map->line.dx = map->line.x_e - map->line.x_s;
     map->line.dy = map->line.y_e - map->line.y_s;
     map->line.pixl = sqrt(pow(map->line.dx, 2) + pow(map->line.dy, 2));
@@ -760,7 +750,7 @@ int the_line(t_line line, t_map *map)
     i = 0;
     while (i < line.pixl)
     {
-        map->image3d.addr[(int)y * map->game.width + (int)x] = line.color;
+        map->image3d.addr[(int)y * (int)map->game.width + (int)x] = line.color;
         x += line.dx;
         y += line.dy;
         i++;
@@ -768,7 +758,7 @@ int the_line(t_line line, t_map *map)
     return (0);
 }
 
-void draw_the_map(int(*f)(t_map *, int , int), t_map *map)
+void drawing(int(*f)(t_map *, int , int), t_map *map)
 {
     int w;
     int h;
@@ -786,10 +776,24 @@ void draw_the_map(int(*f)(t_map *, int , int), t_map *map)
     }
 }
 
-int draw_map(t_map *map)
+void ft_textur(t_map *map, t_image *image, char *path)
 {
-    draw_the_map(&ft_draw_map, map);
-    draw_circle(&circle, map);
+    image->img = mlx_xpm_file_to_image(map->game.mlx, path, &image->width, &image->height);
+    image->addr = (int *)mlx_get_data_addr(image->img, &image->bits_per_pixel, &image->line_length, &image->endian);
+}
+
+void init_texture(t_map *map)
+{
+    ft_textur(map, &map->north.imgt, map->no);
+    ft_textur(map, &map->south.imgt, map->so);
+    ft_textur(map, &map->west.imgt, map->we);
+    ft_textur(map, &map->eath.imgt, map->ea);
+}
+
+void draw_map(t_map *map)
+{
+    drawing(&ft_draw_map, map);
+    drawing(&circle, map);
     ft_initline(map);
     the_line(map->line, map);
 
@@ -800,6 +804,7 @@ void init_start(t_map *map)
     ft_window(map);
     ft_map(map);
     ft_player(map);
+    init_texture(map);
     rays_init(map);
 
 }
@@ -856,14 +861,30 @@ int close_key(t_map *map)
     return (0);
 }
 
+int		destroy(t_map *map, t_image *img)
+{
+	mlx_destroy_image(map->game.mlx, img->img);
+	img->img = 0;
+	img->addr = 0;
+	return (0);
+}
+
+void init_3d(t_map *map)
+{
+    map->image3d.img = mlx_new_image(map->game.mlx, map->game.width, map->game.height);
+    map->image3d.addr = (int *)mlx_get_data_addr(map->image3d.img, &map->image3d.bits_per_pixel, &map->image3d.line_length, &map->image3d.endian);
+}
+
 
 int ft_check(t_map *map)
 {
+    init_3d(map);
     movement_init(map);
     draw_rays(map);
-    ft_draw(map);
-    draw_map(map);
+     //draw_map(map);
+    // ft_draw(map);
     mlx_put_image_to_window(map->game.mlx, map->game.window, map->image3d.img, 0, 0);
+    destroy(map, &map->image3d);
     return (0);
 }
 

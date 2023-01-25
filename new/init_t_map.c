@@ -57,7 +57,7 @@ void init_map(t_map *map)
     map->tmp[1] = 0;
     map->map = NULL;
     map->no = NULL;
-    map->so = NULL;
+    map->so= NULL;
     map->we = NULL;
     map->ea = NULL;
     map->sprite = NULL;
