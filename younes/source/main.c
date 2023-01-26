@@ -149,12 +149,13 @@ int main(int ac, char **av)
 		data.obj_map = &obj_map;
 		data.obj_img = &obj_img;
 		data.obj_plyr = &obj_plyr;
+		// data.tile_size = tilesize()
         data.mlx_ptr = mlx_init();
         ft_map_init(av[1], &data);
         h = data.obj_map->map_height * COLUMN_SIZE;
         w = data.obj_map->map_width * COLUMN_SIZE;
 		printf("this h = %d and w = %d\n", h / COLUMN_SIZE, w / COLUMN_SIZE);
-        data.win_ptr = mlx_new_window(data.mlx_ptr, w, h, "Free Fire");
+        data.win_ptr = mlx_new_window(data.mlx_ptr, w, h, "cube3D");
 		
 		ft_drawer_init(&data);
 		ft_render_map(&data);

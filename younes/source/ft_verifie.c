@@ -47,6 +47,8 @@ static int identifier(char *str, char *info)
     int nbr;
 
     i = 0;
+    if(!str || !info)
+        return (0);
     if (!ft_strcmp(str, "NO") || !ft_strcmp(str, "SO") ||
         !ft_strcmp(str, "WE") || !ft_strcmp(str, "EA") ||
         !ft_strcmp(str, "F") || !ft_strcmp(str, "C"))
@@ -60,6 +62,8 @@ static int identifier(char *str, char *info)
         split = ft_split(info, ',');
         while (ft_len_split(split) == 3 && i != -1 && split[i])
         {
+            if (split[i][0] == '\n')
+                return(0);
             nbr  = ft_atoi(split[i]);
             if (nbr > 255 || nbr < 0)
                 i = -2;
@@ -93,6 +97,8 @@ static int ft_information(char *file)
             split = ft_split(line, ' ');
             if (ft_len_split(split) == 2 || (ft_len_split(split) == 3 && split[ft_len_split(split) - 1][0] == '\n'))
                 re = 1;
+            if(!split || !split[0] || !split[1] || split[1][0] == '\n')
+                return(printf("Error\nError info\n"), 0);
             re = re * identifier(split[0], split[1]);
             ft_free_split(split);
             len++;

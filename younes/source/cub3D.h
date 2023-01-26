@@ -3,9 +3,10 @@
 # define CUB3D_H
 
 # include "mlx.h"
-# include "./get_next_line/get_next_line.h"
 # include "./libft/libft.h"
 # include <math.h>
+# include <fcntl.h>
+# include <stdio.h>
 
 # define COLUMN_SIZE	50
 
@@ -61,6 +62,7 @@ typedef struct s_data
 	t_map		*obj_map;
 	t_player	*obj_plyr;
 	t_img		*obj_img;
+	float tile_size;
 } t_data;
 
 void	ft_maloc_error(void *var);
