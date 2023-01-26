@@ -53,6 +53,31 @@ void ft_map_dimensions(char *map_path, t_data *data)
     close(fd);
 }
 
+char	*ft_strdup_cub3D(char *s1, int row_len)
+{
+	int		i;
+	char	*pdst;
+	int		end;
+
+	i = 0;
+	end = 0;
+	pdst = malloc(sizeof(char) * (row_len + 1));
+	if (pdst == NULL)
+		return (NULL);
+	while (i < row_len)
+	{
+		if (end == 0 && s1[i] != '\0' && s1[i] != '\n')
+			pdst[i] = s1[i];
+		else
+			end = 1;
+		if (end == 1)
+			pdst[i] = ' ';
+		i++;
+	}
+	pdst[i] = '\0';
+	return (pdst);
+}
+
 // this function for convert the map file to 2D char array
 void ft_fill_map(char *map_path, t_map *obj_map)
 {

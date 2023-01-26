@@ -5,14 +5,14 @@ BONUS = cub3D_bonus
 # madatory
 SRC_FOLDER = ./source/
 SRC = main.c error.c map.c map_check.c ft_verifie_utils.c ft_verifie.c fill_data.c draw.c
-SRCS = $(addprefix $(SRC_FOLDER), $(SRC))ZZZZ2ZZZWWZZ
+SRCS = $(addprefix $(SRC_FOLDER), $(SRC))
 SRCOBJ = ${SRCS:.c=.o}
 
-GET_NEXT_LINE_FOLDER = ./src/get_next_line/
+GET_NEXT_LINE_FOLDER = ./source/get_next_line/
 GET_NEXT_LINE_FILES = get_next_line.c get_next_line_utils.c
 SRCS_GET_NEXT_LINE = $(addprefix $(GET_NEXT_LINE_FOLDER), $(GET_NEXT_LINE_FILES))
 
-LIBFT_FOLDER = ./src/libft/
+LIBFT_FOLDER = ./source/libft/
 LIBFT_FILES =	ft_isdigit.c ft_memset.c ft_strjoin.c ft_strtrim.c ft_isprint.c\
 					ft_putchar_fd.c ft_strlcat.c ft_substr.c ft_itoa.c ft_atoi.c ft_putendl_fd.c\
 					ft_strlcpy.c ft_tolower.c ft_bzero.c  ft_putnbr_fd.c ft_strlen.c\
@@ -24,9 +24,9 @@ SRCS_LIBFT = $(addprefix $(LIBFT_FOLDER), $(LIBFT_FILES))
 OTHER_SRCS = $(SRCS_FT_PRINTF) $(SRCS_GET_NEXT_LINE) $(SRCS_LIBFT)
 OTHER_OBJ = ${OTHER_SRCS:.c=.o}
 
-LIBS = ./src/get_next_line.a ./src/libft.a
+LIBS = ./source/get_next_line/get_next_line.a ./source/libft/libft.a
 
-INCLUDES = ./src/cub3D.h ./src/ft_printf/ft_printf.h ./src/get_next_line/get_next_line.h ./src/libft/libft.h ./src/bonus/cub3D_bonus.h
+INCLUDES = ./source/cub3D.h ./source/ft_printf/ft_printf.h ./source/get_next_line/get_next_line.h ./source/libft/libft.h ./source/bonus/cub3D_bonus.h
 
 # -g for the debugger
 FLAGS = -Wall -Wextra -Werror -g

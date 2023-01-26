@@ -1,7 +1,7 @@
-NO ./assets/textures/no1.xpm
-SO ./assets/textures/so1.xpm
-WE ./assets/textures/we1.xpm
-EA ./assets/textures/ea1.xpm
+NO ./assets/textures/creeper.xpm
+SO ./assets/textures/greystone.xpm
+WE ./assets/textures/wood.xpm
+EA ./assets/textures/redbrick.xpm
 
 
 
@@ -12,6 +12,7 @@ EA ./assets/textures/ea1.xpm
 111110000000000001
 100000111111111111
 1111111
+
 
 
 
