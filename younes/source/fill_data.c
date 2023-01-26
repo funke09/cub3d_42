@@ -1,4 +1,5 @@
 
+
 #include "cub3D.h"
 
 static void ft_fill_info(t_map *data, char *line)

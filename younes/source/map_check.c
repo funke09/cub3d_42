@@ -1,4 +1,5 @@
 
+
 #include "cub3D.h"
 
 // this function for get the player position and check if there is more than one player.

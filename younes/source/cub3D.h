@@ -5,8 +5,8 @@
 # include "mlx.h"
 # include "./libft/libft.h"
 # include <math.h>
-# include <fcntl.h>
 # include <stdio.h>
+# include <fcntl.h>
 
 # define COLUMN_SIZE	50
 
@@ -42,9 +42,13 @@ typedef struct s_player
 	float	radius;
 	float	turn_direction;
 	float	walk_direction;
-	float rotation_angle;
-	float move_speed;
-	float rotation_speed;
+	float	rotation_angle;
+	float	move_speed;
+	float	rotation_speed;
+
+	float	fov_angle;
+	float	rays_width;
+	float	rays_num;
 } t_player;
 
 typedef struct s_img
@@ -62,7 +66,6 @@ typedef struct s_data
 	t_map		*obj_map;
 	t_player	*obj_plyr;
 	t_img		*obj_img;
-	float tile_size;
 } t_data;
 
 void	ft_maloc_error(void *var);
@@ -72,6 +75,10 @@ void	ft_check_characters(t_map *obj_map);
 void	ft_check_walls(t_map *obj_map);
 void	ft_drawer_init(t_data *data);
 void	ft_render_map(t_data *data);
+void	ft_draw_square(int y, int x, int size, t_data *data);
+void	ft_render_player(t_data *data);
+void	ft_update(t_data *data, int key);
+void ft_render_rays(t_data *data);
 
 int		ft_verifie(char *file);
 int		ft_strcmp(char *s1, char *s2);
