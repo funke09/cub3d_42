@@ -1,4 +1,5 @@
 
+
 #include "cub3D.h"
 
 void ft_draw_square(int y, int x, int size, t_data *data)
