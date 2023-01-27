@@ -8,7 +8,7 @@
 # include <stdio.h>
 # include <fcntl.h>
 
-# define COLUMN_SIZE	50
+# define COLUMN_SIZE 50
 
 # define KEY_ESC	53
 # define KEY_W	13
@@ -47,8 +47,9 @@ typedef struct s_player
 	float	rotation_speed;
 
 	float	fov_angle;
-	float	rays_width;
+	float	wall_strip_width;
 	float	rays_num;
+	float	minimap_scale_factor;
 } t_player;
 
 typedef struct s_img
@@ -61,11 +62,17 @@ typedef struct s_img
 
 typedef struct s_data
 {
+	void	*img;
 	void		*mlx_ptr;
 	void		*win_ptr;
 	t_map		*obj_map;
 	t_player	*obj_plyr;
 	t_img		*obj_img;
+
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
 } t_data;
 
 void	ft_maloc_error(void *var);
@@ -73,12 +80,21 @@ void	ft_map_init(char *map_path, t_data *data);
 void	ft_map_errors(t_map *obj_map, int error_num);
 void	ft_check_characters(t_map *obj_map);
 void	ft_check_walls(t_map *obj_map);
-void	ft_drawer_init(t_data *data);
+void	ft_imgs_init(t_data *data);
 void	ft_render_map(t_data *data);
 void	ft_draw_square(int y, int x, int size, t_data *data);
 void	ft_render_player(t_data *data);
 void	ft_update(t_data *data, int key);
-void ft_render_rays(t_data *data);
+void	ft_render_rays(t_data *data);
+int		ft_is_in_wall(int new_x, int new_y, t_data *data);
+float		ft_horizontal_intersection(t_data *data, float ray_angle);
+float		ft_vertical_intersection(t_data *data, float ray_angle);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void    ft_render(t_data *data, int key);
+void    ft_draw_one_ray(t_data *data, float ray_angle, int size);
+void	my_mlx_pixel_put2(t_data *data, int x, int y, int color);
+void ft_draw_rectangle(int y, int x, int h, int w,t_data *data);
+void	ft_clear_window(t_data *data);
 
 int		ft_verifie(char *file);
 int		ft_strcmp(char *s1, char *s2);

@@ -78,7 +78,6 @@ char	*ft_strdup_cub3D(char *s1, int row_len)
 	return (pdst);
 }
 
-
 // this function for convert the map file to 2D char array
 void ft_fill_map(char *map_path, t_map *obj_map)
 {
@@ -129,6 +128,6 @@ void ft_map_init(char *map_path, t_data *data)
     ft_check_walls(data->obj_map);
     ft_print_map(data->obj_map->map);
     ft_fill_data(data->obj_map, map_path);
-    data->obj_plyr->x = data->obj_map->plyr_x;
-    data->obj_plyr->y = data->obj_map->plyr_y;
+    data->obj_plyr->x = data->obj_map->plyr_x * COLUMN_SIZE;
+    data->obj_plyr->y = data->obj_map->plyr_y * COLUMN_SIZE;
 }

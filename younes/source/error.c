@@ -1,4 +1,5 @@
 
+
 #include "cub3D.h"
 
 void ft_maloc_error(void *var)
