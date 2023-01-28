@@ -1,5 +1,3 @@
-
-
 #include "cub3D.h"
 
 // this function draw the player on the map
@@ -18,7 +16,7 @@ void ft_render_player(t_data *data)
 	while (++i < player_size)
 	{
 		ft_draw_square(y, x, COLUMN_SIZE / 5, data);
-		my_mlx_pixel_put(data, x + cos(data->obj_plyr->rotation_angle) * i,  y + sin(data->obj_plyr->rotation_angle) * i, 0x00FF0000);
+		my_mlx_pixel_put(data, x + cos(data->obj_plyr->rotation_angle) * i,  y + sin(data->obj_plyr->rotation_angle) * i, 0xf0ef11);
 	}
 }
 

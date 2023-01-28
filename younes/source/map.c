@@ -1,4 +1,3 @@
-
 #include "cub3D.h"
 
 char    *ft_go_to_map_line(int fd)

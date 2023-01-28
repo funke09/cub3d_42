@@ -1,5 +1,3 @@
-
-
 #include "cub3D.h"
 
 int	ft_exit_handler(void *n_data)
@@ -66,29 +64,27 @@ int main(int ac, char **av)
 		obj_plyr.turn_direction = 0; // -1 if left , +1 if right
 		obj_plyr.walk_direction = 0; // -1 if back , +1 if front
 		obj_plyr.rotation_angle = M_PI / 2;
-		obj_plyr.move_speed = 20;
-		obj_plyr.rotation_speed = 10 * (M_PI / 180);
+		obj_plyr.move_speed = 5;
+		obj_plyr.rotation_speed = 4 * (M_PI / 180);
 		obj_plyr.fov_angle = 60 * (M_PI / 180);
-		obj_plyr.wall_strip_width = 1;
+		obj_plyr.wall_strip_width = 0.1;
 		obj_plyr.rays_num = (data.obj_map->map_width) / obj_plyr.wall_strip_width;
 		obj_plyr.minimap_scale_factor = 0.2;
 		
         h = data.obj_map->map_height * COLUMN_SIZE;
         w = data.obj_map->map_width * COLUMN_SIZE;
 		printf("this h = %d and w = %d\n", h / COLUMN_SIZE, w / COLUMN_SIZE);
-        data.win_ptr = mlx_new_window(data.mlx_ptr, w, h, "cub3D");
+        data.win_ptr = mlx_new_window(data.mlx_ptr, w, h, "cube3D");
 		data.img = mlx_new_image(data.mlx_ptr, 1920, 1080);
 		data.addr = mlx_get_data_addr(data.img, &data.bits_per_pixel, &data.line_length, &data.endian);
 		
 		ft_imgs_init(&data);
-		ft_render_map(&data);
-		ft_render_rays(&data);
-		ft_render_player(&data);
+		ft_render(&data, 999999);
 		mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, data.img, 0, 0);
 		mlx_hook(data.win_ptr, 02, 0, ft_key_handler, &data);
 		mlx_hook(data.win_ptr, 17, 0, ft_exit_handler, &data);
 		mlx_loop(data.mlx_ptr);
     }
     else
-        printf("==> Please enter : ./cub3D [assets/maps/map_name.cub]\n");
+        printf("==> usage : ./cub3D [map_name.cub]\n");
 }

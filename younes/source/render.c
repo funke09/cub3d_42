@@ -1,4 +1,3 @@
-
 #include "cub3D.h"
 
 // this function initialize the images
@@ -34,20 +33,24 @@ void	ft_render_map(t_data *data)
 		while (++x < data->obj_map->map_width * COLUMN_SIZE)
 		{
 			if (ft_is_in_wall(x, y, data) == 1)
-				my_mlx_pixel_put(data, x, y, 0x808050);
+				my_mlx_pixel_put(data, x, y, 0x3c5299);
 			else
-				my_mlx_pixel_put(data, x, y, 0xffffff);
+				my_mlx_pixel_put(data, x, y, 0xa577a5);
 			if (x % COLUMN_SIZE == 0 || y % COLUMN_SIZE == 0)
-				my_mlx_pixel_put(data, x, y, 0x808050);
+				my_mlx_pixel_put(data, x, y, 0x666603);
 		}
 	}
 }
 
 // this function render the game elements
+// Note: 
+// you will find the function ft_render_map() that render the map 
+// in the ft_render_rays() ==> ft_cast_rays()
 void    ft_render(t_data *data, int key)
 {
     ft_update(data, key);
-	ft_render_map(data);
+	ft_project_walls(data);
+    ft_render_map(data);
 	ft_render_rays(data);
 	ft_render_player(data);
 }

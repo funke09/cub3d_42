@@ -1,5 +1,3 @@
-
-
 #include "cub3D.h"
 
 typedef struct s_var
