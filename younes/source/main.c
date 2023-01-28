@@ -66,8 +66,8 @@ int main(int ac, char **av)
 		obj_plyr.turn_direction = 0; // -1 if left , +1 if right
 		obj_plyr.walk_direction = 0; // -1 if back , +1 if front
 		obj_plyr.rotation_angle = M_PI / 2;
-		obj_plyr.move_speed = 5;
-		obj_plyr.rotation_speed = 4 * (M_PI / 180);
+		obj_plyr.move_speed = 20;
+		obj_plyr.rotation_speed = 10 * (M_PI / 180);
 		obj_plyr.fov_angle = 60 * (M_PI / 180);
 		obj_plyr.wall_strip_width = 1;
 		obj_plyr.rays_num = (data.obj_map->map_width) / obj_plyr.wall_strip_width;
