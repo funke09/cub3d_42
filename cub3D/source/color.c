@@ -77,7 +77,13 @@ int	ft_get_color(char *color, int rgb)
 	int		i;
 
 	s_rgb = ft_split(color, ',');
+	//printf("size = %d\nrgb = %d\n", i, rgb);
 	rgb_value = 0;
+	if(!s_rgb[0] || !s_rgb[1] || !s_rgb[2])
+	{
+			printf("Error\nInvalid color\n");
+			exit(0);
+	}
 	if (!s_rgb)
 		return (0);
 	if (rgb == 1)

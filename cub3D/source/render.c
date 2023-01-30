@@ -56,6 +56,7 @@ int	ft_get_position_color(t_data *data, int x, int y, int map_size)
 	return (0xffffff);
 }
 
+
 // this function render the minimap
 void	ft_render_minimap(t_data *data)
 {

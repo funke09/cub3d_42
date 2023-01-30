@@ -17,7 +17,11 @@ void	ft_plyr_init(t_player *obj_plyr, t_data *data)
 	obj_plyr->rays_num = (data->fix_w / COLUMN_SIZE) \
 		/ obj_plyr->wall_strip_width;
 	obj_plyr->minimap_scale_factor = 0.2;
-	obj_plyr->minimap_size = 1000;
+	// obj_plyr->minimap_size = 0;
+	if (data->obj_map->map_width > data->obj_map->map_height)
+		obj_plyr->minimap_size = data->fix_w * obj_plyr->minimap_scale_factor;
+	else
+		obj_plyr->minimap_size = data->fix_h * obj_plyr->minimap_scale_factor;
 	obj_plyr->player_size = 30;
 }
 
@@ -26,7 +30,7 @@ void	ft_data_init(t_data *data)
 {
 	data->mlx_ptr = mlx_init();
 	data->win_ptr = \
-		mlx_new_window(data->mlx_ptr, data->fix_w, data->fix_h, "Free Fire");
+		mlx_new_window(data->mlx_ptr, data->fix_w, data->fix_h, "cub3D");
 	data->img = mlx_new_image(data->mlx_ptr, data->fix_w, data->fix_h);
 	data->img_data = mlx_get_data_addr(data->img, &data->bits_per_pixel, \
 	&data->line_length, &data->endian);

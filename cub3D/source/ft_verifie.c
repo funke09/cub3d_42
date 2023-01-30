@@ -28,6 +28,8 @@ static	int	identifier(char *str, char *info)
 	int		nbr;
 
 	i = 0;
+	if(!str || !info)
+		return (0);
 	if (!ft_is_flag(str))
 		return (0);
 	if (!ft_strcmp(str, "F") || !ft_strcmp(str, "C"))

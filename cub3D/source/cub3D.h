@@ -8,7 +8,7 @@
 # include <stdio.h>
 # include <fcntl.h>
 
-# define COLUMN_SIZE 50
+# define COLUMN_SIZE 60
 # define TEX_WIDTH 50
 # define TEX_HEIGHT 50
 

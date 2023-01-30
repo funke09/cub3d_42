@@ -36,7 +36,7 @@ int	ft_is_gbr_valid(char *str)
 	{
 		if ((str[i] >= '0' && str[i] <= '9') || str[i] == ',')
 		{
-			if (str[i] == ',' && str[i + 1] == ',')
+			if (str[i] == ',' && (str[i + 1] == ','|| str[i + 1] == '\0'))
 				return (0);
 			i++;
 		}
