@@ -1,53 +1,87 @@
 
 #include "cub3D.h"
 
-// this function initialize the images
-void	ft_imgs_init(t_data *data)
+// this function initialize one texture
+void	ft_textures_init_utile(t_data *data, int txtr_nbr, char *txtr_path)
 {
-	int		s;
 	void	*p;
+	int		s;
+	t_image	*texture;
 
-	s = COLUMN_SIZE;
 	p = data->mlx_ptr;
-	data->obj_img->ea_texture = mlx_xpm_file_to_image(p, data->obj_map->ea_texture_path, &s, &s);
-	data->obj_img->we_texture = mlx_xpm_file_to_image(p, data->obj_map->we_texture_path, &s, &s);
-	data->obj_img->no_texture = mlx_xpm_file_to_image(p, data->obj_map->no_texture_path, &s, &s);
-	data->obj_img->so_texture = mlx_xpm_file_to_image(p, data->obj_map->so_texture_path, &s, &s);
+	texture = (t_image *)malloc(sizeof(t_image));
+	texture->pointer = mlx_xpm_file_to_image(p, txtr_path, &s, &s);
+	if (!texture->pointer)
+	{
+		ft_free_textures(data);
+		ft_map_errors(data, 5);
+	}
+	texture->img_data = mlx_get_data_addr(texture->pointer, \
+	&texture->bits_per_pixel, &texture->line_size, &texture->endian);
+	if (txtr_nbr == 1)
+		data->obj_img->ea_texture = texture;
+	else if (txtr_nbr == 2)
+		data->obj_img->we_texture = texture;
+	else if (txtr_nbr == 3)
+		data->obj_img->no_texture = texture;
+	else if (txtr_nbr == 4)
+		data->obj_img->so_texture = texture;
 }
 
-// this function draws the map
-void	ft_render_map(t_data *data)
+// this function initialize all textures.
+void	ft_textures_init(t_data *data)
+{
+	t_img	*obj_img;
+	t_map	*obj_map;
+
+	obj_img = data->obj_img;
+	obj_map = data->obj_map;
+	ft_textures_init_utile(data, 1, obj_map->ea_texture_path);
+	ft_textures_init_utile(data, 2, obj_map->we_texture_path);
+	ft_textures_init_utile(data, 3, obj_map->no_texture_path);
+	ft_textures_init_utile(data, 4, obj_map->so_texture_path);
+}
+
+// this function helps you redraw the map element on the minimap
+int	ft_get_position_color(t_data *data, int x, int y, int map_size)
+{
+	int	s_y;
+	int	s_x;
+
+	s_y = data->obj_plyr->y - map_size / 2;
+	s_x = data->obj_plyr->x - map_size / 2;
+	if (ft_is_in_wall(s_x + x, s_y + y, data) == 1
+		|| data->obj_map->map[(s_y + y) / 50][(s_x + x) / 50] == ' ')
+		return (0x808080);
+	return (0xffffff);
+}
+
+// this function render the minimap
+void	ft_render_minimap(t_data *data)
 {
 	int		y;
 	int		x;
-	char	**map;
-	t_map	*obj_map;
-	
+	int		map_size;
 
-	obj_map = data->obj_map;
-	map = data->obj_map->map;
-	
+	map_size = data->obj_plyr->minimap_size;
 	y = -1;
-	while (++y < data->obj_map->map_height * COLUMN_SIZE)
+	while (++y < map_size)
 	{
 		x = -1;
-		while (++x < data->obj_map->map_width * COLUMN_SIZE)
+		while (++x < map_size)
 		{
-			if (ft_is_in_wall(x, y, data) == 1)
-				my_mlx_pixel_put(data, x, y, 0x808050);
-			else
-				my_mlx_pixel_put(data, x, y, 0xffffff);
-			if (x % COLUMN_SIZE == 0 || y % COLUMN_SIZE == 0)
-				my_mlx_pixel_put(data, x, y, 0x808050);
+			my_mlx_pixel_put(data, x, y, \
+				ft_get_position_color(data, x, y, map_size));
 		}
 	}
 }
 
 // this function render the game elements
-void    ft_render(t_data *data, int key)
+// Note: 
+// you will find the function ft_render_minimap() that render the map 
+// in the ft_render_rays() ==> ft_cast_rays()
+void	ft_render(t_data *data, int key)
 {
-    ft_update(data, key);
-	ft_render_map(data);
-	ft_render_rays(data);
-	ft_render_player(data);
+	ft_update(data, key);
+	ft_project_walls(data);
 }
