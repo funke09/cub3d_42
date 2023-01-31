@@ -7,11 +7,11 @@ static void	ft_update_plyr(t_data *data, int nbr_plyrs, int x, int y)
 {
 	t_map	*obj_map;
 
-	obj_map = data->obj_map;
+	obj_map = data->map;
 	if (nbr_plyrs > 1)
 		ft_map_errors(data, 2);
-	obj_map->plyr_x = x;
-	obj_map->plyr_y = y;
+	obj_map->x_player = x;
+	obj_map->y_player = y;
 }
 
 static int	ft_check_char(char c)
@@ -61,10 +61,10 @@ void	ft_is_wall_exist(t_data *data, int y, int x)
 	char	**map;
 	t_map	*obj_map;
 
-	obj_map = data->obj_map;
+	obj_map = data->map;
 	map = obj_map->map;
-	if (y == 0 || y == obj_map->map_height - 1
-		|| x == 0 || x == obj_map->map_width - 1
+	if (y == 0 || y == obj_map->height - 1
+		|| x == 0 || x == obj_map->width - 1
 		|| map[y - 1][x] == ' ' || map[y + 1][x] == ' '
 		|| map[y][x - 1] == ' ' || map[y][x + 1] == ' ')
 		ft_map_errors(data, 3);

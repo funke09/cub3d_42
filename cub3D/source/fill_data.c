@@ -9,17 +9,17 @@ static void	ft_fill_info(t_map *data, char *line)
 	if (!split)
 		ft_maloc_error(split);
 	if (!ft_strcmp(split[0], "NO"))
-		data->no_texture_path = ft_strdup(split[1]);
+		data->no_texture = ft_strdup(split[1]);
 	else if (!ft_strcmp(split[0], "SO"))
-		data->so_texture_path = ft_strdup(split[1]);
+		data->so_texture = ft_strdup(split[1]);
 	else if (!ft_strcmp(split[0], "WE"))
-		data->we_texture_path = ft_strdup(split[1]);
+		data->we_texture = ft_strdup(split[1]);
 	else if (!ft_strcmp(split[0], "EA"))
-		data->ea_texture_path = ft_strdup(split[1]);
+		data->ea_texture = ft_strdup(split[1]);
 	else if (!ft_strcmp(split[0], "F"))
-		data->f_color = ft_strdup(split[1]);
+		data->floor_color = ft_strdup(split[1]);
 	else if (!ft_strcmp(split[0], "C"))
-		data->c_color = ft_strdup(split[1]);
+		data->ceil_color = ft_strdup(split[1]);
 	ft_free_split(split);
 }
 

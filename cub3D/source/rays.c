@@ -9,13 +9,13 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	float	scale_factor;
 	int		minimap_end;
 
-	if (y > (data->obj_map->map_height * COLUMN_SIZE)
-		|| x > (data->obj_map->map_width * COLUMN_SIZE))
+	if (y > (data->map->height * TILE_SIZE)
+		|| x > (data->map->width * TILE_SIZE))
 		return ;
-	scale_factor = data->obj_plyr->minimap_scale_factor;
+	scale_factor = data->player->minimap_scale_factor;
 	x_scaled = x * scale_factor;
 	y_scaled = y * scale_factor;
-	minimap_end = (data->obj_plyr->minimap_size - 1) * scale_factor;
+	minimap_end = (data->player->minimap_size - 1) * scale_factor;
 	dst = data->img_data + (y_scaled * data->line_length + x_scaled \
 		* (data->bits_per_pixel / 8));
 	if (x_scaled == 0 || y_scaled == 0 || \
@@ -34,16 +34,16 @@ void	ft_draw_rectangle(int y, int x, t_data *data)
 	int	w;
 	int	h;
 
-	w = (data->obj_plyr->wall_strip_width * COLUMN_SIZE) + x;
-	h = (data->obj_plyr->wall_strip_height * COLUMN_SIZE) + y;
+	w = (data->player->wall_strip_width * TILE_SIZE) + x;
+	h = (data->player->wall_strip_height * TILE_SIZE) + y;
 	y1 = -1;
-	while (++y1 < data->fix_h)
+	while (++y1 < data->real_height)
 	{
 		x1 = x - 1;
 		while (++x1 < w)
 		{
-			if ((y1 < (data->fix_h) && y1 >= 0)
-				&& (x1 < (data->fix_w) && x1 >= 0))
+			if ((y1 < (data->real_height) && y1 >= 0)
+				&& (x1 < (data->real_width) && x1 >= 0))
 			{
 				if (y1 < y)
 					my_mlx_pixel_put2(data, x1, y1, 1);
@@ -66,15 +66,15 @@ void	ft_render_wall(t_data *data, float bad_distnc, int i, float ray_angle)
 	float	y;
 	float	correct_distance;
 
-	correct_distance = cos(ray_angle - data->obj_plyr->rotate_angle) \
+	correct_distance = cos(ray_angle - data->player->rotate_angle) \
 		* bad_distnc;
-	distance_projection_plane = ((data->fix_w / COLUMN_SIZE) / 2) \
-		/ tan(data->obj_plyr->fov_angle / 2);
-	wall_strip_height = (COLUMN_SIZE / correct_distance) \
+	distance_projection_plane = ((data->real_width / TILE_SIZE) / 2) \
+		/ tan(data->player->fov_angle / 2);
+	wall_strip_height = (TILE_SIZE / correct_distance) \
 		* distance_projection_plane * 0.5 ;
-	y = (data->fix_h / 2) - (wall_strip_height / 2) * COLUMN_SIZE;
-	x = i * data->obj_plyr->wall_strip_width * COLUMN_SIZE;
-	data->obj_plyr->wall_strip_height = wall_strip_height;
+	y = (data->real_height / 2) - (wall_strip_height / 2) * TILE_SIZE;
+	x = i * data->player->wall_strip_width * TILE_SIZE;
+	data->player->wall_strip_height = wall_strip_height;
 	ft_draw_rectangle(y, x, data);
 }
 
@@ -83,28 +83,28 @@ void	ft_render_rays(t_data *data)
 {
 	float	ray_angle;
 	int		i;
-	t_var	result;
-	t_var	d1;
-	t_var	d2;
+	t_ray	result;
+	t_ray	d1;
+	t_ray	d2;
 
 	i = -1;
-	ray_angle = data->obj_plyr->rotate_angle - (data->obj_plyr->fov_angle / 2);
+	ray_angle = data->player->rotate_angle - (data->player->fov_angle / 2);
 	ray_angle = ft_normalize_angle(ray_angle);
-	while (++i < data->obj_plyr->rays_num)
+	while (++i < data->player->rays_num)
 	{
-		data->obj_plyr->is_horz_intr = 1;
+		data->player->is_horz_intr = 1;
 		d1 = ft_horizontal_intersection(data, ray_angle);
 		d2 = ft_vertical_intersection(data, ray_angle);
 		if (d1.distance > d2.distance)
 		{
 			result = d2;
-			data->obj_plyr->is_horz_intr = 0;
+			data->player->is_horz_intr = 0;
 		}
 		else
 			result = d1;
 		data->v = result;
 		ft_draw_one_ray(data, ray_angle, result.distance);
-		ray_angle += data->obj_plyr->fov_angle / data->obj_plyr->rays_num;
+		ray_angle += data->player->fov_angle / data->player->rays_num;
 	}
 }
 
@@ -113,27 +113,27 @@ void	ft_project_walls(t_data *data)
 {
 	float	ray_angle;
 	int		i;
-	t_var	result;
-	t_var	d1;
-	t_var	d2;
+	t_ray	result;
+	t_ray	d1;
+	t_ray	d2;
 
 	i = -1;
-	ray_angle = data->obj_plyr->rotate_angle - (data->obj_plyr->fov_angle / 2);
+	ray_angle = data->player->rotate_angle - (data->player->fov_angle / 2);
 	ray_angle = ft_normalize_angle(ray_angle);
-	while (++i < data->obj_plyr->rays_num)
+	while (++i < data->player->rays_num)
 	{
-		data->obj_plyr->is_horz_intr = 1;
+		data->player->is_horz_intr = 1;
 		d1 = ft_horizontal_intersection(data, ray_angle);
 		d2 = ft_vertical_intersection(data, ray_angle);
 		if (d1.distance > d2.distance)
 		{
 			result = d2;
-			data->obj_plyr->is_horz_intr = 0;
+			data->player->is_horz_intr = 0;
 		}
 		else
 			result = d1;
 		data->v = result;
 		ft_render_wall(data, result.distance, i, ray_angle);
-		ray_angle += data->obj_plyr->fov_angle / data->obj_plyr->rays_num;
+		ray_angle += data->player->fov_angle / data->player->rays_num;
 	}
 }

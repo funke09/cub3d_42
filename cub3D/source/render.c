@@ -10,36 +10,36 @@ void	ft_textures_init_utile(t_data *data, int txtr_nbr, char *txtr_path)
 
 	p = data->mlx_ptr;
 	texture = (t_image *)malloc(sizeof(t_image));
-	texture->pointer = mlx_xpm_file_to_image(p, txtr_path, &s, &s);
-	if (!texture->pointer)
+	texture->ptr = mlx_xpm_file_to_image(p, txtr_path, &s, &s);
+	if (!texture->ptr)
 	{
 		ft_free_textures(data);
 		ft_map_errors(data, 5);
 	}
-	texture->img_data = mlx_get_data_addr(texture->pointer, \
+	texture->img_data = mlx_get_data_addr(texture->ptr, \
 	&texture->bits_per_pixel, &texture->line_size, &texture->endian);
 	if (txtr_nbr == 1)
-		data->obj_img->ea_texture = texture;
+		data->image->ea_texture = texture;
 	else if (txtr_nbr == 2)
-		data->obj_img->we_texture = texture;
+		data->image->we_texture = texture;
 	else if (txtr_nbr == 3)
-		data->obj_img->no_texture = texture;
+		data->image->no_texture = texture;
 	else if (txtr_nbr == 4)
-		data->obj_img->so_texture = texture;
+		data->image->so_texture = texture;
 }
 
 // this function initialize all textures.
 void	ft_textures_init(t_data *data)
 {
-	t_img	*obj_img;
-	t_map	*obj_map;
+	t_img	*image;
+	t_map	*map;
 
-	obj_img = data->obj_img;
-	obj_map = data->obj_map;
-	ft_textures_init_utile(data, 1, obj_map->ea_texture_path);
-	ft_textures_init_utile(data, 2, obj_map->we_texture_path);
-	ft_textures_init_utile(data, 3, obj_map->no_texture_path);
-	ft_textures_init_utile(data, 4, obj_map->so_texture_path);
+	image = data->image;
+	map = data->map;
+	ft_textures_init_utile(data, 1, map->ea_texture);
+	ft_textures_init_utile(data, 2, map->we_texture);
+	ft_textures_init_utile(data, 3, map->no_texture);
+	ft_textures_init_utile(data, 4, map->so_texture);
 }
 
 // this function helps you redraw the map element on the minimap
@@ -48,10 +48,10 @@ int	ft_get_position_color(t_data *data, int x, int y, int map_size)
 	int	s_y;
 	int	s_x;
 
-	s_y = data->obj_plyr->y - map_size / 2;
-	s_x = data->obj_plyr->x - map_size / 2;
+	s_y = data->player->y - map_size / 2;
+	s_x = data->player->x - map_size / 2;
 	if (ft_is_in_wall(s_x + x, s_y + y, data) == 1
-		|| data->obj_map->map[(s_y + y) / 50][(s_x + x) / 50] == ' ')
+		|| data->map->map[(s_y + y) / 50][(s_x + x) / 50] == ' ')
 		return (0x808080);
 	return (0xffffff);
 }
@@ -64,7 +64,7 @@ void	ft_render_minimap(t_data *data)
 	int		x;
 	int		map_size;
 
-	map_size = data->obj_plyr->minimap_size;
+	map_size = data->player->minimap_size;
 	y = -1;
 	while (++y < map_size)
 	{

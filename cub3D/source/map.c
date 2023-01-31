@@ -29,8 +29,8 @@ static void	ft_check_line(t_data *data, char *line, int *i, int *map_end)
 	int	line_lenght;
 
 	line_lenght = ft_strlen(line) - 1;
-	if (data->obj_map->map_width < line_lenght)
-		data->obj_map->map_width = line_lenght;
+	if (data->map->width < line_lenght)
+		data->map->width = line_lenght;
 	if (line[0] != '\n' && *map_end == 0)
 		(*i)++;
 	else if (line[0] == '\n' && *map_end == 0)
@@ -52,7 +52,7 @@ void	ft_map_dimensions(char *map_path, t_data *data)
 
 	i = 0;
 	map_end = 0;
-	data->obj_map->map_width = 0;
+	data->map->width = 0;
 	fd = open(map_path, O_RDONLY);
 	line = ft_go_to_map_line(fd);
 	while (line)
@@ -61,7 +61,7 @@ void	ft_map_dimensions(char *map_path, t_data *data)
 		free(line);
 		line = get_next_line(fd);
 	}
-	data->obj_map->map_height = i;
+	data->map->height = i;
 	close(fd);
 }
 char	*ft_strdup_cub3D(char *s1, int row_len)
@@ -98,7 +98,7 @@ void	ft_fill_map(char *map_path, t_map *obj_map)
 	char	**map;
 	char	*line;
 
-	map_len = obj_map->map_height + 1;
+	map_len = obj_map->height + 1;
 	map = (char **)malloc(sizeof(char *) * map_len);
 	if (!map)
 		ft_maloc_error(map);
@@ -107,7 +107,7 @@ void	ft_fill_map(char *map_path, t_map *obj_map)
 	line = ft_go_to_map_line(fd);
 	while (line && ++i < (map_len - 1))
 	{
-		map[i] = ft_strdup_cub3D(line, obj_map->map_width);
+		map[i] = ft_strdup_cub3D(line, obj_map->width);
 		free(line);
 		line = get_next_line(fd);
 	}
@@ -123,18 +123,18 @@ void	ft_map_init(char *map_path, t_data *data)
 
 	if (!ft_verifie(map_path))
 		exit(0);
-	obj_map = data->obj_map;
+	obj_map = data->map;
 	ft_map_dimensions(map_path, data);
 	ft_fill_map(map_path, obj_map);
 	ft_check_characters(data, obj_map);
 	ft_check_walls(data, obj_map);
 	ft_fill_data(obj_map, map_path);
-	data->obj_plyr->p_orientation = \
-	obj_map->map[obj_map->plyr_y][obj_map->plyr_x];
-	data->obj_plyr->x = obj_map->plyr_x * COLUMN_SIZE + 2;
-	data->obj_plyr->y = obj_map->plyr_y * COLUMN_SIZE + 2;
-	obj_map->f_color_d = ft_trgb_to_dec(0, ft_get_color(obj_map->f_color, 1), \
-	ft_get_color(obj_map->f_color, 2), ft_get_color(obj_map->f_color, 3));
-	obj_map->c_color_d = ft_trgb_to_dec(0, ft_get_color(obj_map->c_color, 1), \
-	ft_get_color(obj_map->c_color, 2), ft_get_color(obj_map->c_color, 3));
+	data->player->player_derection = \
+	obj_map->map[obj_map->y_player][obj_map->x_player];
+	data->player->x = obj_map->x_player * TILE_SIZE + 2;
+	data->player->y = obj_map->y_player * TILE_SIZE + 2;
+	obj_map->floor_color_dc = ft_trgb_to_dec(0, ft_get_color(obj_map->floor_color, 1), \
+	ft_get_color(obj_map->floor_color, 2), ft_get_color(obj_map->floor_color, 3));
+	obj_map->ceil_color_dc = ft_trgb_to_dec(0, ft_get_color(obj_map->ceil_color, 1), \
+	ft_get_color(obj_map->ceil_color, 2), ft_get_color(obj_map->ceil_color, 3));
 }

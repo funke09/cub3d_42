@@ -1,12 +1,12 @@
 
 NO ./assets/textures/creeper.xpm
-SO ./assets/textures/greystone.xpm
+SO ./assets/textures/south.xpm
 
-WE ./assets/textures/wood.xpm
+WE ./assets/textures/west.xpm
 EA ./assets/textures/redbrick.xpm
 
-F 21,74,13
-C 93,156,237
+F 165,121,96
+C 178,183,178
 
         1111111111111111111111111
         1000000000110000000000001

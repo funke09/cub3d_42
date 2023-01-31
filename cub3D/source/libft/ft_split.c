@@ -6,7 +6,7 @@
 /*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/12 17:24:40 by zcherrad          #+#    #+#             */
-/*   Updated: 2021/11/25 04:22:15 by zcherrad         ###   ########.fr       */
+/*   Updated: 2023/01/31 02:36:38 by zcherrad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ typedef struct s_vars
 	int		k;
 	int		start;
 	int		count;
-}				t_vars;
+}				t_rays;
 
 static int	counter(char const *s, char c)
 {
@@ -65,7 +65,7 @@ static int	cntchar(const char *s, int *start, char c)
 	return (j);
 }
 
-static char	**loop(t_vars vars, const char *s, char c)
+static char	**loop(t_rays vars, const char *s, char c)
 {
 	while (vars.i < vars.count)
 	{
@@ -96,7 +96,7 @@ static char	**loop(t_vars vars, const char *s, char c)
 
 char	**ft_split(char const *s, char c)
 {
-	t_vars	vars;
+	t_rays	vars;
 
 	vars.i = 0;
 	vars.j = 0;

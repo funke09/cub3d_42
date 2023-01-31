@@ -2,7 +2,7 @@
 #include "cub3D.h"
 
 // this function for know where the ray is facing 
-void	ft_ray_facing(t_var *v, float ray_angle, t_data *data)
+void	ft_ray_facing(t_ray *v, float ray_angle, t_data *data)
 {
 	v->is_ray_facing_up = 0;
 	v->is_ray_facing_down = 0;
@@ -17,27 +17,27 @@ void	ft_ray_facing(t_var *v, float ray_angle, t_data *data)
 	if (v->is_ray_facing_left == 0)
 		v->is_ray_facing_right = 1;
 	if (v->is_ray_facing_right == 1)
-		data->obj_plyr->is_ray_right = 1;
+		data->player->is_ray_right = 1;
 	else
-		data->obj_plyr->is_ray_right = 0;
+		data->player->is_ray_right = 0;
 	if (v->is_ray_facing_up == 1)
-		data->obj_plyr->is_ray_up = 1;
+		data->player->is_ray_up = 1;
 	else
-		data->obj_plyr->is_ray_up = 0;
+		data->player->is_ray_up = 0;
 }
 
 // this function initialize the ft_horizontal_intersection() function vars
-void	ft_init_horz_vars(t_data *data, float ray_angle, t_var *v)
+void	ft_init_horz_vars(t_data *data, float ray_angle, t_ray *v)
 {
-	v->y_intercept = floor(data->obj_plyr->y / COLUMN_SIZE) * COLUMN_SIZE;
+	v->y_intercept = floor(data->player->y / TILE_SIZE) * TILE_SIZE;
 	if (v->is_ray_facing_down == 1)
-		v->y_intercept += COLUMN_SIZE;
-	v->x_intercept = data->obj_plyr->x + \
-	((v->y_intercept - data->obj_plyr->y) / tan(ray_angle));
-	v->y_steps = COLUMN_SIZE;
+		v->y_intercept += TILE_SIZE;
+	v->x_intercept = data->player->x + \
+	((v->y_intercept - data->player->y) / tan(ray_angle));
+	v->y_steps = TILE_SIZE;
 	if (v->is_ray_facing_up == 1)
 		v->y_steps *= -1;
-	v->x_steps = COLUMN_SIZE / tan(ray_angle);
+	v->x_steps = TILE_SIZE / tan(ray_angle);
 	if (v->is_ray_facing_left == 1 && v->x_steps > 0)
 		v->x_steps *= -1;
 	if (v->is_ray_facing_right == 1 && v->x_steps < 0)
@@ -46,17 +46,17 @@ void	ft_init_horz_vars(t_data *data, float ray_angle, t_var *v)
 	v->next_horz_touch_y = v->y_intercept;
 	if (v->is_ray_facing_up == 1)
 		v->next_horz_touch_y--;
-	v->distance = sqrt(pow((v->y_intercept - data->obj_plyr->y), 2) + \
-	pow((v->y_intercept - data->obj_plyr->y) / tan(ray_angle), 2));
-	v->window_w = data->obj_map->map_width * COLUMN_SIZE;
-	v->window_h = data->obj_map->map_height * COLUMN_SIZE;
+	v->distance = sqrt(pow((v->y_intercept - data->player->y), 2) + \
+	pow((v->y_intercept - data->player->y) / tan(ray_angle), 2));
+	v->window_w = data->map->width * TILE_SIZE;
+	v->window_h = data->map->height * TILE_SIZE;
 }
 
 // this function return the distance between the player
 //  and the horizontal intersection with the wall
-t_var	ft_horizontal_intersection(t_data *data, float ray_angle)
+t_ray	ft_horizontal_intersection(t_data *data, float ray_angle)
 {
-	t_var	v;
+	t_ray	v;
 
 	ft_ray_facing(&v, ray_angle, data);
 	ft_init_horz_vars(data, ray_angle, &v);
@@ -74,17 +74,17 @@ t_var	ft_horizontal_intersection(t_data *data, float ray_angle)
 }
 
 // this function initialize the ft_vertical_intersection() function vars
-void	ft_init_vertcl_vars(t_data *data, float ray_angle, t_var *v)
+void	ft_init_vertcl_vars(t_data *data, float ray_angle, t_ray *v)
 {
-	v->x_intercept = floor(data->obj_plyr->x / COLUMN_SIZE) * COLUMN_SIZE;
+	v->x_intercept = floor(data->player->x / TILE_SIZE) * TILE_SIZE;
 	if (v->is_ray_facing_right == 1)
-		v->x_intercept += COLUMN_SIZE;
-	v->y_intercept = data->obj_plyr->y + \
-	((v->x_intercept - data->obj_plyr->x) * tan(ray_angle));
-	v->x_steps = COLUMN_SIZE;
+		v->x_intercept += TILE_SIZE;
+	v->y_intercept = data->player->y + \
+	((v->x_intercept - data->player->x) * tan(ray_angle));
+	v->x_steps = TILE_SIZE;
 	if (v->is_ray_facing_left == 1)
 		v->x_steps *= -1;
-	v->y_steps = COLUMN_SIZE * tan(ray_angle);
+	v->y_steps = TILE_SIZE * tan(ray_angle);
 	if (v->is_ray_facing_up == 1 && v->y_steps > 0)
 		v->y_steps *= -1;
 	if (v->is_ray_facing_down == 1 && v->y_steps < 0)
@@ -93,17 +93,17 @@ void	ft_init_vertcl_vars(t_data *data, float ray_angle, t_var *v)
 	v->next_vertcl_touch_y = v->y_intercept;
 	if (v->is_ray_facing_left == 1)
 		v->next_vertcl_touch_x--;
-	v->distance = sqrt(pow((v->x_intercept - data->obj_plyr->x), 2) + \
-	pow((v->x_intercept - data->obj_plyr->x) * tan(ray_angle), 2));
-	v->window_w = data->obj_map->map_width * COLUMN_SIZE;
-	v->window_h = data->obj_map->map_height * COLUMN_SIZE;
+	v->distance = sqrt(pow((v->x_intercept - data->player->x), 2) + \
+	pow((v->x_intercept - data->player->x) * tan(ray_angle), 2));
+	v->window_w = data->map->width * TILE_SIZE;
+	v->window_h = data->map->height * TILE_SIZE;
 }
 
 // this function return the distance between the player 
 // and the vertical intersection with the wall
-t_var	ft_vertical_intersection(t_data *data, float ray_angle)
+t_ray	ft_vertical_intersection(t_data *data, float ray_angle)
 {
-	t_var	v;
+	t_ray	v;
 
 	ft_ray_facing(&v, ray_angle, data);
 	ft_init_vertcl_vars(data, ray_angle, &v);

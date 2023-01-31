@@ -3,21 +3,21 @@
 
 void	ft_mlx_wall_body(t_data *data, int *offsetx, t_image **tmp)
 {
-	if (data->obj_plyr->is_horz_intr == 1)
+	if (data->player->is_horz_intr == 1)
 	{
-		*offsetx = (int)data->v.next_horz_touch_x % TEX_WIDTH;
-		if (data->obj_plyr->is_ray_up == 1)
-			*tmp = data->obj_img->no_texture;
-		if (data->obj_plyr->is_ray_up == 0)
-			*tmp = data->obj_img->so_texture;
+		*offsetx = (int)data->v.next_horz_touch_x % TEXTUR_WIDTH;
+		if (data->player->is_ray_up == 1)
+			*tmp = data->image->no_texture;
+		if (data->player->is_ray_up == 0)
+			*tmp = data->image->so_texture;
 	}
 	else
 	{
-		*offsetx = (int)data->v.next_vertcl_touch_y % TEX_WIDTH;
-		if (data->obj_plyr->is_ray_right == 0)
-			*tmp = data->obj_img->we_texture;
-		if (data->obj_plyr->is_ray_right == 1)
-			*tmp = data->obj_img->ea_texture;
+		*offsetx = (int)data->v.next_vertcl_touch_y % TEXTUR_WIDTH;
+		if (data->player->is_ray_right == 0)
+			*tmp = data->image->we_texture;
+		if (data->player->is_ray_right == 1)
+			*tmp = data->image->ea_texture;
 	}
 }
 
@@ -30,16 +30,16 @@ void	my_mlx_pixel_put_wall(t_data *data, int x, int y, int wall_top)
 	int		offsetx;
 	int		offsety;
 
-	s = COLUMN_SIZE;
-	if (y > (data->fix_h)
-		|| x > (data->fix_w))
+	s = TILE_SIZE;
+	if (y > (data->real_height)
+		|| x > (data->real_width))
 		return ;
-	if (y >= (data->fix_h)
-		|| x >= (data->fix_w))
+	if (y >= (data->real_height)
+		|| x >= (data->real_width))
 		return ;
 	ft_mlx_wall_body(data, &offsetx, &tmp);
 	offsety = ((y - wall_top) * \
-		(TEX_WIDTH / (data->obj_plyr->wall_strip_height * COLUMN_SIZE)));
+		(TEXTUR_WIDTH / (data->player->wall_strip_height * TILE_SIZE)));
 	dst = data->img_data + (y * data->line_length + \
 		x * (data->bits_per_pixel / 8));
 	*(unsigned int *)dst = *(unsigned int *)&tmp->img_data[((offsety % s) \
@@ -52,19 +52,19 @@ void	my_mlx_pixel_put2(t_data *data, int x, int y, int color_num)
 	char	*dst;
 	int		s;
 
-	s = COLUMN_SIZE;
-	if (y > (data->fix_h)
-		|| x > (data->fix_w))
+	s = TILE_SIZE;
+	if (y > (data->real_height)
+		|| x > (data->real_width))
 		return ;
-	if (y >= (data->fix_h)
-		|| x >= (data->fix_w))
+	if (y >= (data->real_height)
+		|| x >= (data->real_width))
 		return ;
 	dst = data->img_data + \
 		(y * data->line_length + x * (data->bits_per_pixel / 8));
 	if (color_num == 1)
-		*(unsigned int *)dst = data->obj_map->c_color_d;
+		*(unsigned int *)dst = data->map->ceil_color_dc;
 	else if (color_num == 3)
-		*(unsigned int *)dst = data->obj_map->f_color_d;
+		*(unsigned int *)dst = data->map->floor_color_dc;
 }
 
 // this function draws a square on the position map[y][x] 
@@ -98,7 +98,7 @@ void	ft_draw_one_ray(t_data *data, float ray_angle, int size)
 	j = -1;
 	while (++j < size)
 	{
-		my_mlx_pixel_put(data, (data->obj_plyr->x + cos(ray_angle) * j), \
-		(data->obj_plyr->y + sin(ray_angle) * j), 0x00FF0000);
+		my_mlx_pixel_put(data, (data->player->x + cos(ray_angle) * j), \
+		(data->player->y + sin(ray_angle) * j), 0x00FF0000);
 	}
 }
