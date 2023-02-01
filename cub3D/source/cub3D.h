@@ -14,10 +14,6 @@
 
 # define KEY_ESC	53
 # define KEY_W	13
-# define MOUSE_R	6
-# define MOUSE_L	7
-# define MOUSE_R2	10
-# define MOUSE_L2	9
 # define KEY_S	1
 # define KEY_A	0
 # define KEY_D	2
@@ -91,7 +87,7 @@ typedef struct s_player
 typedef struct s_image
 {
 	void	*ptr;
-	char	*img_data;
+	char	*img_var;
 	int		bits_per_pixel;
 	int		line_size;
 	int		endian;
@@ -105,7 +101,7 @@ typedef struct s_imgs
 	t_image		*ea_texture;
 }	t_img;
 
-typedef struct s_data
+typedef struct s_var
 {
 	void		*mlx_ptr;
 	void		*win_ptr;
@@ -114,7 +110,7 @@ typedef struct s_data
 	t_img		*image;
 
 	void		*img;
-	char		*img_data;
+	char		*img_var;
 	int			bits_per_pixel;
 	int			line_length;
 	int			endian;
@@ -122,42 +118,42 @@ typedef struct s_data
 	int			real_height;
 	int			real_width;
 	t_ray		v;
-}	t_data;
+}	t_var;
 
 void			ft_erorr(void *var);
-void			error_map(t_data *data, int error_num);
+void			error_map(t_var *var, int error_num);
 int				is_param(char *str);
-void			is_characters(t_data *data, t_map *map);
+void			is_characters(t_var *var, t_map *map);
 int				param_number(char *str);
 int				valid_color(char *str);
-void			wall_checker(t_data *data, t_map *map);
-void			init_map(char *map_path, t_data *data);
-void			draw_square(int y, int x, int size, t_data *data);
-int				has_wall(int new_x, int new_y, t_data *data);
-void			update(t_data *data, int key);
-void			player_rendr(t_data *data);
-void			render_rays(t_data *data);
-void			render(t_data *data, int key);
-void			init_texturs(t_data *data);
-void			draw_pixel(t_data *data, int x, int y, int color);
-t_ray			horizontal_intersection(t_data *data, float ray_angle);
-t_ray			vertical_intersection(t_data *data, float ray_angle);
-void			project_plane_wall(t_data *data);
-void			put_one_ray(t_data *data, float ray_angle, int size);
+void			wall_checker(t_var *var, t_map *map);
+void			init_map(char *map_path, t_var *var);
+void			draw_square(int y, int x, int size, t_var *var);
+int				has_wall(int new_x, int new_y, t_var *var);
+void			update(t_var *var, int key);
+void			player_rendr(t_var *var);
+void			render_rays(t_var *var);
+void			render(t_var *var, int key);
+void			init_texturs(t_var *var);
+void			draw_pixel(t_var *var, int x, int y, int color);
+t_ray			horizontal_intersection(t_var *var, float ray_angle);
+t_ray			vertical_intersection(t_var *var, float ray_angle);
+void			project_plane_wall(t_var *var);
+void			put_one_ray(t_var *var, float ray_angle, int size);
 unsigned int	convert_rgb_dec(int t, int r, int g, int b);
 int				check_color(char *color, int rgb);
 float			check_angle(char c);
-void			init_player(t_player *player, t_data *data);
-int				ft_destroy_window(void *n_data);
-void			destroy_textures(t_data *data);
-int				key_press(int key, void *n_data);
-void			drawing_wall(t_data *data, int x, int y, int wall_top);
+void			init_player(t_player *player, t_var *var);
+int				ft_destroy_window(void *n_var);
+void			destroy_textures(t_var *var);
+int				key_press(int key, void *n_var);
+void			drawing_wall(t_var *var, int x, int y, int wall_top);
 int				map_checker(char *file);
 float			normalize(float angle);
 int				count_tab(char **tab);
 void			free_loop(char **tab);
-void			get_info(t_map *data, char *file);
+void			get_info(t_map *var, char *file);
 int				ft_strcmp(char *s1, char *s2);
-void			drawing_ceil_floor(t_data *data, int x, int y, int color_num);
+void			drawing_ceil_floor(t_var *var, int x, int y, int color_num);
 
 #endif

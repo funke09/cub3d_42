@@ -24,13 +24,13 @@ char	*ft_go_to_map_line(int fd)
 	return (line);
 }
 
-static void	ft_check_line(t_data *data, char *line, int *i, int *map_end)
+static void	ft_check_line(t_var *var, char *line, int *i, int *map_end)
 {
 	int	line_lenght;
 
 	line_lenght = ft_strlen(line) - 1;
-	if (data->map->width < line_lenght)
-		data->map->width = line_lenght;
+	if (var->map->width < line_lenght)
+		var->map->width = line_lenght;
 	if (line[0] != '\n' && *map_end == 0)
 		(*i)++;
 	else if (line[0] == '\n' && *map_end == 0)
@@ -38,12 +38,12 @@ static void	ft_check_line(t_data *data, char *line, int *i, int *map_end)
 	else if (line[0] != '\n' && *map_end == 1)
 	{
 		free(line);
-		error_map(data, 4);
+		error_map(var, 4);
 	}
 }
 
 // this function for get the width and the hight of the map
-void	ft_map_dimensions(char *map_path, t_data *data)
+void	ft_map_dimensions(char *map_path, t_var *var)
 {
 	int		fd;
 	int		i;
@@ -52,16 +52,16 @@ void	ft_map_dimensions(char *map_path, t_data *data)
 
 	i = 0;
 	map_end = 0;
-	data->map->width = 0;
+	var->map->width = 0;
 	fd = open(map_path, O_RDONLY);
 	line = ft_go_to_map_line(fd);
 	while (line)
 	{
-		ft_check_line(data, line, &i, &map_end);
+		ft_check_line(var, line, &i, &map_end);
 		free(line);
 		line = get_next_line(fd);
 	}
-	data->map->height = i;
+	var->map->height = i;
 	close(fd);
 }
 char	*ft_strdup_cub3D(char *s1, int row_len)
@@ -117,22 +117,22 @@ void	ft_fill_map(char *map_path, t_map *obj_map)
 }
 
 // this function init the map
-void	init_map(char *map_path, t_data *data)
+void	init_map(char *map_path, t_var *var)
 {
 	t_map	*obj_map;
 
 	if (!map_checker(map_path))
 		exit(0);
-	obj_map = data->map;
-	ft_map_dimensions(map_path, data);
+	obj_map = var->map;
+	ft_map_dimensions(map_path, var);
 	ft_fill_map(map_path, obj_map);
-	is_characters(data, obj_map);
-	wall_checker(data, obj_map);
+	is_characters(var, obj_map);
+	wall_checker(var, obj_map);
 	get_info(obj_map, map_path);
-	data->player->player_derection = \
+	var->player->player_derection = \
 	obj_map->map[obj_map->y_player][obj_map->x_player];
-	data->player->x = obj_map->x_player * TILE_SIZE + 2;
-	data->player->y = obj_map->y_player * TILE_SIZE + 2;
+	var->player->x = obj_map->x_player * TILE_SIZE + 2;
+	var->player->y = obj_map->y_player * TILE_SIZE + 2;
 	obj_map->floor_color_dc = convert_rgb_dec(0, check_color(obj_map->floor_color, 1), \
 	check_color(obj_map->floor_color, 2), check_color(obj_map->floor_color, 3));
 	obj_map->ceil_color_dc = convert_rgb_dec(0, check_color(obj_map->ceil_color, 1), \

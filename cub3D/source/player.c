@@ -17,49 +17,52 @@ float	check_angle(char c)
 }
 
 // this function draw the player on the map
-void	player_rendr(t_data *data)
+void	player_rendr(t_var *var)
 {
 	int	y;
 	int	x;
 	int	sizeofplayer;
 	int	i;
 
-	y = data->player->minimap_size / 2;
-	x = data->player->minimap_size / 2;
+	y = var->player->minimap_size / 2;
+	x = var->player->minimap_size / 2;
 	i = -1;
-	sizeofplayer = data->player->sizeofplayer;
-	draw_square(y, x, sizeofplayer, data);
+	sizeofplayer = var->player->sizeofplayer;
+	draw_square(y, x, sizeofplayer, var);
 }
 
 // this function checks if there is a wall in the position map[new_y][new_x]
-int	has_wall(int new_x, int new_y, t_data *data)
+int	has_wall(int new_x, int new_y, t_var *var)
 {
 	int	w;
 	int	h;
 
-	w = (data->map->width) * TILE_SIZE;
-	h = (data->map->height) * TILE_SIZE;
+	w = (var->map->width) * TILE_SIZE;
+	h = (var->map->height) * TILE_SIZE;
 	if (new_x < 0 || new_x > w || new_y < 0 || new_y > h)
 		return (1);
-	if (data->map->map[new_y / TILE_SIZE][new_x / TILE_SIZE] == '1')
+	if (var->map->map[new_y / TILE_SIZE][new_x / TILE_SIZE] == '1')
 		return (1);
 	else
 		return (0);
 }
 
 // this function updates the players info based on the key you pressed
-void	update(t_data *data, int key)
+void	update(t_var *var, int key)
 {
 	float		move_step;
 	float		new_x;
 	float		new_y;
 	t_player	*player;
 
-	player = data->player;
+	player = var->player;
 	if (key == KEY_RIGHT || key == KEY_LEFT || key == KEY_D
-		|| key == KEY_A || key == MOUSE_L || key == MOUSE_R
-		|| key == MOUSE_L2 || key == MOUSE_R2)
+		|| key == KEY_A )
 	{
+		if(key == KEY_A)
+		{
+
+		}
 		player->rotate_angle += player->turn_direction \
 		* player->rotation_speed;
 		player->turn_direction = 0;
@@ -69,7 +72,7 @@ void	update(t_data *data, int key)
 		move_step = player->move_speed * player->walk_direction;
 		new_x = player->x + move_step * cos(player->rotate_angle);
 		new_y = player->y + move_step * sin(player->rotate_angle);
-		if (has_wall(new_x, new_y, data) == 0)
+		if (has_wall(new_x, new_y, var) == 0)
 		{
 			player->x = new_x;
 			player->y = new_y;
