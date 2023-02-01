@@ -4,7 +4,7 @@ BONUS = cub3D_bonus
 
 # madatory
 SRC_FOLDER = ./source/
-SRC = main.c error.c map.c map_check.c map_checker_utils.c map_checker.c fill_data.c draw.c player.c rays.c render.c wall_intersections.c color.c handler.c map_checker_utils2.c
+SRC = cub3d.c ft_error.c map.c map_check.c tools.c checker.c init.c drawing.c player.c rays.c render.c intersections.c color.c keys.c tools_2.c
 SRCS = $(addprefix $(SRC_FOLDER), $(SRC))
 SRCOBJ = ${SRCS:.c=.o}
 
@@ -19,7 +19,7 @@ LIBFT_FILES =	ft_isdigit.c ft_strjoin.c \
 
 SRCS_LIBFT = $(addprefix $(LIBFT_FOLDER), $(LIBFT_FILES))
 
-OTHER_SRCS = $(SRCS_FT_PRINTF) $(SRCS_GET_NEXT_LINE) $(SRCS_LIBFT)
+OTHER_SRCS =$(SRCS_LIBFT)
 OTHER_OBJ = ${OTHER_SRCS:.c=.o}
 
 LIBS =  ./source/libft/libft.a
