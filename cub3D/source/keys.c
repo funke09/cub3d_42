@@ -25,17 +25,17 @@ int	key_press(int key, void *n_var)
 	var = (t_var *) n_var;
 	if (key == KEY_ESC)
 		ft_destroy_window(var);
-	else if (key == KEY_W || key == KEY_D)
+	else if (key == KEY_W)
 	{
 		var->player->turn_direction = 0;
 		var->player->walk_direction = 1;
 	}
-	else if (key == KEY_S || key == KEY_A)
+	else if (key == KEY_S)
 	{
 		var->player->turn_direction = 0;
 		var->player->walk_direction = -1;
 	}
-	else if (key == KEY_RIGHT)
+	else if (key == KEY_RIGHT || key == KEY_D)
 	{
 		var->player->walk_direction = 0;
 		var->player->turn_direction = 1;

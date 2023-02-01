@@ -63,6 +63,10 @@ void	update(t_var *var, int key)
 		{
 
 		}
+		else if(key == KEY_D)
+		{
+
+		}
 		player->rotate_angle += player->turn_direction \
 		* player->rotation_speed;
 		player->turn_direction = 0;

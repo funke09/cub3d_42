@@ -32,7 +32,7 @@ void	ft_var_init(t_var *var)
 	var->win_ptr = \
 		mlx_new_window(var->mlx_ptr, var->real_width, var->real_height, "NAZISM");
 	var->img = mlx_new_image(var->mlx_ptr, var->real_width, var->real_height);
-	var->img_var = mlx_get_var_addr(var->img, &var->bits_per_pixel, \
+	var->img_var = mlx_get_data_addr(var->img, &var->bits_per_pixel, \
 	&var->line_length, &var->endian);
 	init_texturs(var);
 	render(var, RANDOM_KEY);

@@ -16,7 +16,7 @@ void	init_texturs_utile(t_var *var, int txtr_nbr, char *txtr_path)
 		destroy_textures(var);
 		error_map(var, 5);
 	}
-	texture->img_var = mlx_get_var_addr(texture->ptr, \
+	texture->img_var = mlx_get_data_addr(texture->ptr, \
 	&texture->bits_per_pixel, &texture->line_size, &texture->endian);
 	if (txtr_nbr == 1)
 		var->image->ea_texture = texture;
