@@ -61,15 +61,33 @@ void	update(t_var *var, int key)
 	{
 		if(key == KEY_A)
 		{
-
+		move_step = player->move_speed;
+		new_x = player->x + move_step * cos(player->rotate_angle - (M_PI / 2));
+		new_y = player->y + move_step * sin(player->rotate_angle - (M_PI / 2));
+		if (has_wall(new_x, new_y, var) == 0)
+		{
+			player->x = new_x;
+			player->y = new_y;
+		}
 		}
 		else if(key == KEY_D)
 		{
-
+		move_step = player->move_speed;
+		new_x = player->x + move_step * cos(player->rotate_angle + (M_PI / 2));
+		new_y = player->y + move_step * sin(player->rotate_angle + (M_PI / 2));
+		if (has_wall(new_x, new_y, var) == 0)
+		{
+			player->x = new_x;
+			player->y = new_y;
 		}
-		player->rotate_angle += player->turn_direction \
-		* player->rotation_speed;
-		player->turn_direction = 0;
+		}
+		else
+		{
+			player->rotate_angle += player->turn_direction \
+			* player->rotation_speed;
+			player->turn_direction = 0;
+		}
+
 	}
 	if (key == KEY_W || key == KEY_S || key == KEY_A || key == KEY_D)
 	{
