@@ -41,10 +41,58 @@ int	has_wall(int new_x, int new_y, t_var *var)
 	h = (var->map->height) * TILE_SIZE;
 	if (new_x < 0 || new_x > w || new_y < 0 || new_y > h)
 		return (1);
-	if (var->map->map[new_y / TILE_SIZE][new_x / TILE_SIZE] == '1')
+	if (var->map->map[new_y / TILE_SIZE][new_x / TILE_SIZE] != '0')
+		return (1);
+	if (var->map->map[new_y / TILE_SIZE][new_x / TILE_SIZE] != '0')
 		return (1);
 	else
 		return (0);
+}
+
+int	ft_special_case(int xx, int yy, t_var *var, int isfront)
+{
+	t_player *p;
+	t_map *map;
+	int x;
+	int y;
+	float angle;
+	printf("ft_special_case called \n");
+	
+	
+	x = xx / TILE_SIZE;
+	y = yy / TILE_SIZE;
+	p = var->player;
+	map = var->map;
+	if (isfront == 1)
+		angle = normalize(p->rotate_angle);
+	else
+		angle = normalize(p->rotate_angle + M_PI);
+	printf("rotate_angle %f \n", angle);
+	if (angle > 0 && (angle < M_PI / 2))
+	{
+		printf("ft_special_case1 \n");
+		if ( map->map[y + 1][x] == '1' && map->map[y][x + 1] == '1')
+			return (1);
+	}
+	else if (angle > (M_PI/2) && (angle < (M_PI)))
+	{
+		printf("ft_special_case 2 \n");
+		if ( map->map[y + 1][x] == '1' && map->map[y][x - 1] == '1')
+			return (1);
+	}
+	else if (angle > (M_PI) && (angle < (3 * M_PI / 2)))
+	{
+		printf("ft_special_case 3 \n");
+		if ( map->map[y - 1][x] == '1' && map->map[y][x - 1] == '1')
+			return (1);
+	}
+	else if (angle > (3 * M_PI / 2) && (angle < 0))
+	{
+		printf("ft_special_case 4 \n");
+		if ( map->map[y - 1][x] == '1' && map->map[y][x + 1] == '1')
+			return (1);
+	}
+	return (0);
 }
 
 // this function updates the players info based on the key you pressed
@@ -75,10 +123,11 @@ void	update(t_var *var, int key)
 		move_step = player->move_speed;
 		new_x = player->x + move_step * cos(player->rotate_angle + (M_PI / 2));
 		new_y = player->y + move_step * sin(player->rotate_angle + (M_PI / 2));
-		if (has_wall(new_x, new_y, var) == 0)
+		if (has_wall(new_x, new_y, var) == 0 && ft_special_case(player->x, player->y, var, 1) == 0)
 		{
 			player->x = new_x;
 			player->y = new_y;
+
 		}
 		}
 		else
@@ -87,6 +136,7 @@ void	update(t_var *var, int key)
 			* player->rotation_speed;
 			player->turn_direction = 0;
 		}
+		
 
 	}
 	if (key == KEY_W || key == KEY_S || key == KEY_A || key == KEY_D)
@@ -94,10 +144,18 @@ void	update(t_var *var, int key)
 		move_step = player->move_speed * player->walk_direction;
 		new_x = player->x + move_step * cos(player->rotate_angle);
 		new_y = player->y + move_step * sin(player->rotate_angle);
-		if (has_wall(new_x, new_y, var) == 0)
+		if (key == KEY_W && has_wall(new_x, new_y, var) == 0  && ft_special_case(player->x, player->y, var, 1) == 0)
 		{
 			player->x = new_x;
 			player->y = new_y;
 		}
+		else if ( key == KEY_S && has_wall(new_x, new_y, var) == 0  && ft_special_case(player->x, player->y, var, 0) == 0)
+		{
+			player->x = new_x;
+			player->y = new_y;
+		}
+		
+
 	}
+	var->map->map[(int)player->y/TILE_SIZE][(int)player->x/TILE_SIZE]  = '0';
 }

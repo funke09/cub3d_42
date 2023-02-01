@@ -10,13 +10,14 @@ void	init_player(t_player *player, t_var *var)
 	player->turn_direction = 0;
 	player->walk_direction = 0;
 	player->rotate_angle = check_angle(var->player->player_derection);
-	player->move_speed = 30;
-	player->rotation_speed = 10 * (M_PI / 180);
+	player->move_speed = 5;
+	player->rotation_speed = 5 * (M_PI / 180);
 	player->fov_angle = 60 * (M_PI / 180);
 	player->wall_strip_width = 0.1;
 	player->rays_num = (var->real_width / TILE_SIZE) \
 		/ player->wall_strip_width;
 	player->minimap_scale_factor = 0.2;
+	var->map[(int)player->x][(int)player->y] = '0';
 	// player->minimap_size = 0;
 	if (var->map->width > var->map->height)
 		player->minimap_size = var->real_width * player->minimap_scale_factor;
@@ -26,7 +27,7 @@ void	init_player(t_player *player, t_var *var)
 }
 
 // this function init the the window and the texture
-void	ft_var_init(t_var *var)
+void	 ft_var_init(t_var *var)
 {
 	var->mlx_ptr = mlx_init();
 	var->win_ptr = \
