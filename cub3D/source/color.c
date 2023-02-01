@@ -57,7 +57,7 @@ unsigned int	ft_hexcolor_to_decimal(char *hex)
 }
 
 // this function convert trgb to decimal
-unsigned int	ft_trgb_to_dec(int t, int r, int g, int b)
+unsigned int	convert_rgb_dec(int t, int r, int g, int b)
 {
 	char	*trgb_to_hex;
 	int		hex_to_int;
@@ -70,7 +70,7 @@ unsigned int	ft_trgb_to_dec(int t, int r, int g, int b)
 
 // this function will return the int value of:
 //  'r' if rgb = 1 or 'g' if rgb = 2 or 'b' if rgb = 3
-int	ft_get_color(char *color, int rgb)
+int	check_color(char *color, int rgb)
 {
 	char	**s_rgb;
 	int		rgb_value;

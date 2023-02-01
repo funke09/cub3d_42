@@ -1,14 +1,14 @@
 
 #include "cub3D.h"
 
-void	ft_maloc_error(void *var)
+void	ft_erorr(void *var)
 {
 	if (var)
 		free(var);
 	exit(1);
 }
 
-void	ft_free_textures(t_data *data)
+void	destroy_textures(t_data *data)
 {
 	if (data->image->ea_texture)
 		free(data->image->ea_texture);
@@ -21,7 +21,7 @@ void	ft_free_textures(t_data *data)
 }
 
 // this function handles the maps errors and free the map
-void	ft_map_errors(t_data *data, int error_num)
+void	error_map(t_data *data, int error_num)
 {
 	int		i;
 	t_map	*map;

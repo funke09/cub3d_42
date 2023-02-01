@@ -11,7 +11,7 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-void	ft_free_split(char **tab)
+void	free_loop(char **tab)
 {
 	int		i;
 
@@ -25,21 +25,8 @@ void	ft_free_split(char **tab)
 		free(tab);
 }
 
-int	ft_is_exist(char *str, char c)
-{
-	int	i;
 
-	i = 0;
-	while (str && str[i])
-	{
-		if (str[i] == c)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	ft_len_split(char **tab)
+int	count_tab(char **tab)
 {
 	int	i;
 

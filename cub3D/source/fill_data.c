@@ -7,7 +7,7 @@ static void	ft_fill_info(t_map *data, char *line)
 
 	split = ft_split(line, ' ');
 	if (!split)
-		ft_maloc_error(split);
+		ft_erorr(split);
 	if (!ft_strcmp(split[0], "NO"))
 		data->no_texture = ft_strdup(split[1]);
 	else if (!ft_strcmp(split[0], "SO"))
@@ -20,10 +20,10 @@ static void	ft_fill_info(t_map *data, char *line)
 		data->floor_color = ft_strdup(split[1]);
 	else if (!ft_strcmp(split[0], "C"))
 		data->ceil_color = ft_strdup(split[1]);
-	ft_free_split(split);
+	free_loop(split);
 }
 
-void	ft_fill_data(t_map *data, char *file)
+void	get_info(t_map *data, char *file)
 {
 	int		fd;
 	char	*line;

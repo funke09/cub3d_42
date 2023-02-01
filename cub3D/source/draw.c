@@ -22,7 +22,7 @@ void	ft_mlx_wall_body(t_data *data, int *offsetx, t_image **tmp)
 }
 
 // this function draw a pixel without the scale factor
-void	my_mlx_pixel_put_wall(t_data *data, int x, int y, int wall_top)
+void	drawing_wall(t_data *data, int x, int y, int wall_top)
 {
 	char	*dst;
 	t_image	*tmp;
@@ -47,7 +47,7 @@ void	my_mlx_pixel_put_wall(t_data *data, int x, int y, int wall_top)
 }
 
 // this function draw a pixel without the scale factor
-void	my_mlx_pixel_put2(t_data *data, int x, int y, int color_num)
+void	drawing_ceil_floor(t_data *data, int x, int y, int color_num)
 {
 	char	*dst;
 	int		s;
@@ -69,7 +69,7 @@ void	my_mlx_pixel_put2(t_data *data, int x, int y, int color_num)
 
 // this function draws a square on the position map[y][x] 
 // with a size of your choice
-void	ft_draw_square(int y, int x, int size, t_data *data)
+void	draw_square(int y, int x, int size, t_data *data)
 {
 	int	h;
 	int	w;
@@ -83,7 +83,7 @@ void	ft_draw_square(int y, int x, int size, t_data *data)
 		x = w - size;
 		while (x < w)
 		{
-			my_mlx_pixel_put(data, x, y, 0x00ff000);
+			draw_pixel(data, x, y, 0x00ff000);
 			x++;
 		}
 		y++;
@@ -91,14 +91,14 @@ void	ft_draw_square(int y, int x, int size, t_data *data)
 }
 
 // this function for draw a ray
-void	ft_draw_one_ray(t_data *data, float ray_angle, int size)
+void	put_one_ray(t_data *data, float ray_angle, int size)
 {
 	int	j;
 
 	j = -1;
 	while (++j < size)
 	{
-		my_mlx_pixel_put(data, (data->player->x + cos(ray_angle) * j), \
+		draw_pixel(data, (data->player->x + cos(ray_angle) * j), \
 		(data->player->y + sin(ray_angle) * j), 0x00FF0000);
 	}
 }

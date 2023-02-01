@@ -26,7 +26,7 @@ void	ft_ray_facing(t_ray *v, float ray_angle, t_data *data)
 		data->player->is_ray_up = 0;
 }
 
-// this function initialize the ft_horizontal_intersection() function vars
+// this function initialize the horizontal_intersection() function vars
 void	ft_init_horz_vars(t_data *data, float ray_angle, t_ray *v)
 {
 	v->y_intercept = floor(data->player->y / TILE_SIZE) * TILE_SIZE;
@@ -54,7 +54,7 @@ void	ft_init_horz_vars(t_data *data, float ray_angle, t_ray *v)
 
 // this function return the distance between the player
 //  and the horizontal intersection with the wall
-t_ray	ft_horizontal_intersection(t_data *data, float ray_angle)
+t_ray	horizontal_intersection(t_data *data, float ray_angle)
 {
 	t_ray	v;
 
@@ -63,7 +63,7 @@ t_ray	ft_horizontal_intersection(t_data *data, float ray_angle)
 	while (v.next_horz_touch_x >= 0 && v.next_horz_touch_x < v.window_w
 		&& v.next_horz_touch_y >= 0 && v.next_horz_touch_y < v.window_h)
 	{
-		if (ft_is_in_wall(v.next_horz_touch_x, v.next_horz_touch_y, data) == 1)
+		if (has_wall(v.next_horz_touch_x, v.next_horz_touch_y, data) == 1)
 			return (v);
 		v.next_horz_touch_x += v.x_steps;
 		v.next_horz_touch_y += v.y_steps;
@@ -73,7 +73,7 @@ t_ray	ft_horizontal_intersection(t_data *data, float ray_angle)
 	return (v);
 }
 
-// this function initialize the ft_vertical_intersection() function vars
+// this function initialize the vertical_intersection() function vars
 void	ft_init_vertcl_vars(t_data *data, float ray_angle, t_ray *v)
 {
 	v->x_intercept = floor(data->player->x / TILE_SIZE) * TILE_SIZE;
@@ -101,7 +101,7 @@ void	ft_init_vertcl_vars(t_data *data, float ray_angle, t_ray *v)
 
 // this function return the distance between the player 
 // and the vertical intersection with the wall
-t_ray	ft_vertical_intersection(t_data *data, float ray_angle)
+t_ray	vertical_intersection(t_data *data, float ray_angle)
 {
 	t_ray	v;
 
@@ -110,7 +110,7 @@ t_ray	ft_vertical_intersection(t_data *data, float ray_angle)
 	while (v.next_vertcl_touch_x >= 0 && v.next_vertcl_touch_x < v.window_w
 		&& v.next_vertcl_touch_y >= 0 && v.next_vertcl_touch_y < v.window_h)
 	{
-		if (ft_is_in_wall(v.next_vertcl_touch_x, \
+		if (has_wall(v.next_vertcl_touch_x, \
 		v.next_vertcl_touch_y, data) == 1)
 			return (v);
 		v.next_vertcl_touch_x += v.x_steps;

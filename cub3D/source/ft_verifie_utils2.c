@@ -1,7 +1,7 @@
 
 #include "cub3D.h"
 
-int	ft_is_flag(char *str)
+int	is_param(char *str)
 {
 	if (!ft_strcmp(str, "NO") || !ft_strcmp(str, "SO")
 		|| !ft_strcmp(str, "WE") || !ft_strcmp(str, "EA")
@@ -10,7 +10,7 @@ int	ft_is_flag(char *str)
 	return (0);
 }
 
-int	ft_nbr_flag(char *str)
+int	param_number(char *str)
 {
 	if (!ft_strcmp(str, "SO"))
 		return (1);
@@ -27,7 +27,7 @@ int	ft_nbr_flag(char *str)
 	return (0);
 }
 
-int	ft_is_gbr_valid(char *str)
+int	valid_color(char *str)
 {
 	int	i;
 
@@ -47,7 +47,7 @@ int	ft_is_gbr_valid(char *str)
 }
 
 // this function limits the angle between (0~360) degree or (0~2PI) radian
-float	ft_normalize_angle(float angle)
+float	normalize(float angle)
 {
 	angle = fmod(angle, 2 * M_PI);
 	if (angle < 0)

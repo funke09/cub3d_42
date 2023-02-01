@@ -9,7 +9,7 @@ static void	ft_update_plyr(t_data *data, int nbr_plyrs, int x, int y)
 
 	obj_map = data->map;
 	if (nbr_plyrs > 1)
-		ft_map_errors(data, 2);
+		error_map(data, 2);
 	obj_map->x_player = x;
 	obj_map->y_player = y;
 }
@@ -27,7 +27,7 @@ static int	ft_check_char(char c)
 
 // this function check if there is more than one player 
 // and if there is unwanted characters.
-void	ft_check_characters(t_data *data, t_map *obj_map)
+void	is_characters(t_data *data, t_map *obj_map)
 {
 	int		x;
 	int		y;
@@ -43,7 +43,7 @@ void	ft_check_characters(t_data *data, t_map *obj_map)
 		while (map[y][++x])
 		{
 			if (ft_check_char(map[y][x]) == 1)
-				ft_map_errors(data, 1);
+				error_map(data, 1);
 			else if (ft_check_char(map[y][x]) == 2)
 			{
 				nbr_plyrs++;
@@ -52,7 +52,7 @@ void	ft_check_characters(t_data *data, t_map *obj_map)
 		}
 	}
 	if (nbr_plyrs == 0)
-		ft_map_errors(data, 2);
+		error_map(data, 2);
 }
 
 // this function check if the element surrounded by walls
@@ -67,11 +67,11 @@ void	ft_is_wall_exist(t_data *data, int y, int x)
 		|| x == 0 || x == obj_map->width - 1
 		|| map[y - 1][x] == ' ' || map[y + 1][x] == ' '
 		|| map[y][x - 1] == ' ' || map[y][x + 1] == ' ')
-		ft_map_errors(data, 3);
+		error_map(data, 3);
 }
 
 // this function check if the map surrounded by walls.
-void	ft_check_walls(t_data *data, t_map *obj_map)
+void	wall_checker(t_data *data, t_map *obj_map)
 {
 	int		x;
 	int		y;

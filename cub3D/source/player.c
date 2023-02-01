@@ -3,7 +3,7 @@
 
 // this function get the player.rotation_angle
 // based on the player orientation player_derection
-float	ft_get_rot_angle(char c)
+float	check_angle(char c)
 {
 	if (c == 'W')
 		return (M_PI);
@@ -17,7 +17,7 @@ float	ft_get_rot_angle(char c)
 }
 
 // this function draw the player on the map
-void	ft_render_player(t_data *data)
+void	player_rendr(t_data *data)
 {
 	int	y;
 	int	x;
@@ -28,11 +28,11 @@ void	ft_render_player(t_data *data)
 	x = data->player->minimap_size / 2;
 	i = -1;
 	sizeofplayer = data->player->sizeofplayer;
-	ft_draw_square(y, x, sizeofplayer, data);
+	draw_square(y, x, sizeofplayer, data);
 }
 
 // this function checks if there is a wall in the position map[new_y][new_x]
-int	ft_is_in_wall(int new_x, int new_y, t_data *data)
+int	has_wall(int new_x, int new_y, t_data *data)
 {
 	int	w;
 	int	h;
@@ -48,7 +48,7 @@ int	ft_is_in_wall(int new_x, int new_y, t_data *data)
 }
 
 // this function updates the players info based on the key you pressed
-void	ft_update(t_data *data, int key)
+void	update(t_data *data, int key)
 {
 	float		move_step;
 	float		new_x;
@@ -69,7 +69,7 @@ void	ft_update(t_data *data, int key)
 		move_step = player->move_speed * player->walk_direction;
 		new_x = player->x + move_step * cos(player->rotate_angle);
 		new_y = player->y + move_step * sin(player->rotate_angle);
-		if (ft_is_in_wall(new_x, new_y, data) == 0)
+		if (has_wall(new_x, new_y, data) == 0)
 		{
 			player->x = new_x;
 			player->y = new_y;

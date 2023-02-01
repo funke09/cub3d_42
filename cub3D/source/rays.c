@@ -1,7 +1,7 @@
 
 #include "cub3D.h"
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+void	draw_pixel(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 	int		x_scaled;
@@ -46,11 +46,11 @@ void	ft_draw_rectangle(int y, int x, t_data *data)
 				&& (x1 < (data->real_width) && x1 >= 0))
 			{
 				if (y1 < y)
-					my_mlx_pixel_put2(data, x1, y1, 1);
+					drawing_ceil_floor(data, x1, y1, 1);
 				else if (y1 >= y && y1 < h)
-					my_mlx_pixel_put_wall(data, x1, y1, y);
+					drawing_wall(data, x1, y1, y);
 				else if (y1 >= h)
-					my_mlx_pixel_put2(data, x1, y1, 3);
+					drawing_ceil_floor(data, x1, y1, 3);
 			}
 		}
 	}
@@ -79,7 +79,7 @@ void	ft_render_wall(t_data *data, float bad_distnc, int i, float ray_angle)
 }
 
 // this function draw the rays on the minimap
-void	ft_render_rays(t_data *data)
+void	render_rays(t_data *data)
 {
 	float	ray_angle;
 	int		i;
@@ -89,12 +89,12 @@ void	ft_render_rays(t_data *data)
 
 	i = -1;
 	ray_angle = data->player->rotate_angle - (data->player->fov_angle / 2);
-	ray_angle = ft_normalize_angle(ray_angle);
+	ray_angle = normalize(ray_angle);
 	while (++i < data->player->rays_num)
 	{
 		data->player->is_horz_intr = 1;
-		d1 = ft_horizontal_intersection(data, ray_angle);
-		d2 = ft_vertical_intersection(data, ray_angle);
+		d1 = horizontal_intersection(data, ray_angle);
+		d2 = vertical_intersection(data, ray_angle);
 		if (d1.distance > d2.distance)
 		{
 			result = d2;
@@ -103,13 +103,13 @@ void	ft_render_rays(t_data *data)
 		else
 			result = d1;
 		data->v = result;
-		ft_draw_one_ray(data, ray_angle, result.distance);
+		put_one_ray(data, ray_angle, result.distance);
 		ray_angle += data->player->fov_angle / data->player->rays_num;
 	}
 }
 
 // this function project the walls 
-void	ft_project_walls(t_data *data)
+void	project_plane_wall(t_data *data)
 {
 	float	ray_angle;
 	int		i;
@@ -119,12 +119,12 @@ void	ft_project_walls(t_data *data)
 
 	i = -1;
 	ray_angle = data->player->rotate_angle - (data->player->fov_angle / 2);
-	ray_angle = ft_normalize_angle(ray_angle);
+	ray_angle = normalize(ray_angle);
 	while (++i < data->player->rays_num)
 	{
 		data->player->is_horz_intr = 1;
-		d1 = ft_horizontal_intersection(data, ray_angle);
-		d2 = ft_vertical_intersection(data, ray_angle);
+		d1 = horizontal_intersection(data, ray_angle);
+		d2 = vertical_intersection(data, ray_angle);
 		if (d1.distance > d2.distance)
 		{
 			result = d2;

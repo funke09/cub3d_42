@@ -38,7 +38,7 @@ static void	ft_check_line(t_data *data, char *line, int *i, int *map_end)
 	else if (line[0] != '\n' && *map_end == 1)
 	{
 		free(line);
-		ft_map_errors(data, 4);
+		error_map(data, 4);
 	}
 }
 
@@ -101,7 +101,7 @@ void	ft_fill_map(char *map_path, t_map *obj_map)
 	map_len = obj_map->height + 1;
 	map = (char **)malloc(sizeof(char *) * map_len);
 	if (!map)
-		ft_maloc_error(map);
+		ft_erorr(map);
 	fd = open(map_path, O_RDONLY);
 	i = -1;
 	line = ft_go_to_map_line(fd);
@@ -117,24 +117,24 @@ void	ft_fill_map(char *map_path, t_map *obj_map)
 }
 
 // this function init the map
-void	ft_map_init(char *map_path, t_data *data)
+void	init_map(char *map_path, t_data *data)
 {
 	t_map	*obj_map;
 
-	if (!ft_verifie(map_path))
+	if (!map_checker(map_path))
 		exit(0);
 	obj_map = data->map;
 	ft_map_dimensions(map_path, data);
 	ft_fill_map(map_path, obj_map);
-	ft_check_characters(data, obj_map);
-	ft_check_walls(data, obj_map);
-	ft_fill_data(obj_map, map_path);
+	is_characters(data, obj_map);
+	wall_checker(data, obj_map);
+	get_info(obj_map, map_path);
 	data->player->player_derection = \
 	obj_map->map[obj_map->y_player][obj_map->x_player];
 	data->player->x = obj_map->x_player * TILE_SIZE + 2;
 	data->player->y = obj_map->y_player * TILE_SIZE + 2;
-	obj_map->floor_color_dc = ft_trgb_to_dec(0, ft_get_color(obj_map->floor_color, 1), \
-	ft_get_color(obj_map->floor_color, 2), ft_get_color(obj_map->floor_color, 3));
-	obj_map->ceil_color_dc = ft_trgb_to_dec(0, ft_get_color(obj_map->ceil_color, 1), \
-	ft_get_color(obj_map->ceil_color, 2), ft_get_color(obj_map->ceil_color, 3));
+	obj_map->floor_color_dc = convert_rgb_dec(0, check_color(obj_map->floor_color, 1), \
+	check_color(obj_map->floor_color, 2), check_color(obj_map->floor_color, 3));
+	obj_map->ceil_color_dc = convert_rgb_dec(0, check_color(obj_map->ceil_color, 1), \
+	check_color(obj_map->ceil_color, 2), check_color(obj_map->ceil_color, 3));
 }

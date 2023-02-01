@@ -30,21 +30,21 @@ static	int	identifier(char *str, char *info)
 	i = 0;
 	if(!str || !info)
 		return (0);
-	if (!ft_is_flag(str))
+	if (!is_param(str))
 		return (0);
 	if (!ft_strcmp(str, "F") || !ft_strcmp(str, "C"))
 	{
-		if (!ft_is_gbr_valid(info))
+		if (!valid_color(info))
 			return (0);
 		split = ft_split(info, ',');
-		while (ft_len_split(split) == 3 && i != -1 && split[i])
+		while (count_tab(split) == 3 && i != -1 && split[i])
 		{
 			nbr = ft_atoi(split[i]);
 			if (nbr > 255 || nbr < 0)
 				i = -2;
 			i++;
 		}
-		ft_free_split(split);
+		free_loop(split);
 		if (i == 0 || i == -1)
 			return (0);
 	}
@@ -58,13 +58,13 @@ void	ft_body_info(char *line, int *re, int *len, int *nbr)
 	*re = 0;
 	split = ft_split(line, ' ');
 	if (!split)
-		ft_maloc_error(split);
-	if (ft_len_split(split) == 2 || (ft_len_split(split) == 3
-			&& split[ft_len_split(split) - 1][0] == '\n'))
+		ft_erorr(split);
+	if (count_tab(split) == 2 || (count_tab(split) == 3
+			&& split[count_tab(split) - 1][0] == '\n'))
 		*re = 1;
 	*re = *re * identifier(split[0], split[1]);
-	*nbr = *nbr + ft_nbr_flag(split[0]);
-	ft_free_split(split);
+	*nbr = *nbr + param_number(split[0]);
+	free_loop(split);
 	(*len)++;
 }
 
@@ -94,7 +94,7 @@ int	ft_information(int fd)
 	return (1);
 }
 
-int	ft_verifie(char *file)
+int	map_checker(char *file)
 {
 	int	fd;
 
