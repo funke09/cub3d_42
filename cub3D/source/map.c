@@ -64,6 +64,15 @@ void	ft_map_dimensions(char *map_path, t_var *var)
 	var->map->height = i;
 	close(fd);
 }
+/**
+ * It takes a string and a row length, and returns a string that is the same as the first string, but
+ * with spaces added to the end of it until it reaches the row length
+ * 
+ * @param s1 the string to be copied
+ * @param row_len the length of the row in the map
+ * 
+ * @return A pointer to a string.
+ */
 char	*ft_strdup_cub3D(char *s1, int row_len)
 {
 	int		i;

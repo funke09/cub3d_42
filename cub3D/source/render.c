@@ -50,7 +50,7 @@ int	ft_get_position_color(t_var *var, int x, int y, int map_size)
 
 	s_y = var->player->y - map_size / 2;
 	s_x = var->player->x - map_size / 2;
-	if (has_wall(s_x + x, s_y + y, var) == 1
+	if (has_wall(s_x + x, s_y + y, var, 99) == 1
 		|| var->map->map[(s_y + y) / 50][(s_x + x) / 50] == ' ')
 		return (0x808080);
 	return (0xffffff);

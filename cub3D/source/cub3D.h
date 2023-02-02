@@ -129,7 +129,7 @@ int				valid_color(char *str);
 void			wall_checker(t_var *var, t_map *map);
 void			init_map(char *map_path, t_var *var);
 void			draw_square(int y, int x, int size, t_var *var);
-int				has_wall(int new_x, int new_y, t_var *var);
+int				has_wall(int new_x, int new_y, t_var *var, int front);
 void			update(t_var *var, int key);
 void			player_rendr(t_var *var);
 void			render_rays(t_var *var);

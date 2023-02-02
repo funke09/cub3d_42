@@ -16,6 +16,46 @@ float	check_angle(char c)
 	return (0);
 }
 
+float ft_normalize_promax(int isfront, t_player *p)
+{
+	float	angle;
+
+	if (isfront == 1)
+		angle = normalize(p->rotate_angle);
+	else if (isfront == -1)
+		angle = normalize(p->rotate_angle - (M_PI / 2));
+	else if (isfront == -2)
+		angle = normalize(p->rotate_angle + (M_PI / 2));
+	else 
+		angle = normalize(p->rotate_angle + M_PI);
+	return (normalize(angle));
+}
+
+
+int	ft_special_case(int x, int y, t_var *var, int isfront)
+{
+	t_player *p;
+	t_map *map;
+	float angle;
+	
+	p = var->player;
+	map = var->map;
+	angle = ft_normalize_promax(isfront, p);
+	if (angle >= 0 && (angle < M_PI / 2))
+		if ( map->map[y + 1][x] == '1' && map->map[y][x + 1] == '1')
+			return (1);
+	if (angle >= (M_PI/2) && (angle <= (M_PI)))
+		if ( map->map[y + 1][x] == '1' && map->map[y][x - 1] == '1')
+			return (1);
+	if (angle >= (M_PI) && (angle < (3 * M_PI / 2)))
+		if ( map->map[y - 1][x] == '1' && map->map[y][x - 1] == '1')
+			return (1);
+	if (angle >= (3 * M_PI / 2) && (angle <= 2 * M_PI))
+		if ( map->map[y - 1][x] == '1' && map->map[y][x + 1] == '1')
+			return (1);
+	return (0);
+}
+
 // this function draw the player on the map
 void	player_rendr(t_var *var)
 {
@@ -32,7 +72,7 @@ void	player_rendr(t_var *var)
 }
 
 // this function checks if there is a wall in the position map[new_y][new_x]
-int	has_wall(int new_x, int new_y, t_var *var)
+int	has_wall(int new_x, int new_y, t_var *var, int front)
 {
 	int	w;
 	int	h;
@@ -45,61 +85,19 @@ int	has_wall(int new_x, int new_y, t_var *var)
 		return (1);
 	if (var->map->map[new_y / TILE_SIZE][new_x / TILE_SIZE] != '0')
 		return (1);
+	if (ft_special_case(var->player->x / TILE_SIZE, var->player->y / TILE_SIZE, var, front) == 1)
+		return (1);
 	else
 		return (0);
 }
 
-int	ft_special_case(int xx, int yy, t_var *var, int isfront)
+
+void move_left(t_player *player, float fixedangle, float *new_x, float *new_y)
 {
-	t_player *p;
-	t_map *map;
-	int x;
-	int y;
-	float angle;
-	printf("ft_special_case called \n");
-	
-	
-	x = xx / TILE_SIZE;
-	y = yy / TILE_SIZE;
-	p = var->player;
-	map = var->map;
-	if (isfront == 1)
-		angle = normalize(p->rotate_angle);
-	else if (isfront == -1)
-		angle = normalize(p->rotate_angle - (M_PI / 2));
-	else if (isfront == -2)
-		angle = normalize(p->rotate_angle + (M_PI / 2));
-	else 
-		angle = normalize(p->rotate_angle + M_PI);
-	printf("rotate_angle %f \n", angle);
-	if (angle >= 0 && (angle < M_PI / 2))
-	{
-		printf("ft_special_case1 \n");
-		if ( map->map[y + 1][x] == '1' && map->map[y][x + 1] == '1')
-			return (1);
-	}
-	else if (angle >= (M_PI/2) && (angle <= (M_PI)))
-	{
-		printf("ft_special_case 2 \n");
-		if ( map->map[y + 1][x] == '1' && map->map[y][x - 1] == '1')
-			return (1);
-	}
-	else if (angle >= (M_PI) && (angle < (3 * M_PI / 2)))
-	{
-		printf("ft_special_case 3 \n");
-		if ( map->map[y - 1][x] == '1' && map->map[y][x - 1] == '1')
-			return (1);
-	}
-	else if (angle >= (3 * M_PI / 2) && (angle <= 2 * M_PI))
-	{
-		printf("ft_special_case 4 \n");
-		if ( map->map[y - 1][x] == '1' && map->map[y][x + 1] == '1')
-			return (1);
-	}
-	return (0);
+	*new_x = player->x + player->move_speed * cos(fixedangle);
+	*new_y = player->y + player->move_speed * sin(fixedangle);
 }
 
-// this function updates the players info based on the key you pressed
 void	update(t_var *var, int key)
 {
 	float		move_step;
@@ -109,47 +107,47 @@ void	update(t_var *var, int key)
 
 	player = var->player;
 	move_step = player->move_speed;
-	if (key == KEY_RIGHT || key == KEY_LEFT || key == KEY_D
-		|| key == KEY_A )
-	{
+	// if (key == KEY_RIGHT || key == KEY_LEFT || key == KEY_D
+	// 	|| key == KEY_A )
+	// {
 		if( key == KEY_A)
 		{
+			//move_left(player, player->rotate_angle - (M_PI / 2), &new_x, &new_y);
 			new_x = player->x + move_step * cos(player->rotate_angle - (M_PI / 2));
 			new_y = player->y + move_step * sin(player->rotate_angle - (M_PI / 2));
-		}else if ( key == KEY_D)
+		}
+		 if ( key == KEY_D)
 		{
 			new_x = player->x + move_step * cos(player->rotate_angle + (M_PI / 2));
 			new_y = player->y + move_step * sin(player->rotate_angle + (M_PI / 2));
 		}
-		if (key == KEY_A && has_wall(new_x, new_y, var) == 0 && ft_special_case(player->x, player->y, var, -1) == 0)
+		if (key == KEY_A && has_wall(new_x, new_y, var, -1) == 0 )
 		{	player->x = new_x;
 			player->y = new_y;
 		}
-		else if(key == KEY_D && has_wall(new_x, new_y, var) == 0 && ft_special_case(player->x, player->y, var, -2) == 0)
+		 if(key == KEY_D && has_wall(new_x, new_y, var, -2) == 0)
 		{
 			player->x = new_x;
 			player->y = new_y;
 		}
-		else if ( key == KEY_RIGHT || key == KEY_LEFT)
+		if ( key == KEY_RIGHT || key == KEY_LEFT)
 		{
-			player->rotate_angle += player->turn_direction \
-			* player->rotation_speed;
+			player->rotate_angle =normalize(player->rotate_angle + player->turn_direction * player->rotation_speed);
+			printf("rotate angle %f", player->rotate_angle);
 			player->turn_direction = 0;
 		}
-		
-
-	}
+	//}
 	if (key == KEY_W || key == KEY_S || key == KEY_A || key == KEY_D)
 	{
 		move_step = player->move_speed * player->walk_direction;
 		new_x = player->x + move_step * cos(player->rotate_angle);
 		new_y = player->y + move_step * sin(player->rotate_angle);
-		if (key == KEY_W && has_wall(new_x, new_y, var) == 0  && ft_special_case(player->x, player->y, var, 1) == 0)
+		if (key == KEY_W && has_wall(new_x, new_y, var, 1) == 0  )
 		{
 			player->x = new_x;
 			player->y = new_y;
 		}
-		else if ( key == KEY_S && has_wall(new_x, new_y, var) == 0  && ft_special_case(player->x, player->y, var, 0) == 0)
+		else if ( key == KEY_S && has_wall(new_x, new_y, var, 0) == 0)
 		{
 			player->x = new_x;
 			player->y = new_y;
