@@ -1,8 +1,11 @@
 
 #include "cub3D.h"
 
-// this function handles the exit of the game when 
-// clicking the red cross or the ESK
+/**
+ * It frees the memory allocated for the map, destroys the window, and exits the program
+ *  ESC or X button
+ * @param n_var a void pointer to the t_var struct
+ */
 int	ft_destroy_window(void *n_var)
 {
 	t_var	*var;
@@ -17,7 +20,16 @@ int	ft_destroy_window(void *n_var)
 	exit(0);
 }
 
-// this funciton handles the click on the keys
+
+/**
+ * It takes the key pressed and the variable struct as arguments, and then it changes the player's
+ * direction based on the key pressed
+ * 
+ * @param key the key that was pressed
+ * @param n_var This is a void pointer to the variable that we passed to mlx_hook.
+ * 
+ * @return 0
+ */
 int	key_press(int key, void *n_var)
 {
 	t_var	*var;

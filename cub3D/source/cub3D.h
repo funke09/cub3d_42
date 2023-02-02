@@ -79,7 +79,6 @@ typedef struct s_player
 	float	wall_strip_width;
 	float	wall_strip_height;
 	float	rays_num;
-	float	minimap_scale_factor;
 	int		minimap_size;
 	int		sizeofplayer;
 }	t_player;
@@ -131,7 +130,6 @@ void			init_map(char *map_path, t_var *var);
 void			draw_square(int y, int x, int size, t_var *var);
 int				has_wall(int new_x, int new_y, t_var *var);
 void			update(t_var *var, int key);
-void			player_rendr(t_var *var);
 void			render_rays(t_var *var);
 void			render(t_var *var, int key);
 void			init_texturs(t_var *var);

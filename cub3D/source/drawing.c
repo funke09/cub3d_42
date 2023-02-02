@@ -1,58 +1,80 @@
 
 #include "cub3D.h"
 
-void	ft_mlx_wall_body(t_var *var, int *offsetx, t_image **tmp)
+/**
+ * It sets the texture to be used for the wall
+ * 
+ * @param var the structure that contains all the information about the game.
+ * @param x the x coordinate of the texture
+ * @param image the image to draw
+ */
+void	which_textur(t_var *var, int *x, t_image **image)
 {
 	if (var->player->is_horz_intr == 1)
 	{
-		*offsetx = (int)var->v.next_horz_touch_x % TEXTUR_WIDTH;
+		*x = (int)var->v.next_horz_touch_x % TEXTUR_WIDTH;
 		if (var->player->is_ray_up == 1)
-			*tmp = var->image->no_texture;
+			*image = var->image->no_texture;
 		if (var->player->is_ray_up == 0)
-			*tmp = var->image->so_texture;
+			*image = var->image->so_texture;
 	}
 	else
 	{
-		*offsetx = (int)var->v.next_vertcl_touch_y % TEXTUR_WIDTH;
+		*x = (int)var->v.next_vertcl_touch_y % TEXTUR_WIDTH;
 		if (var->player->is_ray_right == 0)
-			*tmp = var->image->we_texture;
+			*image = var->image->we_texture;
 		if (var->player->is_ray_right == 1)
-			*tmp = var->image->ea_texture;
+			*image = var->image->ea_texture;
 	}
 }
 
-// this function draw a pixel without the scale factor
-void	drawing_wall(t_var *var, int x, int y, int wall_top)
+/**
+ * It draws the wall
+ * 
+ * @param var the main structure
+ * @param x the x coordinate of the pixel to be drawn
+ * @param y the y coordinate of the pixel to be drawn
+ * @param first_wall the first pixel of the wall to draw
+ * 
+ * @return the value of the pixel at the given coordinates.
+ */
+void	drawing_wall(t_var *var, int x, int y, int first_wall)
 {
+	t_image	*img;
 	char	*dst;
-	t_image	*tmp;
-	int		s;
-	int		offsetx;
-	int		offsety;
+	int		t_x;
+	int		t_y;
 
-	s = TILE_SIZE;
 	if (y > (var->real_height)
 		|| x > (var->real_width))
 		return ;
 	if (y >= (var->real_height)
 		|| x >= (var->real_width))
 		return ;
-	ft_mlx_wall_body(var, &offsetx, &tmp);
-	offsety = ((y - wall_top) * \
+	which_textur(var, &t_x, &img);
+	t_y = ((y - first_wall) * \
 		(TEXTUR_WIDTH / (var->player->wall_strip_height * TILE_SIZE)));
 	dst = var->img_var + (y * var->line_length + \
 		x * (var->bits_per_pixel / 8));
-	*(unsigned int *)dst = *(unsigned int *)&tmp->img_var[((offsety % s) \
-		* tmp->line_size + (offsetx % s) * (tmp->bits_per_pixel / 8))];
+	*(unsigned int *)dst = *(unsigned int *)&img->img_var[((t_y % TILE_SIZE) \
+		* img->line_size + (t_x % TILE_SIZE) * (img->bits_per_pixel / 8))];
 }
 
-// this function draw a pixel without the scale factor
-void	drawing_ceil_floor(t_var *var, int x, int y, int color_num)
+
+/**
+ * It draws the ceiling and floor
+ * 
+ * @param var the structure that contains all the information about the game
+ * @param x the x coordinate of the pixel to be drawn
+ * @param y the y coordinate of the pixel to be drawn
+ * @param color 1 = ceil, 3 = floor
+ * 
+ * @return the color of the pixel.
+ */
+void	drawing_ceil_floor(t_var *var, int x, int y, int color)
 {
 	char	*dst;
-	int		s;
 
-	s = TILE_SIZE;
 	if (y > (var->real_height)
 		|| x > (var->real_width))
 		return ;
@@ -61,14 +83,20 @@ void	drawing_ceil_floor(t_var *var, int x, int y, int color_num)
 		return ;
 	dst = var->img_var + \
 		(y * var->line_length + x * (var->bits_per_pixel / 8));
-	if (color_num == 1)
+	if (color == 1)
 		*(unsigned int *)dst = var->map->ceil_color_dc;
-	else if (color_num == 3)
+	else if (color == 3)
 		*(unsigned int *)dst = var->map->floor_color_dc;
 }
 
-// this function draws a square on the position map[y][x] 
-// with a size of your choice
+/**
+ * It draws a square on the screen
+ * 
+ * @param y y coordinate of the square
+ * @param x x coordinate of the square
+ * @param size the size of the square
+ * @param var the structure that contains all the information about the window
+ */
 void	draw_square(int y, int x, int size, t_var *var)
 {
 	int	h;
@@ -90,15 +118,21 @@ void	draw_square(int y, int x, int size, t_var *var)
 	}
 }
 
-// this function for draw a ray
-void	put_one_ray(t_var *var, float ray_angle, int size)
+/**
+ * It draws a ray from the player's position to the wall
+ * 
+ * @param var the structure that contains all the variables
+ * @param angl the angle of the ray
+ * @param size the size of the ray
+ */
+void	put_one_ray(t_var *var, float angl, int size)
 {
-	int	j;
+	int	i;
 
-	j = -1;
-	while (++j < size)
+	i = -1;
+	while (++i < size)
 	{
-		draw_pixel(var, (var->player->x + cos(ray_angle) * j), \
-		(var->player->y + sin(ray_angle) * j), 0x00FF0000);
+		draw_pixel(var, (var->player->x + cos(angl) * i), \
+		(var->player->y + sin(angl) * i), 0x00FF0000);
 	}
 }

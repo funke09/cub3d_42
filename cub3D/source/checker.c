@@ -1,18 +1,25 @@
 
 #include "cub3D.h"
 
-static int	ft_extension(char *str)
+/**
+ * It checks if the file has the .cub extension
+ * 
+ * @param str the string to check
+ * 
+ * @return the length of the string.
+ */
+static int	check_extention(char *str)
 {
 	int		i;
 	int		len;
-	char	*exte;
+	char	*cmp;
 
 	i = 0;
 	len = ft_strlen(str);
-	exte = ".cub";
+	cmp = ".cub";
 	while (str && str[len - 4 + i] && i < 4)
 	{
-		if (str[len - 4 + i] != exte[i])
+		if (str[len - 4 + i] != cmp[i])
 			return (0);
 		i++;
 	}
@@ -21,78 +28,109 @@ static int	ft_extension(char *str)
 	return (1);
 }
 
-static	int	identifier(char *str, char *info)
+/**
+ * It checks if the parameter is valid, and if it is, it checks if the path is valid
+ * 
+ * @param str the parameter name
+ * @param path the path to the file
+ * 
+ * @return the value of the variable i.
+ */
+static	int	is_valid_path(char *str, char *path)
 {
-	char	**split;
+	char	**word;
 	int		i;
-	int		nbr;
+	int		number;
 
 	i = 0;
-	if(!str || !info)
+	if(!str || !path)
 		return (0);
 	if (!is_param(str))
 		return (0);
 	if (!ft_strcmp(str, "F") || !ft_strcmp(str, "C"))
 	{
-		if (!valid_color(info))
+		if (!valid_color(path))
 			return (0);
-		split = ft_split(info, ',');
-		while (count_tab(split) == 3 && i != -1 && split[i])
+		word = ft_split(path, ',');
+		while (count_tab(word) == 3 && i != -1 && word[i])
 		{
-			nbr = ft_atoi(split[i]);
-			if (nbr > 255 || nbr < 0)
+			number = ft_atoi(word[i]);
+			if (number > 255 || number < 0)
 				i = -2;
 			i++;
 		}
-		free_loop(split);
+		free_loop(word);
 		if (i == 0 || i == -1)
 			return (0);
 	}
 	return (1);
 }
 
-void	ft_body_info(char *line, int *re, int *len, int *nbr)
+/**
+ * It checks if the line is a valid command line
+ * 
+ * @param line the line that is being read
+ * @param flag a flag that is set to 1 if the line is valid, 0 otherwise.
+ * @param len the number of lines in the file
+ * @param number the number of parameters in the line
+ */
+void	valid_info(char *line, int *flag, int *len, int *number)
 {
-	char	**split;
+	char	**str;
 
-	*re = 0;
-	split = ft_split(line, ' ');
-	if (!split)
-		ft_erorr(split);
-	if (count_tab(split) == 2 || (count_tab(split) == 3
-			&& split[count_tab(split) - 1][0] == '\n'))
-		*re = 1;
-	*re = *re * identifier(split[0], split[1]);
-	*nbr = *nbr + param_number(split[0]);
-	free_loop(split);
+	*flag = 0;
+	str = ft_split(line, ' ');
+	if (!str)
+		ft_erorr(str);
+	if (count_tab(str) == 2 || (count_tab(str) == 3
+			&& str[count_tab(str) - 1][0] == '\n'))
+		*flag = 1;
+	*flag = *flag * is_valid_path(str[0], str[1]);
+	*number = *number + param_number(str[0]);
+	free_loop(str);
 	(*len)++;
 }
 
-int	ft_information(int fd)
+/**
+ * It reads the first 6 lines of the file and checks if they are valid
+ * 
+ * @param fd file descriptor
+ * 
+ * @return 1 if the parsing is correct, 0 otherwise.
+ */
+int	read_param(int fd)
 {
-	char	*line;
-	int		re;
+	int		flag;
 	int		len;
-	int		nbr;
+	char	*line;
+	int		number;
 
-	re = 1;
+	flag = 1;
 	len = 0;
-	nbr = 0;
+	number = 0;
 	line = get_next_line(fd);
 	while (line)
 	{
 		if (line[0] != '\n' && len < 6)
-			ft_body_info(line, &re, &len, &nbr);
+			valid_info(line, &flag, &len, &number);
 		free(line);
-		if (!re)
+		if (!flag)
 			return (printf("Error\nError info\n"), 0);
 		line = get_next_line(fd);
 	}
 	close(fd);
-	if (len < 6 || nbr != 111111)
-		return (printf("Error\nError info\n"), 0);
+	if (len < 6 || number != 111111)
+		return (printf("Error\nError parssing\n"), 0);
 	return (1);
 }
+
+/**
+ * It opens the file, checks if it's a .cub file, and then reads the parameters
+ * 
+ * @param file the file name
+ * 
+ * @return the value of the function read_param.
+ */
 
 int	map_checker(char *file)
 {
@@ -100,10 +138,10 @@ int	map_checker(char *file)
 
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		return (printf("Error\nError fd\n"), 0);
-	if (!ft_extension(file))
-		return (printf("Error\nExtension must be .cub\n"), 0);
-	if (!ft_information(fd))
+		return (printf("Error\nError file\n"), 0);
+	if (!check_extention(file))
+		return (printf("Error\nfile must be .cub\n"), 0);
+	if (!read_param(fd))
 		return (0);
 	return (1);
 }

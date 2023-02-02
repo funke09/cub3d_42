@@ -1,12 +1,19 @@
 
 #include "cub3D.h"
 
-// this function init the player attributes
+
+/**
+ * It initializes the player's
+ * variables
+ * 
+ * @param player the player object
+ * @param var a pointer to the main structure that contains all the variables.
+ */
 void	init_player(t_player *player, t_var *var)
 {
-	int	w;
+	int	width;
 
-	w = var->map->width;
+	width = var->map->width;
 	player->turn_direction = 0;
 	player->walk_direction = 0;
 	player->rotate_angle = check_angle(var->player->player_derection);
@@ -16,16 +23,15 @@ void	init_player(t_player *player, t_var *var)
 	player->wall_strip_width = 0.1;
 	player->rays_num = (var->real_width / TILE_SIZE) \
 		/ player->wall_strip_width;
-	player->minimap_scale_factor = 0.2;
-	// player->minimap_size = 0;
-	if (var->map->width > var->map->height)
-		player->minimap_size = var->real_width * player->minimap_scale_factor;
-	else
-		player->minimap_size = var->real_height * player->minimap_scale_factor;
 	player->sizeofplayer = 30;
 }
 
-// this function init the the window and the texture
+/**
+ * It initializes the mlx window,
+ * creates the image, and renders the image to the window
+ * 
+ * @param var a pointer to the t_var structure
+ */
 void	ft_var_init(t_var *var)
 {
 	var->mlx_ptr = mlx_init();
@@ -39,6 +45,14 @@ void	ft_var_init(t_var *var)
 	mlx_put_image_to_window(var->mlx_ptr, var->win_ptr, var->img, 0, 0);
 }
 
+/**
+ * It initializes the map, the player, the image, the window, and the mlx, and then it hooks the
+ * key_press function to the window, the destroy_window function to the window, and the mlx_loop to the
+ * mlx
+ * 
+ * @param ac argument count
+ * @param av the array of arguments passed to the program
+ */
 int	main(int ac, char **av)
 {
 	t_var		var;

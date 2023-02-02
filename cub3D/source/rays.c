@@ -12,7 +12,7 @@ void	draw_pixel(t_var *var, int x, int y, int color)
 	if (y > (var->map->height * TILE_SIZE)
 		|| x > (var->map->width * TILE_SIZE))
 		return ;
-	scale_factor = var->player->minimap_scale_factor;
+	scale_factor = 0.1;
 	x_scaled = x * scale_factor;
 	y_scaled = y * scale_factor;
 	minimap_end = (var->player->minimap_size - 1) * scale_factor;

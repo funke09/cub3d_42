@@ -1,13 +1,23 @@
 
 #include "cub3D.h"
 
-void	ft_erorr(void *var)
+/**
+ * *|CURSOR_MARCADOR|*
+ * 
+ * @param ptr The pointer to the memory that needs to be freed.
+ */
+void	ft_erorr(void *ptr)
 {
-	if (var)
-		free(var);
+	if (ptr)
+		free(ptr);
 	exit(1);
 }
 
+/**
+ * It frees the memory allocated for the textures
+ * 
+ * @param var the structure that contains all the information about the game.
+ */
 void	destroy_textures(t_var *var)
 {
 	if (var->image->ea_texture)
@@ -20,27 +30,32 @@ void	destroy_textures(t_var *var)
 		free(var->image->so_texture);
 }
 
-// this function handles the maps errors and free the map
-void	error_map(t_var *var, int error_num)
+/**
+ * It checks if the map is valid, if not, it prints an error message and exits the program
+ * 
+ * @param var is a pointer to the structure that contains all the variables of the game.
+ * @param number the error number.
+ */
+void	error_map(t_var *var, int number)
 {
 	int		i;
 	t_map	*map;
 
 	map = var->map;
-	printf("Error\n==> ");
-	if (error_num == 1)
-		printf("a map must contain only the 6 chars: [0, 1, W, N, E, S]\n");
-	else if (error_num == 2)
-		printf("a map must contain one Player.\n");
-	else if (error_num == 3)
-		printf("a map must be surrounded by walls [1].\n");
-	else if (error_num == 4)
+	printf("Error ==> ");
+	if (number == 1)
+		printf("map must contain only the 6 chars: [0, 1, W, N, E, S]\n");
+	else if (number == 2)
+		printf("map must contain just one Player.\n");
+	else if (number == 3)
+		printf("map must be surrounded by walls [1].\n");
+	else if (number == 4)
 	{
-		printf("a map can't be separated by new line.\n");
+		printf("map separated by new line.\n");
 		exit(1);
 	}
-	else if (error_num == 5)
-		printf("invalid textures.\n");
+	else if (number == 5)
+		printf("invalid path of texture.\n");
 	i = -1;
 	while (map->map[++i])
 		free(map->map[i]);

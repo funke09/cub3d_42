@@ -2,10 +2,13 @@
 #include "cub3D.h"
 
 /**
- *  this function goes to the 7 full line, in the normal it's
- *  the line that contain the map.
-**/
-char	*ft_go_to_map_line(int fd)
+ * It reads the file until it finds a line that is not a newline character, and then returns that line
+ * 
+ * @param fd file descriptor
+ * 
+ * @return The length of the map.
+ */
+char	*len_map(int fd)
 {
 	char	*line;
 	int		len;
@@ -24,117 +27,153 @@ char	*ft_go_to_map_line(int fd)
 	return (line);
 }
 
-static void	ft_check_line(t_var *var, char *line, int *i, int *map_end)
+/**
+ * It checks the line and sets the width of the map
+ * 
+ * @param var a pointer to the structure that holds all the variables
+ * @param line the line read from the file
+ * @param i the number of lines in the map
+ * @param flag This is a flag that is used to check if the map is valid.
+ */
+static void	ft_check_line(t_var *var, char *line, int *i, int *flag)
 {
-	int	line_lenght;
+	int	len;
 
-	line_lenght = ft_strlen(line) - 1;
-	if (var->map->width < line_lenght)
-		var->map->width = line_lenght;
-	if (line[0] != '\n' && *map_end == 0)
+	len = ft_strlen(line) - 1;
+	if (var->map->width < len)
+		var->map->width = len;
+	if (line[0] != '\n' && *flag == 0)
 		(*i)++;
-	else if (line[0] == '\n' && *map_end == 0)
-		*map_end = 1;
-	else if (line[0] != '\n' && *map_end == 1)
+	else if (line[0] == '\n' && *flag == 0)
+		*flag = 1;
+	else if (line[0] != '\n' && *flag == 1)
 	{
 		free(line);
 		error_map(var, 4);
 	}
 }
 
-// this function for get the width and the hight of the map
-void	ft_map_dimensions(char *map_path, t_var *var)
+/**
+ * It opens the file, reads the first line, and then reads the rest of the file
+ * 
+ * @param path the path to the map file
+ * @param var the structure that contains all the variables
+ */
+
+void	get_info_map(char *path, t_var *var)
 {
-	int		fd;
 	int		i;
+	int		fd;
+	int		flag;
 	char	*line;
-	int		map_end;
 
 	i = 0;
-	map_end = 0;
+	flag = 0;
 	var->map->width = 0;
-	fd = open(map_path, O_RDONLY);
-	line = ft_go_to_map_line(fd);
+	fd = open(path, O_RDONLY);
+	line = len_map(fd);
 	while (line)
 	{
-		ft_check_line(var, line, &i, &map_end);
+		ft_check_line(var, line, &i, &flag);
 		free(line);
 		line = get_next_line(fd);
 	}
 	var->map->height = i;
 	close(fd);
 }
-char	*ft_strdup_cub3D(char *s1, int row_len)
+
+/**
+ * It takes a string and a length, and returns a string of the same length, with the first non-null
+ * character of the original string, and all subsequent characters replaced with spaces
+ * 
+ * @param s1 the string to be copied
+ * @param len the length of the string to be duplicated
+ * 
+ * @return A pointer to a string.
+ */
+char	*dup_cub(char *s1, int len)
 {
 	int		i;
-	char	*pdst;
-	int		end;
+	char	*dst;
+	int		flag;
 
 	i = 0;
-	end = 0;
-	pdst = malloc(sizeof(char) * (row_len + 1));
-	if (pdst == NULL)
+	flag = 0;
+	dst = malloc(sizeof(char) * (len + 1));
+	if (dst == NULL)
 		return (NULL);
-	while (i < row_len)
+	while (i < len)
 	{
-		if (end == 0 && s1[i] != '\0' && s1[i] != '\n')
-			pdst[i] = s1[i];
+		if (flag == 0 && s1[i] != '\0' && s1[i] != '\n')
+			dst[i] = s1[i];
 		else
-			end = 1;
-		if (end == 1)
-			pdst[i] = ' ';
+			flag = 1;
+		if (flag == 1)
+			dst[i] = ' ';
 		i++;
 	}
-	pdst[i] = '\0';
-	return (pdst);
+	dst[i] = '\0';
+	return (dst);
 }
 
-// this function for convert the map file to 2D char array
-void	ft_fill_map(char *map_path, t_map *obj_map)
+
+/**
+ * It reads the map from the file and stores it in a 2D array
+ * 
+ * @param path the path to the map file
+ * @param map_file a pointer to a t_map structure.
+ */
+void	to_array(char *path, t_map *map_file)
 {
 	int		i;
 	int		fd;
-	int		map_len;
-	char	**map;
 	char	*line;
+	int		len;
+	char	**map;
 
-	map_len = obj_map->height + 1;
-	map = (char **)malloc(sizeof(char *) * map_len);
+	len = map_file->height + 1;
+	map = (char **)malloc(sizeof(char *) * len);
 	if (!map)
 		ft_erorr(map);
-	fd = open(map_path, O_RDONLY);
+	fd = open(path, O_RDONLY);
 	i = -1;
-	line = ft_go_to_map_line(fd);
-	while (line && ++i < (map_len - 1))
+	line = len_map(fd);
+	while (line && ++i < (len - 1))
 	{
-		map[i] = ft_strdup_cub3D(line, obj_map->width);
+		map[i] = dup_cub(line, map_file->width);
 		free(line);
 		line = get_next_line(fd);
 	}
-	map[map_len - 1] = NULL;
-	obj_map->map = map;
+	map[len - 1] = NULL;
+	map_file->map = map;
 	close(fd);
 }
 
-// this function init the map
+/**
+ * It reads the map file and stores the information in a struct
+ * 
+ * @param map_path the path to the map file
+ * @param var a pointer to the global variable struct
+ */
+
 void	init_map(char *map_path, t_var *var)
 {
-	t_map	*obj_map;
+	t_map	*global;
 
 	if (!map_checker(map_path))
 		exit(0);
-	obj_map = var->map;
-	ft_map_dimensions(map_path, var);
-	ft_fill_map(map_path, obj_map);
-	is_characters(var, obj_map);
-	wall_checker(var, obj_map);
-	get_info(obj_map, map_path);
+	global = var->map;
+	get_info_map(map_path, var);
+	to_array(map_path, global);
+	is_characters(var, global);
+	wall_checker(var, global);
+	get_info(global, map_path);
 	var->player->player_derection = \
-	obj_map->map[obj_map->y_player][obj_map->x_player];
-	var->player->x = obj_map->x_player * TILE_SIZE + 2;
-	var->player->y = obj_map->y_player * TILE_SIZE + 2;
-	obj_map->floor_color_dc = convert_rgb_dec(0, check_color(obj_map->floor_color, 1), \
-	check_color(obj_map->floor_color, 2), check_color(obj_map->floor_color, 3));
-	obj_map->ceil_color_dc = convert_rgb_dec(0, check_color(obj_map->ceil_color, 1), \
-	check_color(obj_map->ceil_color, 2), check_color(obj_map->ceil_color, 3));
+	global->map[global->y_player][global->x_player];
+	var->player->x = global->x_player * TILE_SIZE + 2;
+	var->player->y = global->y_player * TILE_SIZE + 2;
+	global->floor_color_dc = convert_rgb_dec(0, check_color(global->floor_color, 1), \
+	check_color(global->floor_color, 2), check_color(global->floor_color, 3));
+	global->ceil_color_dc = convert_rgb_dec(0, check_color(global->ceil_color, 1), \
+	check_color(global->ceil_color, 2), check_color(global->ceil_color, 3));
 }
