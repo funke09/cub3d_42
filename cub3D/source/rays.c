@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rays.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yjarhbou <yjarhbou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/03 02:25:14 by zcherrad          #+#    #+#             */
-/*   Updated: 2023/02/03 15:30:41 by zcherrad         ###   ########.fr       */
+/*   Created: 2023/02/03 17:50:38 by yjarhbou          #+#    #+#             */
+/*   Updated: 2023/02/03 17:56:02 by yjarhbou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,23 +53,23 @@ void	drawing_rotation_angle(int y, int x, t_var *var)
  * from the player, and then draws the wall
  * 
  * @param var the structure that contains all the variables of the program.
- * @param old_d the distance from the player to the wall
+ * @param wrongdistance the distance from the player to the wall
  * @param i the current column of the screen
  * @param ray_angle the angle of the ray that is being casted
  */
-void	render_wall(t_var *var, float old_d, int i, float ray_angle)
+void	render_wall(t_var *var, float wrongdistance, int i, float ray_angle)
 {
-	float	current_d;
+	float	corrected_distance;
 	float	distance_projection_plane;
 	float	wall_strip_height;
 	float	width_of_pixl;
 	float	first_point_of_wall;
 
-	current_d = cos(ray_angle - var->player->rotate_angle) \
-		* old_d;
+	corrected_distance = cos(ray_angle - var->player->rotate_angle) \
+		* wrongdistance;
 	distance_projection_plane = ((var->real_width / TILE_SIZE) / 2) \
 		/ tan(var->player->fov_angle / 2);
-	wall_strip_height = (TILE_SIZE / current_d) \
+	wall_strip_height = (TILE_SIZE / corrected_distance) \
 		* distance_projection_plane * 0.5 ;
 	first_point_of_wall = (var->real_height / 2)
 		- (wall_strip_height / 2) * TILE_SIZE;

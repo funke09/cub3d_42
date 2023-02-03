@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   update_moves.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yjarhbou <yjarhbou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/03 02:52:02 by zcherrad          #+#    #+#             */
-/*   Updated: 2023/02/03 14:25:46 by zcherrad         ###   ########.fr       */
+/*   Created: 2023/02/03 17:34:44 by yjarhbou          #+#    #+#             */
+/*   Updated: 2023/02/03 17:34:45 by yjarhbou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "cub3D.h"
 

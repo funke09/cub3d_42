@@ -1,8 +1,6 @@
 
 NAME = cub3D
-BONUS = cub3D_bonus
 
-# madatory
 SRC_FOLDER = ./source/
 SRC = cub3d.c ft_error.c map.c map_check.c tools.c checker.c init.c drawing.c \
 	player.c rays.c render.c intersections.c color.c keys.c tools_2.c update_moves.c
@@ -27,7 +25,6 @@ LIBS =  ./source/libft/libft.a
 
 INCLUDES = ./source/cub3D.h ./source/libft/libft.h 
 
-# -g for the debugger
 FLAGS = -Wall -Wextra -Werror
 CC = cc 
 
@@ -37,23 +34,18 @@ CC = cc
 $(NAME) : ${SRCOBJ} $(OTHER_SRCS)
 	@make -C $(LIBFT_FOLDER)
 	@$(CC) ${FLAGS} $(SRCOBJ) $(LIBS) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
-	@echo "|+| make the libft.a"
-	@echo "|+| make the $(NAME) program"
-
-
-all : $(NAME)  
+all : $(NAME) 
 
 clean :
 	@make clean -C $(LIBFT_FOLDER)
 	@rm -f $(LIBS) $(OTHER_OBJ) $(SRCOBJ)
-	@echo "|-| remove object files "
 
 fclean : clean
 	@rm -f ${NAME}
 	@rm -f ${SRCOBJ}
 	@rm -f ${OTHER_OBJ}
 	@make fclean -C $(LIBFT_FOLDER)
-	@echo "|-| remove the program "
+
 
 re : fclean all
 
