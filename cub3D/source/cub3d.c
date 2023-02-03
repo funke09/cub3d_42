@@ -6,7 +6,7 @@
 /*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 02:39:33 by zcherrad          #+#    #+#             */
-/*   Updated: 2023/02/03 02:45:53 by zcherrad         ###   ########.fr       */
+/*   Updated: 2023/02/03 17:01:04 by zcherrad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_var_init(t_var *var)
 	var->mlx_ptr = mlx_init();
 	var->win_ptr = \
 		mlx_new_window(var->mlx_ptr, var->real_width,
-			var->real_height, "NAZISM");
+			var->real_height, "CUB3D");
 	var->img = mlx_new_image(var->mlx_ptr, var->real_width,
 			var->real_height);
 	var->img_var = mlx_get_data_addr(var->img, &var->bits_per_pixel, \
@@ -88,5 +88,5 @@ int	main(int ac, char **av)
 		mlx_loop(var.mlx_ptr);
 	}
 	else
-		printf("=> USAGE : ./cub3D [mapName.cub]\n");
+		printf("====> USAGE : ./cub3D [mapName.cub]\n");
 }

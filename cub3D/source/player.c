@@ -6,7 +6,7 @@
 /*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 02:26:31 by zcherrad          #+#    #+#             */
-/*   Updated: 2023/02/03 02:51:43 by zcherrad         ###   ########.fr       */
+/*   Updated: 2023/02/03 14:39:12 by zcherrad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,23 +31,41 @@ float	check_angle(char c)
 	return (0);
 }
 
-float	ft_normalize_promax(int isfront, t_player *p)
+/**
+ * It normalizes the angle of the player's rotation
+ * 
+ * @param isfront 1 = front, -1 = left, -2 = right, 0 = back
+ * @param player the player
+ * 
+ * @return The angle of the player.
+ */
+float	ft_normalize_promax(int isfront, t_player *player)
 {
 	float	angle;
 
 	if (isfront == 1)
-		angle = normalize(p->rotate_angle);
+		angle = normalize(player->rotate_angle);
 	else if (isfront == -1)
-		angle = normalize(p->rotate_angle - (M_PI / 2));
+		angle = normalize(player->rotate_angle - (M_PI / 2));
 	else if (isfront == -2)
-		angle = normalize(p->rotate_angle + (M_PI / 2));
+		angle = normalize(player->rotate_angle + (M_PI / 2));
 	else if (isfront == 0)
-		angle = normalize(p->rotate_angle + M_PI);
+		angle = normalize(player->rotate_angle + M_PI);
 	else
-		angle = normalize(p->rotate_angle);
+		angle = normalize(player->rotate_angle);
 	return (angle);
 }
 
+/**
+ * It checks if the player is in a corner and if so, returns 1
+ * 
+ * @param x the x coordinate of the current ray
+ * @param y the y coordinate of the current ray
+ * @param var the structure containing all the variables
+ * @param isfront 1 if the ray is in front of the player, 0 if it's behind.
+ * 
+ * @return the value of the variable "angle"
+ */
 int	ft_special_case(int x, int y, t_var *var, int isfront)
 {
 	t_player	*p;
@@ -72,15 +90,25 @@ int	ft_special_case(int x, int y, t_var *var, int isfront)
 	return (0);
 }
 
+/**
+ * It checks if the player is going to hit a wall
+ * 
+ * @param new_x the new x position of the player
+ * @param new_y the new y position of the player
+ * @param var the main structure that contains all the information about the game
+ * @param front 0 for left, 1 for right, 2 for up, 3 for down
+ * 
+ * @return a 1 if there is a wall, and a 0 if there is not.
+ */
 int	has_wall(int new_x, int new_y, t_var *var, int front)
 {
-	int	w;
-	int	h;
+	int	new_width;
+	int	new_height;
 
 	(void)front;
-	w = (var->map->width) * TILE_SIZE;
-	h = (var->map->height) * TILE_SIZE;
-	if (new_x < 0 || new_x > w || new_y < 0 || new_y > h)
+	new_width = (var->map->width) * TILE_SIZE;
+	new_height = (var->map->height) * TILE_SIZE;
+	if (new_x < 0 || new_x > new_width || new_y < 0 || new_y > new_height)
 		return (1);
 	if (var->map->map[new_y / TILE_SIZE][new_x / TILE_SIZE] != '0')
 		return (1);
@@ -93,6 +121,14 @@ int	has_wall(int new_x, int new_y, t_var *var, int front)
 		return (0);
 }
 
+/**
+ * It checks if the player is trying to move, and if so,
+ * it checks if there's a wall in the way. If
+ * there isn't, it updates the player's position
+ * 
+ * @param var the main structure that contains all the information about the game
+ * @param key the key that was pressed
+ */
 void	update(t_var *var, int key)
 {
 	float		move_step;

@@ -6,7 +6,7 @@
 /*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 02:28:28 by zcherrad          #+#    #+#             */
-/*   Updated: 2023/02/03 02:55:28 by zcherrad         ###   ########.fr       */
+/*   Updated: 2023/02/03 14:40:52 by zcherrad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,24 +126,24 @@ void	to_array(char *path, t_map *map_file)
 }
 
 /**
- * It reads the map file and stores the information in a struct
+ * It reads the map file,
+ * checks for errors, and stores the map in a 2D array
  * 
- * @param map_path the path to the map file
+ * @param map_file the name of the map file
  * @param var a pointer to the global variable struct
  */
-
-void	init_map(char *map_path, t_var *var)
+void	init_map(char *map_file, t_var *var)
 {
 	t_map	*global;
 
-	if (!map_checker(map_path))
+	if (!map_checker(map_file))
 		exit(0);
 	global = var->map;
-	get_info_map(map_path, var);
-	to_array(map_path, global);
+	get_info_map(map_file, var);
+	to_array(map_file, global);
 	is_characters(var, global);
 	wall_checker(var, global);
-	get_info(global, map_path);
+	get_info(global, map_file);
 	var->player->player_derection = \
 	global->map[global->y_player][global->x_player];
 	var->player->x = global->x_player * TILE_SIZE + 2;

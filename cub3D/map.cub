@@ -1,8 +1,8 @@
 
 NO ./assets/textures/ft_north.xpm
-SO ./assets/textures/ft_south.xpm
+SO ./assets/textures/m_south.xpm
 
-WE ./assets/textures/ft_west.xpm
+WE ./assets/textures/m_west.xpm
 EA ./assets/textures/ft_eaaaa.xpm
 
 F 142,95,24
@@ -20,15 +20,3 @@ C 43,234,224
 100000100000000001000001
 100000000000000000000001
 111111111111111111111111
-
-
-
-
-
-
-
-
-
-
-
-

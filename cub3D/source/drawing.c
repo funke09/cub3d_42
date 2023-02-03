@@ -6,7 +6,7 @@
 /*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/03 02:39:14 by zcherrad          #+#    #+#             */
-/*   Updated: 2023/02/03 02:39:17 by zcherrad         ###   ########.fr       */
+/*   Updated: 2023/02/03 15:20:48 by zcherrad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,6 @@ void	drawing_wall(t_var *var, int x, int y, int first_wall)
 	int		t_x;
 	int		t_y;
 
-	if (y > (var->real_height)
-		|| x > (var->real_width))
-		return ;
 	if (y >= (var->real_height)
 		|| x >= (var->real_width))
 		return ;
