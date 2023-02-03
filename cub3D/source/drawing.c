@@ -67,38 +67,3 @@ void	drawing_ceil_floor(t_var *var, int x, int y, int color_num)
 		*(unsigned int *)dst = var->map->floor_color_dc;
 }
 
-// this function draws a square on the position map[y][x] 
-// with a size of your choice
-void	draw_square(int y, int x, int size, t_var *var)
-{
-	int	h;
-	int	w;
-
-	y = y - size / 2;
-	x = x - size / 2;
-	h = y + size;
-	w = x + size;
-	while (y < h)
-	{
-		x = w - size;
-		while (x < w)
-		{
-			draw_pixel(var, x, y, 0x00ff000);
-			x++;
-		}
-		y++;
-	}
-}
-
-// this function for draw a ray
-void	put_one_ray(t_var *var, float ray_angle, int size)
-{
-	int	j;
-
-	j = -1;
-	while (++j < size)
-	{
-		draw_pixel(var, (var->player->x + cos(ray_angle) * j), \
-		(var->player->y + sin(ray_angle) * j), 0x00FF0000);
-	}
-}

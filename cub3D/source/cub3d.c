@@ -17,11 +17,6 @@ void	init_player(t_player *player, t_var *var)
 	player->rays_num = (var->real_width / TILE_SIZE) \
 		/ player->wall_strip_width;
 	player->minimap_scale_factor = 0.2;
-	// player->minimap_size = 0;
-	if (var->map->width > var->map->height)
-		player->minimap_size = var->real_width * player->minimap_scale_factor;
-	else
-		player->minimap_size = var->real_height * player->minimap_scale_factor;
 	player->sizeofplayer = 30;
 }
 

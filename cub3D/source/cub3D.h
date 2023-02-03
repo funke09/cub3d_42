@@ -19,7 +19,7 @@
 # define KEY_D	2
 # define KEY_RIGHT	124
 # define KEY_LEFT	123
-# define RANDOM_KEY	9999999
+# define RANDOM_KEY	-404
 
 typedef struct s_ray
 {
@@ -128,18 +128,14 @@ int				param_number(char *str);
 int				valid_color(char *str);
 void			wall_checker(t_var *var, t_map *map);
 void			init_map(char *map_path, t_var *var);
-void			draw_square(int y, int x, int size, t_var *var);
 int				has_wall(int new_x, int new_y, t_var *var, int front);
 void			update(t_var *var, int key);
-void			player_rendr(t_var *var);
 void			render_rays(t_var *var);
 void			render(t_var *var, int key);
 void			init_texturs(t_var *var);
-void			draw_pixel(t_var *var, int x, int y, int color);
 t_ray			horizontal_intersection(t_var *var, float ray_angle);
 t_ray			vertical_intersection(t_var *var, float ray_angle);
 void			project_plane_wall(t_var *var);
-void			put_one_ray(t_var *var, float ray_angle, int size);
 unsigned int	convert_rgb_dec(int t, int r, int g, int b);
 int				check_color(char *color, int rgb);
 float			check_angle(char c);

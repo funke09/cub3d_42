@@ -1,29 +1,6 @@
 
 #include "cub3D.h"
 
-void	draw_pixel(t_var *var, int x, int y, int color)
-{
-	char	*dst;
-	int		x_scaled;
-	int		y_scaled;
-	float	scale_factor;
-	int		minimap_end;
-
-	if (y > (var->map->height * TILE_SIZE)
-		|| x > (var->map->width * TILE_SIZE))
-		return ;
-	scale_factor = var->player->minimap_scale_factor;
-	x_scaled = x * scale_factor;
-	y_scaled = y * scale_factor;
-	minimap_end = (var->player->minimap_size - 1) * scale_factor;
-	dst = var->img_var + (y_scaled * var->line_length + x_scaled \
-		* (var->bits_per_pixel / 8));
-	if (x_scaled == 0 || y_scaled == 0 || \
-		x_scaled == minimap_end || y_scaled == minimap_end)
-		*(unsigned int *)dst = 0x10ffff;
-	else
-		*(unsigned int *)dst = color;
-}
 
 // this function draws a rectange on the position 
 // map[y][x] with a size of your choice
@@ -78,35 +55,6 @@ void	ft_render_wall(t_var *var, float bad_distnc, int i, float ray_angle)
 	ft_draw_rectangle(y, x, var);
 }
 
-// this function draw the rays on the minimap
-void	render_rays(t_var *var)
-{
-	float	ray_angle;
-	int		i;
-	t_ray	result;
-	t_ray	d1;
-	t_ray	d2;
-
-	i = -1;
-	ray_angle = var->player->rotate_angle - (var->player->fov_angle / 2);
-	ray_angle = normalize(ray_angle);
-	while (++i < var->player->rays_num)
-	{
-		var->player->is_horz_intr = 1;
-		d1 = horizontal_intersection(var, ray_angle);
-		d2 = vertical_intersection(var, ray_angle);
-		if (d1.distance > d2.distance)
-		{
-			result = d2;
-			var->player->is_horz_intr = 0;
-		}
-		else
-			result = d1;
-		var->v = result;
-		put_one_ray(var, ray_angle, result.distance);
-		ray_angle += var->player->fov_angle / var->player->rays_num;
-	}
-}
 
 // this function project the walls 
 void	project_plane_wall(t_var *var)
@@ -120,7 +68,7 @@ void	project_plane_wall(t_var *var)
 	i = -1;
 	ray_angle = var->player->rotate_angle - (var->player->fov_angle / 2);
 	ray_angle = normalize(ray_angle);
-	while (++i < var->player->rays_num)
+	while (++i <= var->player->rays_num + 3)
 	{
 		var->player->is_horz_intr = 1;
 		d1 = horizontal_intersection(var, ray_angle);
