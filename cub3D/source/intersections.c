@@ -83,7 +83,7 @@ t_ray	horizontal_intersection(t_var *global, float ray_angle)
 	while (ray.next_horz_touch_x >= 0 && ray.next_horz_touch_x < ray.window_w
 		&& ray.next_horz_touch_y >= 0 && ray.next_horz_touch_y < ray.window_h)
 	{
-		if (has_wall(ray.next_horz_touch_x, ray.next_horz_touch_y, global) == 1)
+		if (has_wall(ray.next_horz_touch_x, ray.next_horz_touch_y, global, 99) == 1)
 			return (ray);
 		ray.next_horz_touch_x += ray.x_steps;
 		ray.next_horz_touch_y += ray.y_steps;
@@ -144,7 +144,7 @@ t_ray	vertical_intersection(t_var *var, float ray_angle)
 		&& ray.next_vertcl_touch_y >= 0 && ray.next_vertcl_touch_y < ray.window_h)
 	{
 		if (has_wall(ray.next_vertcl_touch_x, \
-		ray.next_vertcl_touch_y, var) == 1)
+		ray.next_vertcl_touch_y, var, 99) == 1)
 			return (ray);
 		ray.next_vertcl_touch_x += ray.x_steps;
 		ray.next_vertcl_touch_y += ray.y_steps;
