@@ -1,7 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   player.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 02:26:31 by zcherrad          #+#    #+#             */
+/*   Updated: 2023/02/03 02:51:43 by zcherrad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "cub3D.h"
-
-
 /**
  * It returns the angle of the direction the player is facing
  * 
@@ -63,13 +72,12 @@ int	ft_special_case(int x, int y, t_var *var, int isfront)
 	return (0);
 }
 
-// this function checks if there is a wall in the position map[new_y][new_x]
 int	has_wall(int new_x, int new_y, t_var *var, int front)
 {
 	int	w;
 	int	h;
-	(void)front;
 
+	(void)front;
 	w = (var->map->width) * TILE_SIZE;
 	h = (var->map->height) * TILE_SIZE;
 	if (new_x < 0 || new_x > w || new_y < 0 || new_y > h)
@@ -85,38 +93,6 @@ int	has_wall(int new_x, int new_y, t_var *var, int front)
 		return (0);
 }
 
-void move_left(t_player *player, float fixedangle, float *new_x, float *new_y)
-{
-	*new_x = player->x + player->move_speed * cos(fixedangle);
-	*new_y = player->y + player->move_speed * sin(fixedangle);
-}
-
-void move_right(t_player *player, float fixedangle, float *new_x, float *new_y)
-{
-	*new_x = player->x + player->move_speed * cos(fixedangle);
-	*new_y = player->y + player->move_speed * sin(fixedangle);
-}
-
-void update_playe(t_player *player, float x, float y)
-{
-	player->x = x;
-	player->y = y;
-}
-void change_angle(t_player *player)
-{
-	player->rotate_angle = normalize(player->rotate_angle + \
-		player->turn_direction * player->rotation_speed);
-	printf("rotate angle %f\n", player->rotate_angle);
-	player->turn_direction = 0;
-}
-
-void	change_x_y(t_player *player, float *move_step, float *new_x, float *new_y)
-{
-	*move_step = player->move_speed * player->walk_direction;
-	*new_x = player->x + *move_step * cos(player->rotate_angle);
-	*new_y = player->y + *move_step * sin(player->rotate_angle);
-}
-
 void	update(t_var *var, int key)
 {
 	float		move_step;
@@ -128,7 +104,7 @@ void	update(t_var *var, int key)
 	move_step = player->move_speed;
 	if (key == KEY_A)
 		move_left(player, player->rotate_angle - (M_PI / 2), &new_x, &new_y);
- 	else if (key == KEY_D)
+	else if (key == KEY_D)
 		move_right(player, player->rotate_angle + (M_PI / 2), &new_x, &new_y);
 	if ((key == KEY_A && has_wall(new_x, new_y, var, -1) == 0) || \
 		(key == KEY_D && has_wall(new_x, new_y, var, -2) == 0))

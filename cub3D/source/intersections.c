@@ -1,6 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   intersections.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 02:37:50 by zcherrad          #+#    #+#             */
+/*   Updated: 2023/02/03 02:48:31 by zcherrad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "cub3D.h"
-
 /**
  * It sets the ray's direction
  * 
@@ -31,7 +41,6 @@ void	facing_of_ray(t_ray *ray, float ray_angle, t_var *var)
 	else
 		var->player->is_ray_up = 0;
 }
-
 
 /**
  * It initializes the horizontal ray
@@ -65,9 +74,9 @@ void	init_horizontal(t_var *global, float angle, t_ray *ray)
 	ray->window_h = global->map->height * TILE_SIZE;
 }
 
-
 /**
- * It finds the first wall that the ray hits, and returns the distance to that wall
+ * It finds the first wall that the ray
+ * hits, and returns the distance to that wall
  * 
  * @param global a pointer to the global variable struct
  * @param ray_angle the angle of the ray we're currently casting
@@ -83,7 +92,8 @@ t_ray	horizontal_intersection(t_var *global, float ray_angle)
 	while (ray.next_horz_touch_x >= 0 && ray.next_horz_touch_x < ray.window_w
 		&& ray.next_horz_touch_y >= 0 && ray.next_horz_touch_y < ray.window_h)
 	{
-		if (has_wall(ray.next_horz_touch_x, ray.next_horz_touch_y, global, 99) == 1)
+		if (has_wall(ray.next_horz_touch_x,
+				ray.next_horz_touch_y, global, 99) == 1)
 			return (ray);
 		ray.next_horz_touch_x += ray.x_steps;
 		ray.next_horz_touch_y += ray.y_steps;
@@ -92,7 +102,6 @@ t_ray	horizontal_intersection(t_var *global, float ray_angle)
 	ray.distance = ray.window_w * ray.window_h;
 	return (ray);
 }
-
 
 /**
  * It initializes the vertical ray
@@ -129,7 +138,8 @@ void	init_vertical(t_var *global, float ray_angle, t_ray *ray)
 /**
  * It finds the closest wall in the direction of the ray
  * 
- * @param var a pointer to the struct that contains all the information about the game
+ * @param var a pointer to the struct that
+ * contains all the information about the game
  * @param ray_angle the angle of the ray we're casting
  * 
  * @return A ray struct.
@@ -140,8 +150,10 @@ t_ray	vertical_intersection(t_var *var, float ray_angle)
 
 	facing_of_ray(&ray, ray_angle, var);
 	init_vertical(var, ray_angle, &ray);
-	while (ray.next_vertcl_touch_x >= 0 && ray.next_vertcl_touch_x < ray.window_w
-		&& ray.next_vertcl_touch_y >= 0 && ray.next_vertcl_touch_y < ray.window_h)
+	while (ray.next_vertcl_touch_x >= 0
+		&& ray.next_vertcl_touch_x < ray.window_w
+		&& ray.next_vertcl_touch_y >= 0
+		&& ray.next_vertcl_touch_y < ray.window_h)
 	{
 		if (has_wall(ray.next_vertcl_touch_x, \
 		ray.next_vertcl_touch_y, var, 99) == 1)

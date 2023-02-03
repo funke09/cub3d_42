@@ -1,9 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   color.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 02:40:08 by zcherrad          #+#    #+#             */
+/*   Updated: 2023/02/03 02:44:16 by zcherrad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "cub3D.h"
-
 /**
  * It takes in four integers,
- * each representing a color component, and returns a string representing the
+ * each representing a color component,and returns a string representing the
  * color in hexadecimal format
  * 
  * @param t transparency
@@ -73,7 +83,6 @@ unsigned int	hex_to_dec(char *number)
 	return (intgr);
 }
 
-
 /**
  * It converts a color from RGB to decimal
  * 
@@ -95,9 +104,9 @@ unsigned int	convert_rgb_dec(int t, int r, int g, int b)
 	return (hex_to_d);
 }
 
-
 /**
- * It takes a string, splits it into an array of strings, and returns the value of the string at the
+ * It takes a string, splits it into an array of strings,
+ * and returns the value of the string at the
  * index specified by the second parameter
  * 
  * @param color the color of the object
@@ -113,10 +122,10 @@ int	check_color(char *color, int rgb)
 
 	new = ft_split(color, ',');
 	new_color = 0;
-	if(!new[0] || !new[1] || !new[2])
+	if (!new[0] || !new[1] || !new[2])
 	{
-			printf("Error\nmissing parameter color\n");
-			exit(0);
+		printf("Error\nmissing parameter color\n");
+		exit(0);
 	}
 	if (!new)
 		return (0);

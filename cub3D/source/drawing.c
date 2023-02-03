@@ -1,6 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   drawing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 02:39:14 by zcherrad          #+#    #+#             */
+/*   Updated: 2023/02/03 02:39:17 by zcherrad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "cub3D.h"
-
 /**
  * It sets the texture to be used for the wall
  * 
@@ -60,7 +70,6 @@ void	drawing_wall(t_var *var, int x, int y, int first_wall)
 		* img->line_size + (t_x % TILE_SIZE) * (img->bits_per_pixel / 8))];
 }
 
-
 /**
  * It draws the ceiling and floor
  * 
@@ -88,4 +97,3 @@ void	drawing_ceil_floor(t_var *var, int x, int y, int color)
 	else if (color == 3)
 		*(unsigned int *)dst = var->map->floor_color_dc;
 }
-

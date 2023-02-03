@@ -1,6 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checker.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 02:40:32 by zcherrad          #+#    #+#             */
+/*   Updated: 2023/02/03 02:43:14 by zcherrad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "cub3D.h"
-
 /**
  * It checks if the file has the .cub extension
  * 
@@ -29,7 +39,8 @@ static int	check_extention(char *str)
 }
 
 /**
- * It checks if the parameter is valid, and if it is, it checks if the path is valid
+ * It checks if the parameter is valid, and if it is, 
+ * it checks if the path is valid
  * 
  * @param str the parameter name
  * @param path the path to the file
@@ -43,9 +54,7 @@ static	int	is_valid_path(char *str, char *path)
 	int		number;
 
 	i = 0;
-	if(!str || !path)
-		return (0);
-	if (!is_param(str))
+	if (!str || !path || !is_param(str))
 		return (0);
 	if (!ft_strcmp(str, "F") || !ft_strcmp(str, "C"))
 	{
@@ -70,7 +79,8 @@ static	int	is_valid_path(char *str, char *path)
  * It checks if the line is a valid command line
  * 
  * @param line the line that is being read
- * @param flag a flag that is set to 1 if the line is valid, 0 otherwise.
+ * @param flag a flag that is set to 1 if the 
+ * line is valid, 0 otherwise.
  * @param len the number of lines in the file
  * @param number the number of parameters in the line
  */
@@ -92,7 +102,8 @@ void	valid_info(char *line, int *flag, int *len, int *number)
 }
 
 /**
- * It reads the first 6 lines of the file and checks if they are valid
+ * It reads the first 6 lines of the file
+ * and checks if they are valid
  * 
  * @param fd file descriptor
  * 
@@ -125,7 +136,8 @@ int	read_param(int fd)
 }
 
 /**
- * It opens the file, checks if it's a .cub file, and then reads the parameters
+ * It opens the file, checks if it's 
+ * a .cub file, and then reads the parameters
  * 
  * @param file the file name
  * 

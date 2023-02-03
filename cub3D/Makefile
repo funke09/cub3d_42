@@ -4,7 +4,7 @@ BONUS = cub3D_bonus
 
 # madatory
 SRC_FOLDER = ./source/
-SRC = cub3d.c ft_error.c map.c map_check.c tools.c checker.c init.c drawing.c player.c rays.c render.c intersections.c color.c keys.c tools_2.c
+SRC = cub3d.c ft_error.c map.c map_check.c tools.c checker.c init.c drawing.c player.c rays.c render.c intersections.c color.c keys.c tools_2.c update_moves.c
 SRCS = $(addprefix $(SRC_FOLDER), $(SRC))
 SRCOBJ = ${SRCS:.c=.o}
 

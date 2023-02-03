@@ -1,6 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_error.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 02:38:43 by zcherrad          #+#    #+#             */
+/*   Updated: 2023/02/03 02:47:03 by zcherrad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "cub3D.h"
-
 /**
  * *|CURSOR_MARCADOR|*
  * 
@@ -31,9 +41,11 @@ void	destroy_textures(t_var *var)
 }
 
 /**
- * It checks if the map is valid, if not, it prints an error message and exits the program
+ * It checks if the map is valid, if not,
+ * it prints an error message and exits the program
  * 
- * @param var is a pointer to the structure that contains all the variables of the game.
+ * @param var is a pointer to the structure that
+ * contains all the variables of the game.
  * @param number the error number.
  */
 void	error_map(t_var *var, int number)

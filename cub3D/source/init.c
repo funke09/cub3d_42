@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 02:38:16 by zcherrad          #+#    #+#             */
+/*   Updated: 2023/02/03 02:47:22 by zcherrad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "cub3D.h"
-
 /**
- * It takes a line from the map file and fills the appropriate variable in the t_map struct
+ * It takes a line from the map file and fills
+ * the appropriate variable in the t_map struct
  * 
- * @param var a pointer to the structure that holds all the information about the map.
+ * @param var a pointer to the structure that
+ * holds all the information about the map.
  * @param line the line of the map file that is being read
  */
 static void	ft_fill_info(t_map *var, char *line)
@@ -30,9 +42,11 @@ static void	ft_fill_info(t_map *var, char *line)
 }
 
 /**
- * It reads the first 6 lines of the file and stores the information in the struct
+ * It reads the first 6 lines of the file
+ * and stores the information in the struct
  * 
- * @param var a pointer to a t_map struct, which is defined in the header file.
+ * @param var a pointer to a t_map struct, which
+ * is defined in the header file.
  * @param file the file name
  */
 void	get_info(t_map *var, char *file)

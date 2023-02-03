@@ -1,9 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rays.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 02:25:14 by zcherrad          #+#    #+#             */
+/*   Updated: 2023/02/03 02:26:04 by zcherrad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "cub3D.h"
 
-
-// this function draws a rectange on the position 
-// map[y][x] with a size of your choice
 void	ft_draw_rectangle(int y, int x, t_var *var)
 {
 	int	x1;
@@ -33,8 +41,6 @@ void	ft_draw_rectangle(int y, int x, t_var *var)
 	}
 }
 
-// this function will render a 3D projected wall 
-// bad_distnc: is the distorted distance
 void	ft_render_wall(t_var *var, float bad_distnc, int i, float ray_angle)
 {
 	float	distance_projection_plane;
@@ -55,8 +61,6 @@ void	ft_render_wall(t_var *var, float bad_distnc, int i, float ray_angle)
 	ft_draw_rectangle(y, x, var);
 }
 
-
-// this function project the walls 
 void	project_plane_wall(t_var *var)
 {
 	float	ray_angle;

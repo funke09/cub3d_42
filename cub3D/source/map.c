@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 02:28:28 by zcherrad          #+#    #+#             */
+/*   Updated: 2023/02/03 02:55:28 by zcherrad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "cub3D.h"
-
 /**
- * It reads the file until it finds a line that is not a newline character, and then returns that line
+ * It reads the file until it finds a line that is 
+ * not a newline character, and then returns that line
  * 
  * @param fd file descriptor
  * 
@@ -83,41 +94,6 @@ void	get_info_map(char *path, t_var *var)
 }
 
 /**
- * It takes a string and a length, and returns a string of the same length, with the first non-null
- * character of the original string, and all subsequent characters replaced with spaces
- * 
- * @param s1 the string to be copied
- * @param len the length of the string to be duplicated
- * 
- * @return A pointer to a string.
- */
-char	*dup_cub(char *s1, int len)
-{
-	int		i;
-	char	*dst;
-	int		flag;
-
-	i = 0;
-	flag = 0;
-	dst = malloc(sizeof(char) * (len + 1));
-	if (dst == NULL)
-		return (NULL);
-	while (i < len)
-	{
-		if (flag == 0 && s1[i] != '\0' && s1[i] != '\n')
-			dst[i] = s1[i];
-		else
-			flag = 1;
-		if (flag == 1)
-			dst[i] = ' ';
-		i++;
-	}
-	dst[i] = '\0';
-	return (dst);
-}
-
-
-/**
  * It reads the map from the file and stores it in a 2D array
  * 
  * @param path the path to the map file
@@ -172,8 +148,10 @@ void	init_map(char *map_path, t_var *var)
 	global->map[global->y_player][global->x_player];
 	var->player->x = global->x_player * TILE_SIZE + 2;
 	var->player->y = global->y_player * TILE_SIZE + 2;
-	global->floor_color_dc = convert_rgb_dec(0, check_color(global->floor_color, 1), \
+	global->floor_color_dc = convert_rgb_dec(0,
+			check_color(global->floor_color, 1), \
 	check_color(global->floor_color, 2), check_color(global->floor_color, 3));
-	global->ceil_color_dc = convert_rgb_dec(0, check_color(global->ceil_color, 1), \
+	global->ceil_color_dc = convert_rgb_dec(0,
+			check_color(global->ceil_color, 1), \
 	check_color(global->ceil_color, 2), check_color(global->ceil_color, 3));
 }

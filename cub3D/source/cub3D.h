@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3D.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 02:41:07 by zcherrad          #+#    #+#             */
+/*   Updated: 2023/02/03 02:56:20 by zcherrad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
@@ -149,6 +160,14 @@ int				count_tab(char **tab);
 void			free_loop(char **tab);
 void			get_info(t_map *var, char *file);
 int				ft_strcmp(char *s1, char *s2);
+char			*dup_cub(char *s1, int len);
 void			drawing_ceil_floor(t_var *var, int x, int y, int color_num);
-
+void			move_left(t_player *player, float fixedangle,
+					float *new_x, float *new_y);
+void			move_right(t_player *player, float fixedangle,
+					float *new_x, float *new_y);
+void			update_playe(t_player *player, float x, float y);
+void			change_angle(t_player *player);
+void			change_x_y(t_player *player, float *move_step,
+					float *new_x, float *new_y);
 #endif

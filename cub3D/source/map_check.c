@@ -1,6 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_check.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 02:27:45 by zcherrad          #+#    #+#             */
+/*   Updated: 2023/02/03 02:28:13 by zcherrad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "cub3D.h"
-
 /**
  * It updates the player's position on the map
  * 
@@ -72,7 +82,6 @@ void	is_characters(t_var *var, t_map *tab)
 		error_map(var, 2);
 }
 
-
 /**
  * It checks if the map is surrounded by walls
  * 
@@ -93,7 +102,6 @@ void	ft_is_wall_exist(t_var *var, int y, int x)
 		|| map[y][x - 1] == ' ' || map[y][x + 1] == ' ')
 		error_map(var, 3);
 }
-
 
 /**
  * It checks if the map is valid

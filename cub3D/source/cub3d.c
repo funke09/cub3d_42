@@ -1,7 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zcherrad <zcherrad@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/03 02:39:33 by zcherrad          #+#    #+#             */
+/*   Updated: 2023/02/03 02:45:53 by zcherrad         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "cub3D.h"
-
-
 /**
  * It initializes the player's
  * variables
@@ -36,8 +45,10 @@ void	ft_var_init(t_var *var)
 {
 	var->mlx_ptr = mlx_init();
 	var->win_ptr = \
-		mlx_new_window(var->mlx_ptr, var->real_width, var->real_height, "NAZISM");
-	var->img = mlx_new_image(var->mlx_ptr, var->real_width, var->real_height);
+		mlx_new_window(var->mlx_ptr, var->real_width,
+			var->real_height, "NAZISM");
+	var->img = mlx_new_image(var->mlx_ptr, var->real_width,
+			var->real_height);
 	var->img_var = mlx_get_data_addr(var->img, &var->bits_per_pixel, \
 	&var->line_length, &var->endian);
 	init_texturs(var);
@@ -46,8 +57,10 @@ void	ft_var_init(t_var *var)
 }
 
 /**
- * It initializes the map, the player, the image, the window, and the mlx, and then it hooks the
- * key_press function to the window, the destroy_window function to the window, and the mlx_loop to the
+ * It initializes the map, the player,
+ * the image, the window, and the mlx, and then it hooks the
+ * key_press function to the window, the destroy_window
+ * function to the window, and the mlx_loop to the
  * mlx
  * 
  * @param ac argument count
