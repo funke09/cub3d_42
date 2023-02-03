@@ -4,7 +4,8 @@ BONUS = cub3D_bonus
 
 # madatory
 SRC_FOLDER = ./source/
-SRC = cub3d.c ft_error.c map.c map_check.c tools.c checker.c init.c drawing.c player.c rays.c render.c intersections.c color.c keys.c tools_2.c update_moves.c
+SRC = cub3d.c ft_error.c map.c map_check.c tools.c checker.c init.c drawing.c \
+	player.c rays.c render.c intersections.c color.c keys.c tools_2.c update_moves.c
 SRCS = $(addprefix $(SRC_FOLDER), $(SRC))
 SRCOBJ = ${SRCS:.c=.o}
 
@@ -27,7 +28,7 @@ LIBS =  ./source/libft/libft.a
 INCLUDES = ./source/cub3D.h ./source/libft/libft.h 
 
 # -g for the debugger
-FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+FLAGS = -Wall -Wextra -Werror
 CC = cc 
 
 %.o : %.c ${INCLUDES}
@@ -36,36 +37,23 @@ CC = cc
 $(NAME) : ${SRCOBJ} $(OTHER_SRCS)
 	@make -C $(LIBFT_FOLDER)
 	@$(CC) ${FLAGS} $(SRCOBJ) $(LIBS) -lmlx -framework OpenGL -framework AppKit -o $(NAME)
-	@echo "|+| make the get_next_line.a [${GREEN}DONE${RESET}]"
-	@echo "|+| make the libft.a         [${GREEN}DONE${RESET}]"
-	@echo "|+| make the $(NAME) program   [${GREEN}DONE${RESET}]"
-	clear
+	@echo "|+| make the libft.a"
+	@echo "|+| make the $(NAME) program"
 
-# @$(CC) ${FLAGS} $(SRCOBJ) $(LIBS) -o $(NAME)
-
-bonus:
-	@echo "did not make it yet!"
 
 all : $(NAME)  
 
 clean :
 	@make clean -C $(LIBFT_FOLDER)
 	@rm -f $(LIBS) $(OTHER_OBJ) $(SRCOBJ)
-	@echo "|-| remove object files [${RED}DONE${RESET}]"
+	@echo "|-| remove object files "
 
 fclean : clean
 	@rm -f ${NAME}
 	@rm -f ${SRCOBJ}
 	@rm -f ${OTHER_OBJ}
 	@make fclean -C $(LIBFT_FOLDER)
-	@echo "|-| remove the program  [${RED}DONE${RESET}]"
+	@echo "|-| remove the program "
 
 re : fclean all
 
-
-
-
-# colors used
-GREEN = \033[0;92m
-RED = \033[0;91m
-RESET = \033[0m
