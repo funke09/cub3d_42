@@ -91,7 +91,7 @@ void move_right(t_player *player, float fixedangle, float *new_x, float *new_y)
 	*new_y = player->y + player->move_speed * sin(fixedangle);
 }
 
-void update_playe(t_player *player, int x, int y)
+void update_playe(t_player *player, float x, float y)
 {
 	player->x = x;
 	player->y = y;
